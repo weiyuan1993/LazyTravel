@@ -33,7 +33,7 @@ class Map extends Component {
   // more details for that place.
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
-
+    console.log(places);
     if (places.length == 0) {
       return;
     }
