@@ -4,8 +4,8 @@ html, body {
   padding: 0;
 }
 #map {
-  width:50%;
-  height: 50%;
+  width:1150px;
+  height: 300px;
 }
 .controls {
 margin-top: 10px;

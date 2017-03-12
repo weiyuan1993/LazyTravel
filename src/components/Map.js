@@ -87,7 +87,7 @@ class Map extends Component {
   render(){
     return(
       <div>
-        <div id="map" ref="map" style={{width:500,height:500}}></div>
+        <div id="map" ref="map"></div>
         <input id="pac-input" className="controls" type="text" placeholder="Search Box"/>
       </div>
     )

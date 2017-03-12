@@ -18,6 +18,21 @@ class WhereToGo extends Component {
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
     var searchBox = new google.maps.places.SearchBox(input);
+
+
+  //   var placeID = "ChIJ6THl_bWfaDQRUkMnbqlLI54";
+  //   var request = {
+  //    placeId: placeID
+  //  };
+  // var service = new google.maps.places.PlacesService(map);
+  //  service.getDetails(request, callback);
+  //
+  //  function callback(place, status) {
+  //    if (status == google.maps.places.PlacesServiceStatus.OK) {
+  //      // createMarker(place);
+  //      console.log(place);
+  //    }
+  //  }
   }
   searchClick(){
   // var input = document.getElementById('where-to-go');
@@ -34,7 +49,20 @@ class WhereToGo extends Component {
     if(placeData.length!==0){
       var placeNames = placeData.map(function(place){
         return(
-          <li key={place.id}>{place.name}</li>
+          <li key={place.id} className="list-group-item">
+             <div className="video-list media">
+              <div className="media-left">
+                <img src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+              </div>
+              <div className="media-body">
+                <div className="media-heading">
+                  {place.name}
+                  <p>評價:{place.rating}</p>
+                 </div>
+              </div>
+            </div>
+
+          </li>
         );
       });
     }
