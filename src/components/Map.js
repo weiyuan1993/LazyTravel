@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getPlaceData } from "../actions/index";
+
+function mapStateToProps(state){
+  return{
+    placeData:state.placeData.placeName
+  }
+}
 
 class Map extends Component {
   constructor(props){
   super(props);
   this.initAutocomplete=this.initAutocomplete.bind(this);
-
 }
   componentDidMount(){
     this.initAutocomplete();
     console.log("%c Google Map loading success!",'color: green');
   }
   initAutocomplete() {
+  var self = this;
   var map = new google.maps.Map(this.refs.map, {
     center: {lat: 23.990906, lng: 121.603088},
     zoom: 13,
@@ -33,7 +41,8 @@ class Map extends Component {
   // more details for that place.
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
-    console.log(places);
+    self.props.getPlaceData(places);
+
     if (places.length == 0) {
       return;
     }
@@ -84,4 +93,4 @@ class Map extends Component {
     )
   }
 }
-export default Map;
+export default connect(mapStateToProps,{getPlaceData})(Map);

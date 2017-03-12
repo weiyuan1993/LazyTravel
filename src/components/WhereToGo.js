@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
 import axios from 'axios';
+import { connect } from 'react-redux';
+
+function mapStateToProps(state){
+  return{
+    placeData:state.placeData.placeData
+  }
+}
 
 class WhereToGo extends Component {
   constructor(props){
@@ -23,6 +30,14 @@ class WhereToGo extends Component {
     this.setState({whereInput:searchInput});
   }
   render(){
+    const { placeData } = this.props;
+    if(placeData.length!==0){
+      var placeNames = placeData.map(function(place){
+        return(
+          <li key={place.id}>{place.name}</li>
+        );
+      });
+    }
     return(
       <div>
         <input id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
@@ -35,8 +50,9 @@ class WhereToGo extends Component {
         <input type="date"/>~
         <input type="date"/>
         <h5>推薦景點</h5>
+        {placeNames}
       </div>
     )
   }
 }
-export default WhereToGo;
+export default connect(mapStateToProps)(WhereToGo);
