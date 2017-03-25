@@ -67,7 +67,8 @@ class Map extends Component {
       // Create a marker for each place.
       markers.push(new google.maps.Marker({
         map: map,
-        icon: place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}),
+        // icon: place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}),
+        icon:icon,
         title: place.name,
         position: place.geometry.location
       }));
@@ -88,7 +89,6 @@ class Map extends Component {
     return(
       <div>
         <div id="map" ref="map"></div>
-        <input id="pac-input" className="controls" type="text" placeholder="Search Box"/>
       </div>
     )
   }

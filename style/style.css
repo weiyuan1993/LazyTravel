@@ -56,10 +56,29 @@ font-weight: 300;
   line-height: 60px !important;
   background-color: rgba(0,0,0,0.35) !important;
   color:white;
+  padding-left: 45px !important;
 }
 #page-header>a{
   color:#F5F5F5;
 }
 #page-header>a:hover{
   color:#03A9F4;
+}
+@media (min-width:801px){
+  #page-header>h1,#page-header>a>i{
+    font-size: 45px;
+  }
+}
+@media (max-width:800px){
+  #page-header>h1,#page-header>a>i{
+    font-size: 28px;
+  }
+  #map {
+    height:300px;
+  }
+}
+@media (max-width:600px){
+  #page-header>h1,#page-header>a>i{
+    font-size: 22px;
+  }
 }
