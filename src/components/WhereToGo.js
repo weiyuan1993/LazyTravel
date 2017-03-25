@@ -12,34 +12,20 @@ function mapStateToProps(state){
 class WhereToGo extends Component {
   constructor(props){
     super(props);
-    this.state = {whereInput:'',destination:''};
+    this.state = {whereInput:'',destination:'',tripNameInput:'為此趟旅行命名吧!'};
   }
   componentDidMount(){
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
     var searchBox = new google.maps.places.SearchBox(input);
-
-
-  //   var placeID = "ChIJ6THl_bWfaDQRUkMnbqlLI54";
-  //   var request = {
-  //    placeId: placeID
-  //  };
-  // var service = new google.maps.places.PlacesService(map);
-  //  service.getDetails(request, callback);
-  //
-  //  function callback(place, status) {
-  //    if (status == google.maps.places.PlacesServiceStatus.OK) {
-  //      // createMarker(place);
-  //      console.log(place);
-  //    }
-  //  }
   }
   searchClick(){
-  // var input = document.getElementById('where-to-go');
-  // var searchBox = new google.maps.places.SearchBox(input);
-  // var places = searchBox.getPlaces();
-  // console.log(places);
   this.setState({destination:this.refs.inputRef.value});
+  localStorage.destination = this.refs.inputRef.value;
+  }
+  onTripNameChange(tripNameInput){
+    this.setState({tripNameInput:tripNameInput});
+    localStorage.tripName = this.state.tripNameInput;
   }
   onSearchInputChange(searchInput){
     this.setState({whereInput:searchInput});
@@ -52,12 +38,22 @@ class WhereToGo extends Component {
           <li key={place.id} className="list-group-item">
              <div className="video-list media">
               <div className="media-left">
-                <img src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+                {place.photos?
+                  <img src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+                  :
+                  <div>無圖片</div>
+                }
+
               </div>
               <div className="media-body">
                 <div className="media-heading">
                   {place.name}
                   <p>評價:{place.rating}</p>
+                  <a className="btn btn-alt btn-hover btn-info" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
+                    <span>Google搜尋</span>
+                    <i className="glyph-icon icon-arrow-right"></i>
+                  </a>
+
                  </div>
               </div>
             </div>
@@ -66,19 +62,52 @@ class WhereToGo extends Component {
         );
       });
     }
+    var destination = localStorage.destination;
     return(
       <div>
-        <input id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
-          onChange={(e)=>{this.onSearchInputChange(e.target.value)}} ref="inputRef"/>
-        <button onClick={()=>{this.searchClick();}}>確定</button>
+        <div className="content-box">
+          <h3 className="content-box-header bg-primary">
+              <i className="glyph-icon icon-thumb-tack"></i>
+              {this.state.tripNameInput}
+          </h3>
 
-        <h3>我的行程</h3>
-        <h4>目的地:{this.state.destination}</h4>
-        <h4>日期:</h4>
-        <input type="date"/>~
-        <input type="date"/>
-        <h5>推薦景點</h5>
-        {placeNames}
+          <div className="content-box-wrapper">
+            <div className="col-md-6">
+              <h4>旅程名稱</h4>
+              <div className="input-group">
+                <input className="form-control" placeholder="請輸入行程名稱" value={this.state.tripNameInput}
+                  onChange={(e)=>{this.onTripNameChange(e.target.value)}}
+                />
+                {/* <span className="input-group-btn" >
+                  <button className="btn btn-primary" type="button">確定<div className="ripple-wrapper"></div></button>
+                </span> */}
+              </div>
+            </div>
+            <div className="col-md-6">
+              <h4>去哪玩?</h4>
+              <div className="input-group">
+                <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
+                  onChange={(e)=>{this.onSearchInputChange(e.target.value)}} ref="inputRef"/>
+                <span className="input-group-btn" >
+                  <button className="btn btn-primary" type="button" onClick={()=>{this.searchClick();}}>確定<div className="ripple-wrapper"></div></button>
+                </span>
+              </div>
+           </div>
+
+            <h4>目的地:{this.state.destination}</h4>
+            <h4>日期:</h4>
+            <input type="date"/>~
+            <input type="date"/>
+            <h4>第一天</h4>
+              <a className="btn btn-sm btn-default no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
+              <h5>推薦景點</h5>
+              {placeNames}
+          </div>
+        </div>
+
+
+
+
       </div>
     )
   }

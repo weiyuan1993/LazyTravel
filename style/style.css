@@ -3,9 +3,12 @@ html, body {
   margin: 0;
   padding: 0;
 }
+body {
+  background-image:url('../img/back2.jpg');
+  background-size:cover;
+}
 #map {
-  width:1150px;
-  height: 300px;
+  height: 700px;
 }
 .controls {
 margin-top: 10px;
@@ -47,4 +50,16 @@ padding: 5px 11px 0px 11px;
 font-family: Roboto;
 font-size: 13px;
 font-weight: 300;
+}
+
+#page-header{
+  line-height: 60px !important;
+  background-color: rgba(0,0,0,0.35) !important;
+  color:white;
+}
+#page-header>a{
+  color:#F5F5F5;
+}
+#page-header>a:hover{
+  color:#03A9F4;
 }

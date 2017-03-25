@@ -67,7 +67,7 @@ class Map extends Component {
       // Create a marker for each place.
       markers.push(new google.maps.Marker({
         map: map,
-        icon: icon,
+        icon: place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}),
         title: place.name,
         position: place.geometry.location
       }));
