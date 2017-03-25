@@ -12,7 +12,8 @@
   "main": "index.js",
   "repository": "git@github.com:weiyuan1993/react-redux-starter.git",
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    
+    "start": "node server.js"
   },
   "author": "Weiyuan1993",
   "license": "ISC",
