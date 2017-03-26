@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-starter",
+  "name": "LazyTravel",
   "version": "1.0.0",
   "babel": {
     "presets": [
@@ -8,9 +8,9 @@
       "stage-1"
     ]
   },
-  "description": "React-Redux starter kit",
+  "description": "A lazy travel web app that help people plan their weekend easily.",
   "main": "index.js",
-  "repository": "git@github.com:weiyuan1993/react-redux-starter.git",
+  "repository": "git@github.com:weiyuan1993/LazyTravel.git",
   "scripts": {
     "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "start": "node server.js"

@@ -91,7 +91,7 @@
 	  _reactRedux.Provider,
 	  { store: createStoreWithMiddleware(_reducers2.default) },
 	  _react2.default.createElement(_reactRouter.Router, { history: _reactRouter.browserHistory, routes: _route2.default })
-	), document.querySelector('.container-fluid'));
+	), document.getElementById('container'));
 
 /***/ },
 /* 2 */
@@ -29205,7 +29205,7 @@
 	          _react2.default.createElement(
 	            _reactRouter.Link,
 	            { to: '/' },
-	            _react2.default.createElement('i', { className: 'glyph-icon icon-bicycle', style: { fontSize: '45px', paddingRight: '10px' } })
+	            _react2.default.createElement('i', { className: 'glyph-icon icon-bicycle', style: { paddingRight: '10px' } })
 	          ),
 	          _react2.default.createElement(
 	            'h1',
@@ -29390,12 +29390,12 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          _react2.default.createElement(_Map2.default, null)
+	          _react2.default.createElement(_WhereToGo2.default, null)
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          _react2.default.createElement(_WhereToGo2.default, null)
+	          _react2.default.createElement(_Map2.default, null)
 	        )
 	      );
 	    }
@@ -29510,7 +29510,8 @@
 	          // Create a marker for each place.
 	          markers.push(new google.maps.Marker({
 	            map: map,
-	            icon: place.photos[0].getUrl({ 'maxWidth': 35, 'maxHeight': 35 }),
+	            // icon: place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}),
+	            icon: icon,
 	            title: place.name,
 	            position: place.geometry.location
 	          }));
@@ -29532,8 +29533,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('div', { id: 'map', ref: 'map' }),
-	        _react2.default.createElement('input', { id: 'pac-input', className: 'controls', type: 'text', placeholder: 'Search Box' })
+	        _react2.default.createElement('div', { id: 'map', ref: 'map' })
 	      );
 	    }
 	  }]);
@@ -29657,7 +29657,11 @@
 
 	    var _this = _possibleConstructorReturn(this, (WhereToGo.__proto__ || Object.getPrototypeOf(WhereToGo)).call(this, props));
 
-	    _this.state = { whereInput: '', destination: '', tripNameInput: '為此趟旅行命名吧!' };
+	    _this.state = {
+	      whereInput: '',
+	      destination: '',
+	      tripNameInput: '為此趟旅行命名吧!',
+	      placeInput: '' };
 	    return _this;
 	  }
 
@@ -29666,12 +29670,16 @@
 	    value: function componentDidMount() {
 	      //loading autocomplete serach box
 	      var input = document.getElementById('where-to-go');
+	      var placeInput = document.getElementById('place-input');
 	      var searchBox = new google.maps.places.SearchBox(input);
+	      var placeSearchBox = new google.maps.places.SearchBox(placeInput);
 	    }
 	  }, {
 	    key: 'searchClick',
 	    value: function searchClick() {
-	      this.setState({ destination: this.refs.inputRef.value });
+	      this.setState({
+	        destination: this.refs.inputRef.value
+	      });
 	      localStorage.destination = this.refs.inputRef.value;
 	    }
 	  }, {
@@ -29684,6 +29692,34 @@
 	    key: 'onSearchInputChange',
 	    value: function onSearchInputChange(searchInput) {
 	      this.setState({ whereInput: searchInput });
+	    }
+	  }, {
+	    key: 'onPlaceInputChange',
+	    value: function onPlaceInputChange(placeInput) {
+	      this.setState({ placeInput: placeInput });
+	    }
+	  }, {
+	    key: 'placeSearchClick',
+	    value: function placeSearchClick() {
+	      var placeInput = document.getElementById('pac-input');
+	      google.maps.event.trigger(placeInput, 'focus');
+	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+	    }
+	  }, {
+	    key: 'suggestPlace',
+	    value: function suggestPlace() {
+	      var placeInput = document.getElementById('pac-input');
+	      placeInput.value = this.state.whereInput + " 景點";
+	      google.maps.event.trigger(placeInput, 'focus');
+	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+	    }
+	  }, {
+	    key: 'suggestFood',
+	    value: function suggestFood() {
+	      var placeInput = document.getElementById('pac-input');
+	      placeInput.value = this.state.whereInput + " 美食";
+	      google.maps.event.trigger(placeInput, 'focus');
+	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
 	    }
 	  }, {
 	    key: 'render',
@@ -29731,6 +29767,11 @@
 	                      'Google\u641C\u5C0B'
 	                    ),
 	                    _react2.default.createElement('i', { className: 'glyph-icon icon-arrow-right' })
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'btn btn-round btn-xs btn-primary', style: { float: "right" } },
+	                    _react2.default.createElement('i', { className: 'glyph-icon icon-plus' })
 	                  )
 	                )
 	              )
@@ -29739,6 +29780,7 @@
 	        });
 	      }
 	      var destination = localStorage.destination;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -29816,6 +29858,11 @@
 	            '~',
 	            _react2.default.createElement('input', { type: 'date' }),
 	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              '\u65C5\u884C\u6458\u8981'
+	            ),
+	            _react2.default.createElement(
 	              'h4',
 	              null,
 	              '\u7B2C\u4E00\u5929'
@@ -29827,12 +29874,48 @@
 	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	            ),
 	            _react2.default.createElement(
-	              'h5',
-	              null,
+	              'div',
+	              { className: 'input-group' },
+	              _react2.default.createElement('input', { id: 'place-input', className: 'form-control', value: this.state.placeInput,
+	                onChange: function onChange(e) {
+	                  _this2.onPlaceInputChange(e.target.value);
+	                },
+	                type: 'text', placeholder: '\u641C\u5C0B\u666F\u9EDE\u3001\u7F8E\u98DF' }),
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'input-group-btn' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
+	                      _this2.placeSearchClick();
+	                    } },
+	                  '\u78BA\u5B9A',
+	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: function onClick() {
+	                  _this2.suggestPlace();
+	                }, className: 'btn btn-sm btn-primary' },
 	              '\u63A8\u85A6\u666F\u9EDE'
 	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: function onClick() {
+	                  _this2.suggestFood();
+	                }, className: 'btn btn-sm btn-success' },
+	              '\u63A8\u85A6\u7F8E\u98DF'
+	            ),
 	            placeNames
-	          )
+	          ),
+	          _react2.default.createElement('input', { value: this.state.placeInput,
+	            onChange: function onChange(e) {
+	              _this2.onPlaceInputChange(e.target.value);
+	            },
+	            id: 'pac-input', className: 'controls',
+	            type: 'text', placeholder: 'Search Box' })
 	        )
 	      );
 	    }

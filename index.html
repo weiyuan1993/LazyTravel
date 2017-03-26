@@ -2,10 +2,13 @@
 <html>
   <head>
     <link rel="stylesheet" href="/style/style.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Favicons -->
-
+    <style>
+        #loading .svg-icon-loader {position: absolute;top: 50%;left: 50%;margin: -50px 0 0 -50px;}
+    </style>
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/icons/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/icons/apple-touch-icon-114-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/icons/apple-touch-icon-72-precomposed.png">
@@ -148,8 +151,8 @@
     <script type="text/javascript" src="/assets/js-core/transition.js"></script>
     <script type="text/javascript" src="/assets/js-core/modernizr.js"></script>
     <script type="text/javascript" src="/assets/js-core/jquery-cookie.js"></script>
-    <script type="text/javascript" src="../../assets/widgets/colorpicker/colorpicker.js"></script>
-    <script type="text/javascript" src="../../assets/widgets/colorpicker/colorpicker-demo.js"></script>
+    <script type="text/javascript" src="/assets/widgets/colorpicker/colorpicker.js"></script>
+    <script type="text/javascript" src="/assets/widgets/colorpicker/colorpicker-demo.js"></script>
 
 
 
@@ -163,7 +166,12 @@
     </script>
   </head>
   <body>
-    <div class="container"></div>
+    <div id="loading">
+    <div class="svg-icon-loader">
+        <img src="../../assets/images/svg-loaders/bars.svg" width="40" alt="">
+    </div>
+    </div>
+    <div id="container"></div>
   </body>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzcS1IUfZeqlyXgvbg4xpiuFjx9P09on0&libraries=places"></script>
   <script src="bundle.js"></script>
