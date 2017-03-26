@@ -17,6 +17,13 @@ class Map extends Component {
     this.initAutocomplete();
     console.log("%c Google Map loading success!",'color: green');
   }
+  processResults(results, status, pagination) {
+    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+      return;
+    } else {
+        console.log(results,pagination);
+      }
+  }
   initAutocomplete() {
   var self = this;
   var map = new google.maps.Map(this.refs.map, {
@@ -24,7 +31,21 @@ class Map extends Component {
     zoom: 13,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
-
+  /////////////////////////////////////////// 測試文字搜尋
+  var hualien = new google.maps.LatLng(23.990906,121.603088);
+  var request = {
+    location: hualien,
+    radius: '500',
+    query: 'restaurant'
+  };
+  function callback(results, status,pagination) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    console.log(results,pagination);
+  }
+  }
+  var service = new google.maps.places.PlacesService(map);
+  service.textSearch(request,callback);
+//////////////////////////////////////////////
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
