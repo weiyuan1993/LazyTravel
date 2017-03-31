@@ -67,7 +67,7 @@ class WhereToGo extends Component {
              <div className="video-list media">
               <div className="media-left">
                 {place.photos?
-                  <img src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+                  <img className="searchPhotos" src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
                   :
                   <div>無圖片</div>
                 }

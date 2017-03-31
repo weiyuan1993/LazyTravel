@@ -81,4 +81,8 @@ font-weight: 300;
   #page-header>h1,#page-header>a>i{
     font-size: 22px;
   }
+  .searchPhotos{
+    max-width:100px;
+    max-height:100px;
+  }
 }
