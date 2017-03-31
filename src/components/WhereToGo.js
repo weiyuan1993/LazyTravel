@@ -54,13 +54,21 @@ class WhereToGo extends Component {
   }
   suggestPlace(){
       var placeInput = document.getElementById('pac-input');
-      placeInput.value=this.state.whereInput+" 景點";
+      if(!this.state.whereInput){
+        placeInput.value="景點";
+      }else{
+        placeInput.value=this.state.whereInput+" 景點";
+      }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
   }
   suggestFood(){
       var placeInput = document.getElementById('pac-input');
-      placeInput.value=this.state.whereInput+" 美食";
+      if(!this.state.whereInput){
+        placeInput.value="美食";
+      }else{
+        placeInput.value=this.state.whereInput+" 美食";
+      }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
   }
