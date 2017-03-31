@@ -29333,7 +29333,8 @@
 	  _react2.default.createElement(_reactRouter.Route, { path: 'NewTrip', component: _MainView2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'page1', component: Page1 }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'page2', component: Page2 }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'page3', component: Page3 })
+	  _react2.default.createElement(_reactRouter.Route, { path: 'page3', component: Page3 }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '*', component: _MyTrip2.default })
 	);
 
 /***/ },
@@ -29459,6 +29460,15 @@
 	      console.log("%c Google Map loading success!", 'color: green');
 	    }
 	  }, {
+	    key: 'processResults',
+	    value: function processResults(results, status, pagination) {
+	      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+	        return;
+	      } else {
+	        console.log(results, pagination);
+	      }
+	    }
+	  }, {
 	    key: 'initAutocomplete',
 	    value: function initAutocomplete() {
 	      var self = this;
@@ -29467,7 +29477,21 @@
 	        zoom: 13,
 	        mapTypeId: google.maps.MapTypeId.ROADMAP
 	      });
-
+	      /////////////////////////////////////////// 測試文字搜尋
+	      var hualien = new google.maps.LatLng(23.990906, 121.603088);
+	      var request = {
+	        location: hualien,
+	        radius: '500',
+	        query: 'restaurant'
+	      };
+	      function callback(results, status, pagination) {
+	        if (status == google.maps.places.PlacesServiceStatus.OK) {
+	          console.log(results, pagination);
+	        }
+	      }
+	      var service = new google.maps.places.PlacesService(map);
+	      service.textSearch(request, callback);
+	      //////////////////////////////////////////////
 	      // Create the search box and link it to the UI element.
 	      var input = document.getElementById('pac-input');
 	      var searchBox = new google.maps.places.SearchBox(input);
@@ -29658,10 +29682,10 @@
 	    var _this = _possibleConstructorReturn(this, (WhereToGo.__proto__ || Object.getPrototypeOf(WhereToGo)).call(this, props));
 
 	    _this.state = {
-	      whereInput: '',
-	      destination: '',
-	      tripNameInput: '為此趟旅行命名吧!',
-	      placeInput: '' };
+	      whereInput: localStorage.whereInput,
+	      tripNameInput: localStorage.tripName,
+	      placeInput: '',
+	      planInput: localStorage.planInput };
 	    return _this;
 	  }
 
@@ -29678,9 +29702,9 @@
 	    key: 'searchClick',
 	    value: function searchClick() {
 	      this.setState({
-	        destination: this.refs.inputRef.value
+	        whereInput: this.refs.whereInputRef.value
 	      });
-	      localStorage.destination = this.refs.inputRef.value;
+	      localStorage.whereInput = this.refs.whereInputRef.value;
 	    }
 	  }, {
 	    key: 'onTripNameChange',
@@ -29689,8 +29713,8 @@
 	      localStorage.tripName = this.state.tripNameInput;
 	    }
 	  }, {
-	    key: 'onSearchInputChange',
-	    value: function onSearchInputChange(searchInput) {
+	    key: 'onWhereInputChange',
+	    value: function onWhereInputChange(searchInput) {
 	      this.setState({ whereInput: searchInput });
 	    }
 	  }, {
@@ -29699,11 +29723,21 @@
 	      this.setState({ placeInput: placeInput });
 	    }
 	  }, {
+	    key: 'onPlanInputChange',
+	    value: function onPlanInputChange(planInput) {
+	      this.setState({ planInput: planInput });
+	    }
+	  }, {
 	    key: 'placeSearchClick',
 	    value: function placeSearchClick() {
 	      var placeInput = document.getElementById('pac-input');
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+	    }
+	  }, {
+	    key: 'savePlanClick',
+	    value: function savePlanClick() {
+	      localStorage.planInput = this.state.planInput;
 	    }
 	  }, {
 	    key: 'suggestPlace',
@@ -29728,6 +29762,7 @@
 
 	      var placeData = this.props.placeData;
 
+
 	      if (placeData.length !== 0) {
 	        var placeNames = placeData.map(function (place) {
 	          return _react2.default.createElement(
@@ -29739,7 +29774,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'media-left' },
-	                place.photos ? _react2.default.createElement('img', { src: place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
+	                place.photos ? _react2.default.createElement('img', { className: 'searchPhotos', src: place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
 	                  'div',
 	                  null,
 	                  '\u7121\u5716\u7247'
@@ -29779,7 +29814,6 @@
 	          );
 	        });
 	      }
-	      var destination = localStorage.destination;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -29807,7 +29841,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'input-group' },
-	                _react2.default.createElement('input', { className: 'form-control', placeholder: '\u8ACB\u8F38\u5165\u884C\u7A0B\u540D\u7A31', value: this.state.tripNameInput,
+	                _react2.default.createElement('input', { className: 'form-control', placeholder: '\u60F3\u500B\u65C5\u7A0B\u540D\u7A31\u5427!', value: this.state.tripNameInput,
 	                  onChange: function onChange(e) {
 	                    _this2.onTripNameChange(e.target.value);
 	                  }
@@ -29827,8 +29861,8 @@
 	                { className: 'input-group' },
 	                _react2.default.createElement('input', { className: 'form-control', id: 'where-to-go', placeholder: '\u60F3\u53BB\u54EA\u73A9?', value: this.state.whereInput,
 	                  onChange: function onChange(e) {
-	                    _this2.onSearchInputChange(e.target.value);
-	                  }, ref: 'inputRef' }),
+	                    _this2.onWhereInputChange(e.target.value);
+	                  }, ref: 'whereInputRef' }),
 	                _react2.default.createElement(
 	                  'span',
 	                  { className: 'input-group-btn' },
@@ -29844,20 +29878,6 @@
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'h4',
-	              null,
-	              '\u76EE\u7684\u5730:',
-	              this.state.destination
-	            ),
-	            _react2.default.createElement(
-	              'h4',
-	              null,
-	              '\u65E5\u671F:'
-	            ),
-	            _react2.default.createElement('input', { type: 'date' }),
-	            '~',
-	            _react2.default.createElement('input', { type: 'date' }),
-	            _react2.default.createElement(
 	              'h3',
 	              null,
 	              '\u65C5\u884C\u6458\u8981'
@@ -29867,9 +29887,27 @@
 	              null,
 	              '\u7B2C\u4E00\u5929'
 	            ),
+	            _react2.default.createElement('textarea', { className: 'form-control textarea-sm',
+	              onChange: function onChange(e) {
+	                _this2.onPlanInputChange(e.target.value);
+	              },
+	              value: this.state.planInput,
+	              placeholder: '\u958B\u59CB\u52D5\u624B\u898F\u5283!' }),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'input-group-btn' },
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
+	                    _this2.savePlanClick();
+	                  } },
+	                '\u5132\u5B58',
+	                _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	              )
+	            ),
 	            _react2.default.createElement(
 	              'a',
-	              { className: 'btn btn-sm btn-default no-border', title: '' },
+	              { className: 'btn btn-sm btn-yellow no-border', title: '' },
 	              '\u65B0\u589E\u5929\u6578',
 	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	            ),
@@ -31546,8 +31584,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (MyTrip.__proto__ || Object.getPrototypeOf(MyTrip)).call(this, props));
 
-	    _this.state = { trips: '目前還沒有規劃行程哦!點擊右上角新增來安排假期吧' };
-
+	    _this.state = { trips: '目前還沒有規劃行程哦!點擊右上角新增來安排假期吧', where: localStorage.whereInput };
 	    return _this;
 	  }
 
@@ -31589,8 +31626,14 @@
 	                _react2.default.createElement(
 	                  'p',
 	                  null,
-	                  '\u884C\u7A0B1:',
+	                  '\u884C\u7A0B:',
 	                  trips
+	                ),
+	                _react2.default.createElement(
+	                  'p',
+	                  null,
+	                  '\u5730\u9EDE:',
+	                  this.state.where
 	                ),
 	                _react2.default.createElement(
 	                  _reactRouter.Link,
@@ -31599,7 +31642,7 @@
 	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	                )
 	              ) : _react2.default.createElement(
-	                'p',
+	                ㄣ,
 	                null,
 	                this.state.trips
 	              )
