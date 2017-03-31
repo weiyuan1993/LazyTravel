@@ -13,10 +13,10 @@ class WhereToGo extends Component {
   constructor(props){
     super(props);
     this.state = {
-      whereInput:'',
-      destination:'',
-      tripNameInput:'為此趟旅行命名吧!',
-      placeInput:''};
+      whereInput:localStorage.whereInput,
+      tripNameInput:localStorage.tripName,
+      placeInput:'',
+      planInput:localStorage.planInput};
   }
   componentDidMount(){
     //loading autocomplete serach box
@@ -26,25 +26,31 @@ class WhereToGo extends Component {
     var placeSearchBox = new google.maps.places.SearchBox(placeInput);
   }
   searchClick(){
-  this.setState({
-    destination:this.refs.inputRef.value
-  });
-  localStorage.destination = this.refs.inputRef.value;
+    this.setState({
+      whereInput:this.refs.whereInputRef.value
+    });
+    localStorage.whereInput = this.refs.whereInputRef.value;
   }
   onTripNameChange(tripNameInput){
     this.setState({tripNameInput:tripNameInput});
     localStorage.tripName = this.state.tripNameInput;
   }
-  onSearchInputChange(searchInput){
+  onWhereInputChange(searchInput){
     this.setState({whereInput:searchInput});
   }
   onPlaceInputChange(placeInput){
     this.setState({placeInput:placeInput});
   }
+  onPlanInputChange(planInput){
+    this.setState({planInput:planInput});
+  }
   placeSearchClick(){
       var placeInput = document.getElementById('pac-input');
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+  }
+  savePlanClick(){
+      localStorage.planInput = this.state.planInput;
   }
   suggestPlace(){
       var placeInput = document.getElementById('pac-input');
@@ -60,6 +66,7 @@ class WhereToGo extends Component {
   }
   render(){
     const { placeData } = this.props;
+
     if(placeData.length!==0){
       var placeNames = placeData.map(function(place){
         return(
@@ -90,7 +97,6 @@ class WhereToGo extends Component {
         );
       });
     }
-    var destination = localStorage.destination;
 
     return(
       <div>
@@ -104,7 +110,7 @@ class WhereToGo extends Component {
             <div className="col-md-6">
               <h4>旅程名稱</h4>
               <div className="input-group">
-                <input className="form-control" placeholder="請輸入行程名稱" value={this.state.tripNameInput}
+                <input className="form-control" placeholder="想個旅程名稱吧!" value={this.state.tripNameInput}
                   onChange={(e)=>{this.onTripNameChange(e.target.value)}}
                 />
                 {/* <span className="input-group-btn" >
@@ -116,20 +122,25 @@ class WhereToGo extends Component {
               <h4>去哪玩?</h4>
               <div className="input-group">
                 <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
-                  onChange={(e)=>{this.onSearchInputChange(e.target.value)}} ref="inputRef"/>
+                  onChange={(e)=>{this.onWhereInputChange(e.target.value)}} ref="whereInputRef"/>
                 <span className="input-group-btn" >
                   <button className="btn btn-primary" type="button" onClick={()=>{this.searchClick();}}>確定<div className="ripple-wrapper"></div></button>
                 </span>
               </div>
            </div>
-
-            <h4>目的地:{this.state.destination}</h4>
-            <h4>日期:</h4>
+            {/* <h4>日期:</h4>
             <input type="date"/>~
-            <input type="date"/>
+            <input type="date"/> */}
             <h3>旅行摘要</h3>
             <h4>第一天</h4>
-              <a className="btn btn-sm btn-default no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
+              <textarea className="form-control textarea-sm"
+                onChange={(e)=>{this.onPlanInputChange(e.target.value)}}
+                value={this.state.planInput}
+                placeholder="開始動手規劃!"/>
+              <span className="input-group-btn" >
+                <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>儲存<div className="ripple-wrapper"></div></button>
+              </span>
+              <a className="btn btn-sm btn-yellow no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
               <div className="input-group">
                 <input id="place-input" className="form-control" value={this.state.placeInput}
                   onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}

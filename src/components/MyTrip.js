@@ -13,8 +13,7 @@ function mapStateToProps(state){
 class MyTrip extends Component {
   constructor(props){
     super(props);
-    this.state={trips:'目前還沒有規劃行程哦!點擊右上角新增來安排假期吧'}
-
+    this.state={trips:'目前還沒有規劃行程哦!點擊右上角新增來安排假期吧',where:localStorage.whereInput}
   }
   render(){
     var trips = localStorage.tripName;
@@ -32,8 +31,12 @@ class MyTrip extends Component {
           <div className="content-box-wrapper">
             {trips?
               <div style={{display:"inline"}}>
-              <p>行程1:{trips}</p><Link to="/NewTrip" className="btn btn-sm btn-primary no-border" title="">修改<div className="ripple-wrapper"></div></Link></div>:
-              <p>{this.state.trips}</p>
+                <p>行程:{trips}</p>
+                <p>地點:{this.state.where}</p>
+                <Link to="/NewTrip" className="btn btn-sm btn-primary no-border" title="">
+                修改<div className="ripple-wrapper"></div></Link></div>:
+              <ㄣ>{this.state.trips}</ㄣ>
+
             }
           </div>
         </div>

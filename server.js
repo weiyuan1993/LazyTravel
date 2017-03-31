@@ -20,6 +20,14 @@ app.use(express.static(__dirname + '/'));
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+app.get('/NewTrip', function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+  console.log("123");
+});
+app.get('/123NewTrip123', function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+  console.log("123");
+});
 
 app.listen(PORT, function(error) {
   if (error) {
