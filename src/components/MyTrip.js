@@ -35,7 +35,7 @@ class MyTrip extends Component {
                 <p>地點:{this.state.where}</p>
                 <Link to="/NewTrip" className="btn btn-sm btn-primary no-border" title="">
                 修改<div className="ripple-wrapper"></div></Link></div>:
-              <ㄣ>{this.state.trips}</ㄣ>
+              <p>{this.state.trips}</p>
 
             }
           </div>

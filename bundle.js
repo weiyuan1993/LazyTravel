@@ -31642,7 +31642,7 @@
 	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	                )
 	              ) : _react2.default.createElement(
-	                ㄣ,
+	                'p',
 	                null,
 	                this.state.trips
 	              )
