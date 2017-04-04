@@ -26,6 +26,19 @@ class Map extends Component {
   }
   initAutocomplete() {
   var self = this;
+  // 定位座標
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(position){
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      map.setCenter(pos);
+    })
+  }
+
+
+
   var map = new google.maps.Map(this.refs.map, {
     center: {lat: 23.990906, lng: 121.603088},
     zoom: 13,
