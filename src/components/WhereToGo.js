@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import SearchBox from './SearchBox';
 
 function mapStateToProps(state){
   return{
-    placeData:state.placeData.placeData
+    placeData:state.placeReducer.placeData
   }
 }
 
@@ -21,9 +22,9 @@ class WhereToGo extends Component {
   componentDidMount(){
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
-    var placeInput = document.getElementById('place-input');
+    // var placeInput = document.getElementById('place-input');
     var searchBox = new google.maps.places.SearchBox(input);
-    var placeSearchBox = new google.maps.places.SearchBox(placeInput);
+    // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
   }
   searchClick(){
     this.setState({
@@ -149,14 +150,15 @@ class WhereToGo extends Component {
                 <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>儲存<div className="ripple-wrapper"></div></button>
               </span>
               <a className="btn btn-sm btn-yellow no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
-              <div className="input-group">
+              {/* <div className="input-group">
                 <input id="place-input" className="form-control" value={this.state.placeInput}
                   onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
                   type="text" placeholder="搜尋景點、美食"/>
                     <span className="input-group-btn" >
                       <button className="btn btn-primary" type="button" onClick={()=>{this.placeSearchClick();}}>確定<div className="ripple-wrapper"></div></button>
                     </span>
-              </div>
+              </div> */}
+              <SearchBox />
               <button onClick={()=>{this.suggestPlace()}} className="btn btn-sm btn-primary">推薦景點</button>
               <button onClick={()=>{this.suggestFood()}} className="btn btn-sm btn-success">推薦美食</button>
               {placeNames}
@@ -164,7 +166,8 @@ class WhereToGo extends Component {
           <input value={this.state.placeInput}
             onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
             id="pac-input" className="controls"
-            type="text" placeholder="Search Box"/>
+            type="text" placeholder="地圖搜尋"/>
+
         </div>
 
 

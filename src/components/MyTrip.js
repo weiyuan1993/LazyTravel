@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 function mapStateToProps(state){
   return{
-    placeData:state.placeData.placeData
+    placeData:state.placeReducer.placeData
   }
 }
 
