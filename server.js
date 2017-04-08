@@ -1,7 +1,11 @@
 var path = require('path');
 var express = require('express');
 var app = express();
+var axios = require('axios');
+var fs = require('fs')
 var PORT = process.env.PORT || 8080
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 // using webpack-dev-server and middleware in development environment
 if(process.env.NODE_ENV !== 'production') {
@@ -22,13 +26,28 @@ app.get('/', function(req, res) {
 });
 app.get('/NewTrip', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
-  console.log("123");
-});
-app.get('/123NewTrip123', function(req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'));
-  console.log("123");
-});
 
+});
+app.post('/user', function(req, res) {
+    // console.log(req.query.id);
+    // console.log(req.body.name);
+    // console.log(req.body.tel);
+    console.log(req.body);
+    fs.readFile('./user.json', 'utf-8', function(err, data) {
+    	if (err) throw err
+
+    	var arrayOfObjects = JSON.parse(data)
+    	arrayOfObjects.users.push(req.body)
+
+    	console.log(arrayOfObjects)
+
+    	fs.writeFile('./user.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
+    		if (err) throw err
+    		console.log('Done!')
+    	})
+    })
+
+});
 app.listen(PORT, function(error) {
   if (error) {
     console.error(error);

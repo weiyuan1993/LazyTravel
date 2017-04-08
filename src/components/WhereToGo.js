@@ -22,20 +22,26 @@ class WhereToGo extends Component {
       planInput:'',
       storagePlans:localStorage.plansArray?JSON.parse(localStorage.plansArray):[]
     };
-    console.log(this.state.storagePlans)
     //若本機有資料
     // if(typeof localStorage.plansArray !=='undefined'){
     //   this.props.action_addPlan(JSON.parse(localStorage.plansArray));
     // }
+
   }
   componentDidMount(){
-
+    fetch('/user.json')
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log('parsed json', json)
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
     // var placeInput = document.getElementById('place-input');
     var searchBox = new google.maps.places.SearchBox(input);
     // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
-
 
   }
   searchClick(){
@@ -93,6 +99,15 @@ class WhereToGo extends Component {
     this.props.action_addPlan(place);
 
     localStorage.plansArray = JSON.stringify(this.props.planData);
+    fetch('/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        plan:place
+      })
+    })
   }
   render(){
     const { placeData ,planData} = this.props;

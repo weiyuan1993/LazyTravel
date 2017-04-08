@@ -75,11 +75,11 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _route = __webpack_require__(287);
+	var _route = __webpack_require__(288);
 
 	var _route2 = _interopRequireDefault(_route);
 
-	var _reduxPromise = __webpack_require__(314);
+	var _reduxPromise = __webpack_require__(315);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
@@ -29250,13 +29250,18 @@
 
 	var _searchingDataReducer2 = _interopRequireDefault(_searchingDataReducer);
 
+	var _planReducer = __webpack_require__(287);
+
+	var _planReducer2 = _interopRequireDefault(_planReducer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var rootReducer = (0, _redux.combineReducers)({
 	  mapReducer: _mapReducer2.default,
 	  posReducer: _posReducer2.default,
 	  placeReducer: _placeReducer2.default,
-	  searchingDataReducer: _searchingDataReducer2.default
+	  searchingDataReducer: _searchingDataReducer2.default,
+	  planReducer: _planReducer2.default
 	});
 
 	exports.default = rootReducer;
@@ -29381,6 +29386,39 @@
 
 /***/ },
 /* 287 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var INITIAL_STATE = { planData: [], localData: localStorage.plansArray ? localStorage.plansArray : [] };
+
+	function planReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case "ADD_PLAN":
+	      console.log("redux", action.payload);
+	      return _extends({}, state, { planData: [].concat(_toConsumableArray(state.planData), [action.payload]) });
+	    case "ADD_LOCAL_PLAN":
+	      console.log("local", action.payload);
+	      return _extends({}, state, { localData: [].concat(_toConsumableArray(state.localData), [action.payload]) });
+	    default:
+	      return state;
+	  }
+	}
+	exports.default = planReducer;
+
+/***/ },
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29399,11 +29437,11 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _MainView = __webpack_require__(288);
+	var _MainView = __webpack_require__(289);
 
 	var _MainView2 = _interopRequireDefault(_MainView);
 
-	var _MyTrip = __webpack_require__(313);
+	var _MyTrip = __webpack_require__(314);
 
 	var _MyTrip2 = _interopRequireDefault(_MyTrip);
 
@@ -29443,7 +29481,7 @@
 	);
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29458,19 +29496,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Map = __webpack_require__(289);
+	var _Map = __webpack_require__(290);
 
 	var _Map2 = _interopRequireDefault(_Map);
 
-	var _SearchBox = __webpack_require__(291);
+	var _SearchBox = __webpack_require__(292);
 
 	var _SearchBox2 = _interopRequireDefault(_SearchBox);
 
-	var _WhereToGo = __webpack_require__(292);
+	var _WhereToGo = __webpack_require__(293);
 
 	var _WhereToGo2 = _interopRequireDefault(_WhereToGo);
 
-	var _SearchResult = __webpack_require__(312);
+	var _SearchResult = __webpack_require__(313);
 
 	var _SearchResult2 = _interopRequireDefault(_SearchResult);
 
@@ -29526,7 +29564,7 @@
 	exports.default = MainView;
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29543,7 +29581,7 @@
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _index = __webpack_require__(290);
+	var _index = __webpack_require__(291);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29699,7 +29737,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { getPlaceData: _index.getPlaceData, saveMapData: _index.saveMapData, savePosData: _index.savePosData })(Map);
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29714,6 +29752,8 @@
 	exports.action_searchingData = action_searchingData;
 	exports.action_nextPage = action_nextPage;
 	exports.action_pagination = action_pagination;
+	exports.action_addPlan = action_addPlan;
+	exports.action_addLocalPlan = action_addLocalPlan;
 	function saveMapData(map) {
 	  return {
 	    type: 'MAP_DATA',
@@ -29760,8 +29800,21 @@
 	  };
 	}
 
+	function action_addPlan(plan) {
+	  return {
+	    type: 'ADD_PLAN',
+	    payload: plan
+	  };
+	}
+	function action_addLocalPlan(plan) {
+	  return {
+	    type: 'ADD_LOCAL_PLAN',
+	    payload: plan
+	  };
+	}
+
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29778,7 +29831,7 @@
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _index = __webpack_require__(290);
+	var _index = __webpack_require__(291);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29821,6 +29874,7 @@
 	  }, {
 	    key: 'searchButtonClick',
 	    value: function searchButtonClick() {
+	      document.getElementById('suggestDiv').style.display = "none";
 	      var self = this;
 	      var request = {
 	        location: this.props.pos,
@@ -29835,8 +29889,11 @@
 	            self.props.action_nextPage(pagination.hasNextPage);
 	            self.props.action_pagination(pagination);
 	            self.setState({ pagination: pagination });
+	            document.getElementById('moreResult').style.display = "initial";
+	            console.log(results, pagination);
 	          } else {
 	            self.refs.moreButton.className = "btn btn-default disabled";
+	            document.getElementById('moreResult').style.display = "none";
 	          }
 	        }
 	      }
@@ -29899,7 +29956,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_searchingData: _index.action_searchingData, action_nextPage: _index.action_nextPage, action_pagination: _index.action_pagination })(SearchBox);
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29908,25 +29965,29 @@
 	  value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _isomorphicFetch = __webpack_require__(293);
+	var _isomorphicFetch = __webpack_require__(294);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _axios = __webpack_require__(295);
+	var _axios = __webpack_require__(296);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _SearchBox = __webpack_require__(291);
+	var _SearchBox = __webpack_require__(292);
 
 	var _SearchBox2 = _interopRequireDefault(_SearchBox);
+
+	var _index = __webpack_require__(291);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29938,7 +29999,9 @@
 
 	function mapStateToProps(state) {
 	  return {
-	    placeData: state.placeReducer.placeData
+	    placeData: state.placeReducer.placeData,
+	    planData: state.planReducer.planData,
+	    localData: state.planReducer.localData
 	  };
 	}
 
@@ -29954,13 +30017,27 @@
 	      whereInput: localStorage.whereInput,
 	      tripNameInput: localStorage.tripName,
 	      placeInput: '',
-	      planInput: localStorage.planInput };
+	      planInput: '',
+	      storagePlans: localStorage.plansArray ? JSON.parse(localStorage.plansArray) : []
+	    };
+	    //若本機有資料
+	    // if(typeof localStorage.plansArray !=='undefined'){
+	    //   this.props.action_addPlan(JSON.parse(localStorage.plansArray));
+	    // }
+
 	    return _this;
 	  }
 
 	  _createClass(WhereToGo, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      (0, _isomorphicFetch2.default)('/user.json').then(function (response) {
+	        return response.json();
+	      }).then(function (json) {
+	        console.log('parsed json', json);
+	      }).catch(function (ex) {
+	        console.log('parsing failed', ex);
+	      });
 	      //loading autocomplete serach box
 	      var input = document.getElementById('where-to-go');
 	      // var placeInput = document.getElementById('place-input');
@@ -30007,10 +30084,12 @@
 	    key: 'savePlanClick',
 	    value: function savePlanClick() {
 	      localStorage.planInput = this.state.planInput;
+	      this.props.action_addPlan(this.state.planInput);
 	    }
 	  }, {
 	    key: 'suggestPlace',
 	    value: function suggestPlace() {
+
 	      var placeInput = document.getElementById('pac-input');
 	      if (!this.state.whereInput) {
 	        placeInput.value = "景點";
@@ -30019,6 +30098,7 @@
 	      }
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+	      document.getElementById('suggestDiv').style.display = "initial";
 	    }
 	  }, {
 	    key: 'suggestFood',
@@ -30031,17 +30111,37 @@
 	      }
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+	      document.getElementById('suggestDiv').style.display = "initial";
+	    }
+	  }, {
+	    key: 'onAddPlace',
+	    value: function onAddPlace(place) {
+	      this.props.action_addPlan(place);
+
+	      localStorage.plansArray = JSON.stringify(this.props.planData);
+	      (0, _isomorphicFetch2.default)('/user', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          plan: place
+	        })
+	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 
-	      var placeData = this.props.placeData;
-
+	      var _props = this.props,
+	          placeData = _props.placeData,
+	          planData = _props.planData;
 
 	      if (placeData.length !== 0) {
+	        var self = this;
 	        var placeNames = placeData.map(function (place) {
+	          // document.getElementById('suggestDiv').style.display = "initial";
 	          return _react2.default.createElement(
 	            'li',
 	            { key: place.id, className: 'list-group-item' },
@@ -30051,9 +30151,9 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'media-left' },
-	                place.photos ? _react2.default.createElement('img', { className: 'searchPhotos', src: place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
+	                place.photos ? _react2.default.createElement('img', { style: { width: "100px" }, className: 'searchPhotos', src: place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
 	                  'div',
-	                  null,
+	                  { style: { width: "100px" } },
 	                  '\u7121\u5716\u7247'
 	                )
 	              ),
@@ -30072,18 +30172,21 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'a',
-	                    { className: 'btn btn-alt btn-hover btn-info', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + place.name, target: '_blank' },
-	                    _react2.default.createElement(
-	                      'span',
-	                      null,
-	                      'Google\u641C\u5C0B'
-	                    ),
-	                    _react2.default.createElement('i', { className: 'glyph-icon icon-arrow-right' })
+	                    { href: '#', className: 'btn btn-primary float-right tooltip-button',
+	                      onClick: function onClick() {
+	                        return self.onAddPlace(place);
+	                      } },
+	                    _react2.default.createElement('i', { className: 'glyph-icon icon-plus' })
 	                  ),
 	                  _react2.default.createElement(
 	                    'a',
-	                    { className: 'btn btn-round btn-xs btn-primary', style: { float: "right" } },
-	                    _react2.default.createElement('i', { className: 'glyph-icon icon-plus' })
+	                    { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + place.name, target: '_blank' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      null,
+	                      '\u641C\u5C0B'
+	                    ),
+	                    _react2.default.createElement('i', { className: 'glyph-icon icon-search' })
 	                  )
 	                )
 	              )
@@ -30091,6 +30194,77 @@
 	          );
 	        });
 	      }
+
+	      var plans = planData.map(function (plan) {
+	        if ((typeof plan === 'undefined' ? 'undefined' : _typeof(plan)) === "object") {
+	          return (
+	            // <li key={plan.id}>
+	            //   <h3>{plan.name}</h3>
+	            // </li>
+	            _react2.default.createElement(
+	              'li',
+	              { key: plan.id, className: 'border-red' },
+	              _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'sec-todo-1' },
+	                plan.name
+	              ),
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'bs-label bg-red', title: true },
+	                '\u5FC5\u53BB'
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { href: '#', className: 'btn btn-xs btn-danger float-right', title: true },
+	                _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
+	              )
+	            )
+	          );
+	        } else {
+	          return _react2.default.createElement(
+	            'li',
+	            { key: plan, className: 'border-green' },
+	            _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'sec-todo-1' },
+	              plan
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'bs-label bg-green', title: true },
+	              '\u60F3\u53BB'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { href: '#', className: 'btn btn-xs btn-danger float-right', title: true },
+	              _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
+	            )
+	          );
+	        }
+	      });
+	      // var self = this;
+	      // if(typeof localStorage.plansArray !== "undefined"){
+	      //   var storedPlans = JSON.parse(localStorage.plansArray);
+	      //   // console.log(JSON.parse(storedPlans));
+	      //   var sPlans = self.state.storagePlans.map(function(splan){
+	      //       if(splan=="["||splan=="]"){
+	      //         return;
+	      //       }
+	      //       return(
+	      //         <li key={splan.id} className="border-red">
+	      //           <div className="glyph-icon sort-handle icon-ellipsis-v" />
+	      //           <label htmlFor="sec-todo-1">{splan.name}</label>
+	      //           <span className="bs-label bg-red" title>必去</span>
+	      //           <a href="#" className="btn btn-xs btn-danger float-right" title>
+	      //             <i className="glyph-icon icon-remove" />
+	      //           </a>
+	      //         </li>
+	      //       );
+	      //   });
+	      // }
 
 	      return _react2.default.createElement(
 	        'div',
@@ -30109,9 +30283,9 @@
 	            { className: 'content-box-wrapper' },
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6' },
+	              { className: 'col-md-6', style: { padding: "0" } },
 	              _react2.default.createElement(
-	                'h4',
+	                'h3',
 	                null,
 	                '\u65C5\u7A0B\u540D\u7A31'
 	              ),
@@ -30127,9 +30301,9 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6' },
+	              { className: 'col-md-6', style: { padding: "0" } },
 	              _react2.default.createElement(
-	                'h4',
+	                'h3',
 	                null,
 	                '\u53BB\u54EA\u73A9?'
 	              ),
@@ -30160,35 +30334,47 @@
 	              '\u65C5\u884C\u6458\u8981'
 	            ),
 	            _react2.default.createElement(
-	              'h4',
-	              null,
-	              '\u7B2C\u4E00\u5929'
-	            ),
-	            _react2.default.createElement('textarea', { className: 'form-control textarea-sm',
-	              onChange: function onChange(e) {
-	                _this2.onPlanInputChange(e.target.value);
-	              },
-	              value: this.state.planInput,
-	              placeholder: '\u958B\u59CB\u52D5\u624B\u898F\u5283!' }),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'input-group-btn' },
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
-	                    _this2.savePlanClick();
-	                  } },
-	                '\u5132\u5B58',
-	                _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	              )
-	            ),
-	            _react2.default.createElement(
 	              'a',
 	              { className: 'btn btn-sm btn-yellow no-border', title: '' },
 	              '\u65B0\u589E\u5929\u6578',
 	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	            ),
-	            _react2.default.createElement(_SearchBox2.default, null),
+	            _react2.default.createElement(
+	              'h4',
+	              null,
+	              '\u7B2C\u4E00\u5929'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'scrollable-content scrollable-nice scrollable-medium', style: { height: "auto" } },
+	              _react2.default.createElement(
+	                'ul',
+	                { className: 'todo-box todo-sort' },
+	                plans
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'input-group' },
+	              _react2.default.createElement('input', { className: 'form-control',
+	                onChange: function onChange(e) {
+	                  _this2.onPlanInputChange(e.target.value);
+	                },
+	                value: this.state.planInput,
+	                placeholder: '\u958B\u59CB\u52D5\u624B\u898F\u5283!' }),
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'input-group-btn' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
+	                      _this2.savePlanClick();
+	                    } },
+	                  '\u65B0\u589E',
+	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	                )
+	              )
+	            ),
 	            _react2.default.createElement(
 	              'button',
 	              { onClick: function onClick() {
@@ -30203,14 +30389,19 @@
 	                }, className: 'btn btn-sm btn-success' },
 	              '\u63A8\u85A6\u7F8E\u98DF'
 	            ),
-	            placeNames
-	          ),
-	          _react2.default.createElement('input', { value: this.state.placeInput,
-	            onChange: function onChange(e) {
-	              _this2.onPlaceInputChange(e.target.value);
-	            },
-	            id: 'pac-input', className: 'controls',
-	            type: 'text', placeholder: '\u5730\u5716\u641C\u5C0B' })
+	            _react2.default.createElement(_SearchBox2.default, null),
+	            _react2.default.createElement(
+	              'div',
+	              { id: 'suggestDiv', style: { maxHeight: "500px", overflow: "scroll", overflowX: "hidden" } },
+	              placeNames
+	            ),
+	            _react2.default.createElement('input', { value: this.state.placeInput,
+	              onChange: function onChange(e) {
+	                _this2.onPlaceInputChange(e.target.value);
+	              },
+	              id: 'pac-input', className: 'controls',
+	              type: 'text', placeholder: '\u5730\u5716\u641C\u5C0B' })
+	          )
 	        )
 	      );
 	    }
@@ -30219,22 +30410,22 @@
 	  return WhereToGo;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(WhereToGo);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_addPlan: _index.action_addPlan, action_addLocalPlan: _index.action_addLocalPlan })(WhereToGo);
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(294);
+	__webpack_require__(295);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -30701,25 +30892,25 @@
 
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(296);
+	module.exports = __webpack_require__(297);
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(297);
-	var utils = __webpack_require__(298);
-	var dispatchRequest = __webpack_require__(299);
-	var InterceptorManager = __webpack_require__(307);
-	var isAbsoluteURL = __webpack_require__(308);
-	var combineURLs = __webpack_require__(309);
-	var bind = __webpack_require__(310);
-	var transformData = __webpack_require__(303);
+	var defaults = __webpack_require__(298);
+	var utils = __webpack_require__(299);
+	var dispatchRequest = __webpack_require__(300);
+	var InterceptorManager = __webpack_require__(308);
+	var isAbsoluteURL = __webpack_require__(309);
+	var combineURLs = __webpack_require__(310);
+	var bind = __webpack_require__(311);
+	var transformData = __webpack_require__(304);
 
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -30802,7 +30993,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(311);
+	axios.spread = __webpack_require__(312);
 
 	// Expose interceptors
 	axios.interceptors = defaultInstance.interceptors;
@@ -30833,12 +31024,12 @@
 
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -30902,7 +31093,7 @@
 
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31152,7 +31343,7 @@
 
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -31174,10 +31365,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(300);
+	        adapter = __webpack_require__(301);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(300);
+	        adapter = __webpack_require__(301);
 	      }
 
 	      if (typeof adapter === 'function') {
@@ -31193,17 +31384,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
-	var buildURL = __webpack_require__(301);
-	var parseHeaders = __webpack_require__(302);
-	var transformData = __webpack_require__(303);
-	var isURLSameOrigin = __webpack_require__(304);
-	var btoa = window.btoa || __webpack_require__(305);
+	var utils = __webpack_require__(299);
+	var buildURL = __webpack_require__(302);
+	var parseHeaders = __webpack_require__(303);
+	var transformData = __webpack_require__(304);
+	var isURLSameOrigin = __webpack_require__(305);
+	var btoa = window.btoa || __webpack_require__(306);
 
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -31278,7 +31469,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(306);
+	    var cookies = __webpack_require__(307);
 
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -31329,12 +31520,12 @@
 
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -31402,12 +31593,12 @@
 
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	/**
 	 * Parse headers into an object
@@ -31445,12 +31636,12 @@
 
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	/**
 	 * Transform the data for a request or a response
@@ -31471,12 +31662,12 @@
 
 
 /***/ },
-/* 304 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -31545,7 +31736,7 @@
 
 
 /***/ },
-/* 305 */
+/* 306 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31587,12 +31778,12 @@
 
 
 /***/ },
-/* 306 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -31646,12 +31837,12 @@
 
 
 /***/ },
-/* 307 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(298);
+	var utils = __webpack_require__(299);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -31704,7 +31895,7 @@
 
 
 /***/ },
-/* 308 */
+/* 309 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31724,7 +31915,7 @@
 
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31742,7 +31933,7 @@
 
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31759,7 +31950,7 @@
 
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31792,7 +31983,7 @@
 
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31809,6 +32000,8 @@
 
 	var _reactRedux = __webpack_require__(179);
 
+	var _index = __webpack_require__(291);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31821,7 +32014,8 @@
 	  return {
 	    searchingData: state.searchingDataReducer.searchingData,
 	    nextPage: state.searchingDataReducer.nextPage,
-	    pagination: state.searchingDataReducer.pagination
+	    pagination: state.searchingDataReducer.pagination,
+	    planData: state.planReducer.planData
 	  };
 	}
 
@@ -31838,6 +32032,12 @@
 	    key: 'moreResult',
 	    value: function moreResult() {
 	      this.props.pagination.nextPage();
+	      this.refs.resultDiv.scrollTop = 0;
+	    }
+	  }, {
+	    key: 'onAddPlace',
+	    value: function onAddPlace(place) {
+	      this.props.action_addPlan(place);
 	    }
 	  }, {
 	    key: 'render',
@@ -31850,6 +32050,7 @@
 	          pagination = _props.pagination;
 
 	      if (searchingData.length !== 0) {
+	        var self = this;
 	        var displayResult = searchingData.map(function (result) {
 	          return _react2.default.createElement(
 	            'li',
@@ -31863,9 +32064,9 @@
 	                _react2.default.createElement(
 	                  'a',
 	                  { href: '#', className: 'prettyphoto', rel: 'prettyPhoto[pp_gal]', title: result.name },
-	                  result.photos ? _react2.default.createElement('img', { style: { width: "100px", height: "100px" }, className: 'searchPhotos', src: result.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
+	                  result.photos ? _react2.default.createElement('img', { style: { width: "100px" }, className: 'searchPhotos', src: result.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { style: { width: "100px" } },
 	                    '\u7121\u5716\u7247'
 	                  )
 	                )
@@ -31887,6 +32088,24 @@
 	                  null,
 	                  '\u8A55\u5206:',
 	                  result.rating
+	                ),
+	                _react2.default.createElement(
+	                  'a',
+	                  { href: '#', className: 'btn btn-primary float-right tooltip-button',
+	                    onClick: function onClick() {
+	                      self.onAddPlace(result);
+	                    } },
+	                  _react2.default.createElement('i', { className: 'glyph-icon icon-plus' })
+	                ),
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + result.name, target: '_blank' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    '\u641C\u5C0B'
+	                  ),
+	                  _react2.default.createElement('i', { className: 'glyph-icon icon-search' })
 	                )
 	              )
 	            )
@@ -31894,7 +32113,7 @@
 	        });
 	        return _react2.default.createElement(
 	          'div',
-	          { className: 'content-box' },
+	          { ref: 'resultDiv', className: 'content-box', style: { height: "500px", overflow: "scroll" } },
 	          _react2.default.createElement(
 	            'h2',
 	            { className: 'content-box-header bg-default' },
@@ -31907,7 +32126,7 @@
 	          displayResult,
 	          nextPage ? _react2.default.createElement(
 	            'button',
-	            { type: 'button', className: 'btn btn-primary btn-lg btn-block',
+	            { id: 'moreResult', type: 'button', className: 'btn btn-primary btn-lg btn-block',
 	              onClick: function onClick() {
 	                _this2.moreResult();
 	              }
@@ -31925,10 +32144,10 @@
 	  return SearchResult;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(SearchResult);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_addPlan: _index.action_addPlan })(SearchResult);
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31943,11 +32162,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _isomorphicFetch = __webpack_require__(293);
+	var _isomorphicFetch = __webpack_require__(294);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _axios = __webpack_require__(295);
+	var _axios = __webpack_require__(296);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
@@ -32052,7 +32271,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(MyTrip);
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32063,7 +32282,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(315);
+	var _fluxStandardAction = __webpack_require__(316);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -32090,7 +32309,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32101,7 +32320,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _lodashIsplainobject = __webpack_require__(316);
+	var _lodashIsplainobject = __webpack_require__(317);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -32120,7 +32339,7 @@
 	}
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32131,9 +32350,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(317),
-	    isArguments = __webpack_require__(318),
-	    keysIn = __webpack_require__(319);
+	var baseFor = __webpack_require__(318),
+	    isArguments = __webpack_require__(319),
+	    keysIn = __webpack_require__(320);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -32229,7 +32448,7 @@
 
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports) {
 
 	/**
@@ -32283,7 +32502,7 @@
 
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports) {
 
 	/**
@@ -32518,7 +32737,7 @@
 
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32529,8 +32748,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(318),
-	    isArray = __webpack_require__(320);
+	var isArguments = __webpack_require__(319),
+	    isArray = __webpack_require__(321);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -32656,7 +32875,7 @@
 
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports) {
 
 	/**
