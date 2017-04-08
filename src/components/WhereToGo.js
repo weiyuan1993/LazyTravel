@@ -20,7 +20,7 @@ class WhereToGo extends Component {
       tripNameInput:localStorage.tripName,
       placeInput:'',
       planInput:'',
-      storagePlans:localStorage.plansArray?JSON.parse(localStorage.plansArray):[]
+      storagePlans:''
     };
     //若本機有資料
     // if(typeof localStorage.plansArray !=='undefined'){
@@ -34,6 +34,7 @@ class WhereToGo extends Component {
       return response.json()
     }).then(function(json) {
       console.log('parsed json', json)
+      this.setState({storagePlans:json.users})
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -109,6 +110,20 @@ class WhereToGo extends Component {
       })
     })
   }
+  onRemoveClick(id){
+    document.getElementById(id).style.display = 'none';
+  }
+  onRemovePlanClick(){
+    fetch('/deleteAllPlan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        users:[]
+      })
+    })
+  }
   render(){
     const { placeData ,planData} = this.props;
     if(placeData.length!==0){
@@ -146,18 +161,19 @@ class WhereToGo extends Component {
         );
       });
     }
-
+    var self = this;
     var plans = planData.map(function(plan){
+
       if(typeof plan ==="object"){
         return(
           // <li key={plan.id}>
           //   <h3>{plan.name}</h3>
           // </li>
-          <li key={plan.id} className="border-red">
+          <li id={plan.id} key={plan.id} className="border-red">
             <div className="glyph-icon sort-handle icon-ellipsis-v" />
             <label htmlFor="sec-todo-1">{plan.name}</label>
             <span className="bs-label bg-red" title>必去</span>
-            <a href="#" className="btn btn-xs btn-danger float-right" title>
+            <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(plan.id)}}>
               <i className="glyph-icon icon-remove" />
             </a>
           </li>
@@ -232,6 +248,8 @@ class WhereToGo extends Component {
 
               <h3>旅行摘要</h3>
               <a className="btn btn-sm btn-yellow no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
+              <a className="btn btn-sm btn-danger no-border"
+                onClick={()=>{this.onRemovePlanClick()}} >清空行程<div className="ripple-wrapper"></div></a>
               <h4>第一天</h4>
               <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
                 <ul className="todo-box todo-sort">

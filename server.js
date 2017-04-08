@@ -29,15 +29,12 @@ app.get('/NewTrip', function(req, res) {
 
 });
 app.post('/user', function(req, res) {
-    // console.log(req.query.id);
-    // console.log(req.body.name);
-    // console.log(req.body.tel);
     console.log(req.body);
     fs.readFile('./user.json', 'utf-8', function(err, data) {
     	if (err) throw err
 
     	var arrayOfObjects = JSON.parse(data)
-    	arrayOfObjects.users.push(req.body)
+    	arrayOfObjects.users.push(req.body.plan.name)
 
     	console.log(arrayOfObjects)
 
@@ -46,8 +43,23 @@ app.post('/user', function(req, res) {
     		console.log('Done!')
     	})
     })
-
 });
+app.post('/deleteAllPlan', function(req, res) {
+    fs.readFile('./user.json', 'utf-8', function(err, data) {
+    	if (err) throw err
+
+    	var arrayOfObjects = JSON.parse(data)
+    	arrayOfObjects.users =[]
+
+    	console.log(arrayOfObjects)
+
+    	fs.writeFile('./user.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
+    		if (err) throw err
+    		console.log('Delete Done!')
+    	})
+    })
+});
+
 app.listen(PORT, function(error) {
   if (error) {
     console.error(error);
