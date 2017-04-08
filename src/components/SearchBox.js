@@ -36,8 +36,11 @@ class SearchBox extends Component {
           self.props.action_nextPage(pagination.hasNextPage);
           self.props.action_pagination(pagination);
           self.setState({pagination:pagination});
+          document.getElementById('moreResult').style.display = "initial";
+          console.log(results,pagination);
         }else{
           self.refs.moreButton.className = "btn btn-default disabled";
+          document.getElementById('moreResult').style.display = "none";
         }
       }
     }
