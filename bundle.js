@@ -30018,7 +30018,7 @@
 	      tripNameInput: localStorage.tripName,
 	      placeInput: '',
 	      planInput: '',
-	      storagePlans: localStorage.plansArray ? JSON.parse(localStorage.plansArray) : []
+	      storagePlans: ''
 	    };
 	    //若本機有資料
 	    // if(typeof localStorage.plansArray !=='undefined'){
@@ -30035,6 +30035,7 @@
 	        return response.json();
 	      }).then(function (json) {
 	        console.log('parsed json', json);
+	        this.setState({ storagePlans: json.users });
 	      }).catch(function (ex) {
 	        console.log('parsing failed', ex);
 	      });
@@ -30130,6 +30131,24 @@
 	      });
 	    }
 	  }, {
+	    key: 'onRemoveClick',
+	    value: function onRemoveClick(id) {
+	      document.getElementById(id).style.display = 'none';
+	    }
+	  }, {
+	    key: 'onRemovePlanClick',
+	    value: function onRemovePlanClick() {
+	      (0, _isomorphicFetch2.default)('/deleteAllPlan', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          users: []
+	        })
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
@@ -30194,8 +30213,9 @@
 	          );
 	        });
 	      }
-
+	      var self = this;
 	      var plans = planData.map(function (plan) {
+
 	        if ((typeof plan === 'undefined' ? 'undefined' : _typeof(plan)) === "object") {
 	          return (
 	            // <li key={plan.id}>
@@ -30203,7 +30223,7 @@
 	            // </li>
 	            _react2.default.createElement(
 	              'li',
-	              { key: plan.id, className: 'border-red' },
+	              { id: plan.id, key: plan.id, className: 'border-red' },
 	              _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
 	              _react2.default.createElement(
 	                'label',
@@ -30217,7 +30237,9 @@
 	              ),
 	              _react2.default.createElement(
 	                'a',
-	                { href: '#', className: 'btn btn-xs btn-danger float-right', title: true },
+	                { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
+	                    self.onRemoveClick(plan.id);
+	                  } },
 	                _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
 	              )
 	            )
@@ -30337,6 +30359,15 @@
 	              'a',
 	              { className: 'btn btn-sm btn-yellow no-border', title: '' },
 	              '\u65B0\u589E\u5929\u6578',
+	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'btn btn-sm btn-danger no-border',
+	                onClick: function onClick() {
+	                  _this2.onRemovePlanClick();
+	                } },
+	              '\u6E05\u7A7A\u884C\u7A0B',
 	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	            ),
 	            _react2.default.createElement(
