@@ -3,10 +3,12 @@ import fetch from 'isomorphic-fetch';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import SearchBox from './SearchBox';
-
+import { action_addPlan,action_addLocalPlan } from '../actions/index';
 function mapStateToProps(state){
   return{
-    placeData:state.placeReducer.placeData
+    placeData:state.placeReducer.placeData,
+    planData:state.planReducer.planData,
+    localData:state.planReducer.localData
   }
 }
 
@@ -17,14 +19,24 @@ class WhereToGo extends Component {
       whereInput:localStorage.whereInput,
       tripNameInput:localStorage.tripName,
       placeInput:'',
-      planInput:localStorage.planInput};
+      planInput:'',
+      storagePlans:localStorage.plansArray?JSON.parse(localStorage.plansArray):[]
+    };
+    console.log(this.state.storagePlans)
+    //若本機有資料
+    // if(typeof localStorage.plansArray !=='undefined'){
+    //   this.props.action_addPlan(JSON.parse(localStorage.plansArray));
+    // }
   }
   componentDidMount(){
+
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
     // var placeInput = document.getElementById('place-input');
     var searchBox = new google.maps.places.SearchBox(input);
     // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
+
+
   }
   searchClick(){
     this.setState({
@@ -52,8 +64,10 @@ class WhereToGo extends Component {
   }
   savePlanClick(){
       localStorage.planInput = this.state.planInput;
+      this.props.action_addPlan(this.state.planInput);
   }
   suggestPlace(){
+
       var placeInput = document.getElementById('pac-input');
       if(!this.state.whereInput){
         placeInput.value="景點";
@@ -62,6 +76,7 @@ class WhereToGo extends Component {
       }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+      document.getElementById('suggestDiv').style.display ="initial";
   }
   suggestFood(){
       var placeInput = document.getElementById('pac-input');
@@ -72,20 +87,27 @@ class WhereToGo extends Component {
       }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
+      document.getElementById('suggestDiv').style.display ="initial";
+  }
+  onAddPlace(place){
+    this.props.action_addPlan(place);
+
+    localStorage.plansArray = JSON.stringify(this.props.planData);
   }
   render(){
-    const { placeData } = this.props;
-
+    const { placeData ,planData} = this.props;
     if(placeData.length!==0){
+      var self = this;
       var placeNames = placeData.map(function(place){
+        // document.getElementById('suggestDiv').style.display = "initial";
         return(
           <li key={place.id} className="list-group-item">
              <div className="video-list media">
               <div className="media-left">
                 {place.photos?
-                  <img className="searchPhotos" src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+                  <img style={{width:"100px"}} className="searchPhotos" src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
                   :
-                  <div>無圖片</div>
+                  <div style={{width:"100px"}}>無圖片</div>
                 }
 
               </div>
@@ -93,11 +115,14 @@ class WhereToGo extends Component {
                 <div className="media-heading">
                   {place.name}
                   <p>評價:{place.rating}</p>
-                  <a className="btn btn-alt btn-hover btn-info" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
-                    <span>Google搜尋</span>
-                    <i className="glyph-icon icon-arrow-right"></i>
+                  <a href="#" className="btn btn-primary float-right tooltip-button"
+                    onClick={()=>self.onAddPlace(place)}>
+                    <i className="glyph-icon icon-plus"></i>
                   </a>
-                  <a className="btn btn-round btn-xs btn-primary" style={{float: "right"}}><i className="glyph-icon icon-plus"></i></a>
+                  <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
+                    <span>搜尋</span>
+                    <i className="glyph-icon icon-search"></i>
+                  </a>
                  </div>
               </div>
             </div>
@@ -106,6 +131,58 @@ class WhereToGo extends Component {
         );
       });
     }
+
+    var plans = planData.map(function(plan){
+      if(typeof plan ==="object"){
+        return(
+          // <li key={plan.id}>
+          //   <h3>{plan.name}</h3>
+          // </li>
+          <li key={plan.id} className="border-red">
+            <div className="glyph-icon sort-handle icon-ellipsis-v" />
+            <label htmlFor="sec-todo-1">{plan.name}</label>
+            <span className="bs-label bg-red" title>必去</span>
+            <a href="#" className="btn btn-xs btn-danger float-right" title>
+              <i className="glyph-icon icon-remove" />
+            </a>
+          </li>
+
+
+        )
+      }else{
+        return(
+          <li key={plan} className="border-green">
+            <div className="glyph-icon sort-handle icon-ellipsis-v" />
+            <label htmlFor="sec-todo-1">{plan}</label>
+            <span className="bs-label bg-green" title>想去</span>
+            <a href="#" className="btn btn-xs btn-danger float-right" title>
+              <i className="glyph-icon icon-remove" />
+            </a>
+          </li>
+        )
+      }
+
+    })
+    // var self = this;
+    // if(typeof localStorage.plansArray !== "undefined"){
+    //   var storedPlans = JSON.parse(localStorage.plansArray);
+    //   // console.log(JSON.parse(storedPlans));
+    //   var sPlans = self.state.storagePlans.map(function(splan){
+    //       if(splan=="["||splan=="]"){
+    //         return;
+    //       }
+    //       return(
+    //         <li key={splan.id} className="border-red">
+    //           <div className="glyph-icon sort-handle icon-ellipsis-v" />
+    //           <label htmlFor="sec-todo-1">{splan.name}</label>
+    //           <span className="bs-label bg-red" title>必去</span>
+    //           <a href="#" className="btn btn-xs btn-danger float-right" title>
+    //             <i className="glyph-icon icon-remove" />
+    //           </a>
+    //         </li>
+    //       );
+    //   });
+    // }
 
     return(
       <div>
@@ -116,8 +193,8 @@ class WhereToGo extends Component {
           </h3>
 
           <div className="content-box-wrapper">
-            <div className="col-md-6">
-              <h4>旅程名稱</h4>
+            <div className="col-md-6" style={{padding:"0"}}>
+              <h3>旅程名稱</h3>
               <div className="input-group">
                 <input className="form-control" placeholder="想個旅程名稱吧!" value={this.state.tripNameInput}
                   onChange={(e)=>{this.onTripNameChange(e.target.value)}}
@@ -127,8 +204,8 @@ class WhereToGo extends Component {
                 </span> */}
               </div>
             </div>
-            <div className="col-md-6">
-              <h4>去哪玩?</h4>
+            <div className="col-md-6" style={{padding:"0"}}>
+              <h3>去哪玩?</h3>
               <div className="input-group">
                 <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
                   onChange={(e)=>{this.onWhereInputChange(e.target.value)}} ref="whereInputRef"/>
@@ -137,19 +214,42 @@ class WhereToGo extends Component {
                 </span>
               </div>
            </div>
-            {/* <h4>日期:</h4>
-            <input type="date"/>~
-            <input type="date"/> */}
-            <h3>旅行摘要</h3>
-            <h4>第一天</h4>
-              <textarea className="form-control textarea-sm"
-                onChange={(e)=>{this.onPlanInputChange(e.target.value)}}
-                value={this.state.planInput}
-                placeholder="開始動手規劃!"/>
-              <span className="input-group-btn" >
-                <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>儲存<div className="ripple-wrapper"></div></button>
-              </span>
+
+              <h3>旅行摘要</h3>
               <a className="btn btn-sm btn-yellow no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
+              <h4>第一天</h4>
+              <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
+                <ul className="todo-box todo-sort">
+                  {plans}
+                  {/* {sPlans?
+                    <span>{sPlans}</span>
+                  : <li>本機無資料</li>
+                  } */}
+                </ul>
+              </div>
+
+
+
+            <div className="input-group">
+               <input className="form-control"
+                 onChange={(e)=>{this.onPlanInputChange(e.target.value)}}
+                 value={this.state.planInput}
+                 placeholder="開始動手規劃!"/>
+               <span className="input-group-btn" >
+                 <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>新增<div className="ripple-wrapper"></div></button>
+               </span>
+            </div>
+            <button onClick={()=>{this.suggestPlace()}} className="btn btn-sm btn-primary">推薦景點</button>
+            <button onClick={()=>{this.suggestFood()}} className="btn btn-sm btn-success">推薦美食</button>
+             <SearchBox />
+
+             <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
+               {placeNames}
+             </div>
+             <input value={this.state.placeInput}
+               onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
+               id="pac-input" className="controls"
+               type="text" placeholder="地圖搜尋"/>
               {/* <div className="input-group">
                 <input id="place-input" className="form-control" value={this.state.placeInput}
                   onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
@@ -158,15 +258,11 @@ class WhereToGo extends Component {
                       <button className="btn btn-primary" type="button" onClick={()=>{this.placeSearchClick();}}>確定<div className="ripple-wrapper"></div></button>
                     </span>
               </div> */}
-              <SearchBox />
-              <button onClick={()=>{this.suggestPlace()}} className="btn btn-sm btn-primary">推薦景點</button>
-              <button onClick={()=>{this.suggestFood()}} className="btn btn-sm btn-success">推薦美食</button>
-              {placeNames}
+
+
+
           </div>
-          <input value={this.state.placeInput}
-            onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
-            id="pac-input" className="controls"
-            type="text" placeholder="地圖搜尋"/>
+
 
         </div>
 
@@ -177,4 +273,4 @@ class WhereToGo extends Component {
     )
   }
 }
-export default connect(mapStateToProps)(WhereToGo);
+export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan})(WhereToGo);

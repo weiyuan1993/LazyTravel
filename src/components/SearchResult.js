@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { action_addPlan } from '../actions/index';
 
 function mapStateToProps(state){
   return{
     searchingData:state.searchingDataReducer.searchingData,
     nextPage:state.searchingDataReducer.nextPage,
-    pagination:state.searchingDataReducer.pagination
+    pagination:state.searchingDataReducer.pagination,
+    planData:state.planReducer.planData
   }
 }
 
@@ -15,9 +16,14 @@ class SearchResult extends Component{
     this.props.pagination.nextPage();
     this.refs.resultDiv.scrollTop = 0;
   }
+  onAddPlace(place){
+    this.props.action_addPlan(place);
+
+  }
   render(){
     const { searchingData ,nextPage,pagination} = this.props;
     if(searchingData.length!==0){
+      var self = this;
       var displayResult = searchingData.map(function(result){
         return(
           <li key={result.id} className="list-group-item">
@@ -36,7 +42,8 @@ class SearchResult extends Component{
                   <h3>{result.name}</h3>
                 </a>
                 <h4>評分:{result.rating}</h4>
-                <a href="#" className="btn btn-primary float-right tooltip-button" data-placement="top" title="" data-original-title="Remove comment">
+                <a href="#" className="btn btn-primary float-right tooltip-button"
+                  onClick={()=>{self.onAddPlace(result)}}>
                   <i className="glyph-icon icon-plus"></i>
                 </a>
                 <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${result.name}`} target="_blank">
@@ -72,4 +79,4 @@ class SearchResult extends Component{
 
   }
 }
-export default connect(mapStateToProps)(SearchResult);
+export default connect(mapStateToProps,{action_addPlan})(SearchResult);

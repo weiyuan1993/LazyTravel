@@ -43,3 +43,16 @@ export function action_pagination(pagination){
     payload:pagination
   }
 }
+
+export function action_addPlan(plan){
+  return{
+    type:'ADD_PLAN',
+    payload:plan
+  }
+}
+export function action_addLocalPlan(plan){
+  return{
+    type:'ADD_LOCAL_PLAN',
+    payload:plan
+  }
+}

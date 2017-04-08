@@ -22,6 +22,7 @@ class SearchBox extends Component {
 
   }
   searchButtonClick(){
+    document.getElementById('suggestDiv').style.display = "none";
     var self = this;
     var request = {
       location: this.props.pos,
