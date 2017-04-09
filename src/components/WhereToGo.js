@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import SearchBox from './SearchBox';
-import { action_addPlan,action_addLocalPlan } from '../actions/index';
+import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan } from '../actions/index';
 function mapStateToProps(state){
   return{
     placeData:state.placeReducer.placeData,
@@ -29,12 +29,14 @@ class WhereToGo extends Component {
 
   }
   componentDidMount(){
+    var self = this;
     fetch('/user.json')
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log('parsed json', json)
-      this.setState({storagePlans:json.users})
+      console.log('parsed json', json);
+      self.setState({storagePlans:json.plans});
+      self.props.action_addLocalPlan(json.plans);
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -99,7 +101,6 @@ class WhereToGo extends Component {
   onAddPlace(place){
     this.props.action_addPlan(place);
 
-    localStorage.plansArray = JSON.stringify(this.props.planData);
     fetch('/user', {
       method: 'POST',
       headers: {
@@ -109,11 +110,14 @@ class WhereToGo extends Component {
         plan:place
       })
     })
+
   }
   onRemoveClick(id){
     document.getElementById(id).style.display = 'none';
+
   }
   onRemovePlanClick(){
+    this.props.action_deleteLocalPlan();
     fetch('/deleteAllPlan', {
       method: 'POST',
       headers: {
@@ -125,9 +129,10 @@ class WhereToGo extends Component {
     })
   }
   render(){
-    const { placeData ,planData} = this.props;
+    const { placeData ,planData } = this.props;
+    var self = this;
     if(placeData.length!==0){
-      var self = this;
+
       var placeNames = placeData.map(function(place){
         // document.getElementById('suggestDiv').style.display = "initial";
         return(
@@ -161,14 +166,10 @@ class WhereToGo extends Component {
         );
       });
     }
-    var self = this;
     var plans = planData.map(function(plan){
 
       if(typeof plan ==="object"){
         return(
-          // <li key={plan.id}>
-          //   <h3>{plan.name}</h3>
-          // </li>
           <li id={plan.id} key={plan.id} className="border-red">
             <div className="glyph-icon sort-handle icon-ellipsis-v" />
             <label htmlFor="sec-todo-1">{plan.name}</label>
@@ -177,8 +178,6 @@ class WhereToGo extends Component {
               <i className="glyph-icon icon-remove" />
             </a>
           </li>
-
-
         )
       }else{
         return(
@@ -192,28 +191,22 @@ class WhereToGo extends Component {
           </li>
         )
       }
-
     })
-    // var self = this;
-    // if(typeof localStorage.plansArray !== "undefined"){
-    //   var storedPlans = JSON.parse(localStorage.plansArray);
-    //   // console.log(JSON.parse(storedPlans));
-    //   var sPlans = self.state.storagePlans.map(function(splan){
-    //       if(splan=="["||splan=="]"){
-    //         return;
-    //       }
-    //       return(
-    //         <li key={splan.id} className="border-red">
-    //           <div className="glyph-icon sort-handle icon-ellipsis-v" />
-    //           <label htmlFor="sec-todo-1">{splan.name}</label>
-    //           <span className="bs-label bg-red" title>必去</span>
-    //           <a href="#" className="btn btn-xs btn-danger float-right" title>
-    //             <i className="glyph-icon icon-remove" />
-    //           </a>
-    //         </li>
-    //       );
-    //   });
-    // }
+
+      var sPlans = this.props.localData.map(function(splan){
+
+          return(
+            <li key={splan.id} className="border-red">
+              <div className="glyph-icon sort-handle icon-ellipsis-v" />
+              <label htmlFor="sec-todo-1">{splan.name}</label>
+              <span className="bs-label bg-red" title>必去</span>
+              <a href="#" className="btn btn-xs btn-danger float-right">
+                <i className="glyph-icon icon-remove" />
+              </a>
+            </li>
+          );
+      });
+
 
     return(
       <div>
@@ -254,10 +247,7 @@ class WhereToGo extends Component {
               <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
                 <ul className="todo-box todo-sort">
                   {plans}
-                  {/* {sPlans?
-                    <span>{sPlans}</span>
-                  : <li>本機無資料</li>
-                  } */}
+                  {sPlans}
                 </ul>
               </div>
 
@@ -306,4 +296,4 @@ class WhereToGo extends Component {
     )
   }
 }
-export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan})(WhereToGo);
+export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan,action_deleteLocalPlan})(WhereToGo);

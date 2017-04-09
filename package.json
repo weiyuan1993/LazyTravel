@@ -13,7 +13,8 @@
   "repository": "git@github.com:weiyuan1993/LazyTravel.git",
   "scripts": {
     "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "nodemon":"nodemon server.js"
   },
   "author": "Weiyuan1993",
   "license": "ISC",
@@ -27,11 +28,13 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "assert": "^1.4.1",
     "axios": "^0.9.0",
     "babel-preset-stage-1": "^6.1.18",
     "body-parser": "^1.17.1",
     "express": "*",
     "lodash": "^3.10.1",
+    "mongodb": "^2.2.25",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.0.0",

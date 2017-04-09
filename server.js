@@ -2,10 +2,10 @@ var path = require('path');
 var express = require('express');
 var app = express();
 var axios = require('axios');
-var fs = require('fs')
-var PORT = process.env.PORT || 8080
+var fs = require('fs');
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
+var PORT = process.env.PORT || 8080
+
 
 // using webpack-dev-server and middleware in development environment
 if(process.env.NODE_ENV !== 'production') {
@@ -20,6 +20,7 @@ if(process.env.NODE_ENV !== 'production') {
 }
 
 app.use(express.static(__dirname + '/'));
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -34,7 +35,7 @@ app.post('/user', function(req, res) {
     	if (err) throw err
 
     	var arrayOfObjects = JSON.parse(data)
-    	arrayOfObjects.users.push(req.body.plan.name)
+    	arrayOfObjects.plans.push(req.body.plan)
 
     	console.log(arrayOfObjects)
 
@@ -49,7 +50,7 @@ app.post('/deleteAllPlan', function(req, res) {
     	if (err) throw err
 
     	var arrayOfObjects = JSON.parse(data)
-    	arrayOfObjects.users =[]
+    	arrayOfObjects.plans =[]
 
     	console.log(arrayOfObjects)
 
@@ -59,6 +60,21 @@ app.post('/deleteAllPlan', function(req, res) {
     	})
     })
 });
+// app.post('/delete', function(req, res) {
+//     fs.readFile('./user.json', 'utf-8', function(err, data) {
+//     	if (err) throw err
+//
+//     	var arrayOfObjects = JSON.parse(data)
+//     	arrayOfObjects.plans =[]
+//
+//     	console.log(arrayOfObjects)
+//
+//     	fs.writeFile('./user.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
+//     		if (err) throw err
+//     		console.log('Delete Done!')
+//     	})
+//     })
+// });
 
 app.listen(PORT, function(error) {
   if (error) {

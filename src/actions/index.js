@@ -56,3 +56,8 @@ export function action_addLocalPlan(plan){
     payload:plan
   }
 }
+export function action_deleteLocalPlan(){
+  return{
+    type:'DELETE_ALL_LOCAL_PLAN',
+  }
+}
