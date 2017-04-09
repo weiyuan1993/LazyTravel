@@ -29398,7 +29398,7 @@
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var INITIAL_STATE = { planData: [], localData: localStorage.plansArray ? localStorage.plansArray : [] };
+	var INITIAL_STATE = { planData: [], localData: [] };
 
 	function planReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
@@ -29406,11 +29406,11 @@
 
 	  switch (action.type) {
 	    case "ADD_PLAN":
-	      console.log("redux", action.payload);
 	      return _extends({}, state, { planData: [].concat(_toConsumableArray(state.planData), [action.payload]) });
 	    case "ADD_LOCAL_PLAN":
-	      console.log("local", action.payload);
-	      return _extends({}, state, { localData: [].concat(_toConsumableArray(state.localData), [action.payload]) });
+	      return _extends({}, state, { localData: action.payload });
+	    case "DELETE_ALL_LOCAL_PLAN":
+	      return _extends({}, state, { localData: [] });
 	    default:
 	      return state;
 	  }
@@ -29754,6 +29754,7 @@
 	exports.action_pagination = action_pagination;
 	exports.action_addPlan = action_addPlan;
 	exports.action_addLocalPlan = action_addLocalPlan;
+	exports.action_deleteLocalPlan = action_deleteLocalPlan;
 	function saveMapData(map) {
 	  return {
 	    type: 'MAP_DATA',
@@ -29810,6 +29811,11 @@
 	  return {
 	    type: 'ADD_LOCAL_PLAN',
 	    payload: plan
+	  };
+	}
+	function action_deleteLocalPlan() {
+	  return {
+	    type: 'DELETE_ALL_LOCAL_PLAN'
 	  };
 	}
 
@@ -30031,11 +30037,13 @@
 	  _createClass(WhereToGo, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      var self = this;
 	      (0, _isomorphicFetch2.default)('/user.json').then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
 	        console.log('parsed json', json);
-	        this.setState({ storagePlans: json.users });
+	        self.setState({ storagePlans: json.plans });
+	        self.props.action_addLocalPlan(json.plans);
 	      }).catch(function (ex) {
 	        console.log('parsing failed', ex);
 	      });
@@ -30119,7 +30127,6 @@
 	    value: function onAddPlace(place) {
 	      this.props.action_addPlan(place);
 
-	      localStorage.plansArray = JSON.stringify(this.props.planData);
 	      (0, _isomorphicFetch2.default)('/user', {
 	        method: 'POST',
 	        headers: {
@@ -30138,6 +30145,7 @@
 	  }, {
 	    key: 'onRemovePlanClick',
 	    value: function onRemovePlanClick() {
+	      this.props.action_deleteLocalPlan();
 	      (0, _isomorphicFetch2.default)('/deleteAllPlan', {
 	        method: 'POST',
 	        headers: {
@@ -30157,8 +30165,9 @@
 	          placeData = _props.placeData,
 	          planData = _props.planData;
 
+	      var self = this;
 	      if (placeData.length !== 0) {
-	        var self = this;
+
 	        var placeNames = placeData.map(function (place) {
 	          // document.getElementById('suggestDiv').style.display = "initial";
 	          return _react2.default.createElement(
@@ -30213,35 +30222,29 @@
 	          );
 	        });
 	      }
-	      var self = this;
 	      var plans = planData.map(function (plan) {
 
 	        if ((typeof plan === 'undefined' ? 'undefined' : _typeof(plan)) === "object") {
-	          return (
-	            // <li key={plan.id}>
-	            //   <h3>{plan.name}</h3>
-	            // </li>
+	          return _react2.default.createElement(
+	            'li',
+	            { id: plan.id, key: plan.id, className: 'border-red' },
+	            _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
 	            _react2.default.createElement(
-	              'li',
-	              { id: plan.id, key: plan.id, className: 'border-red' },
-	              _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'sec-todo-1' },
-	                plan.name
-	              ),
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'bs-label bg-red', title: true },
-	                '\u5FC5\u53BB'
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
-	                    self.onRemoveClick(plan.id);
-	                  } },
-	                _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
-	              )
+	              'label',
+	              { htmlFor: 'sec-todo-1' },
+	              plan.name
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'bs-label bg-red', title: true },
+	              '\u5FC5\u53BB'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
+	                  self.onRemoveClick(plan.id);
+	                } },
+	              _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
 	            )
 	          );
 	        } else {
@@ -30267,26 +30270,30 @@
 	          );
 	        }
 	      });
-	      // var self = this;
-	      // if(typeof localStorage.plansArray !== "undefined"){
-	      //   var storedPlans = JSON.parse(localStorage.plansArray);
-	      //   // console.log(JSON.parse(storedPlans));
-	      //   var sPlans = self.state.storagePlans.map(function(splan){
-	      //       if(splan=="["||splan=="]"){
-	      //         return;
-	      //       }
-	      //       return(
-	      //         <li key={splan.id} className="border-red">
-	      //           <div className="glyph-icon sort-handle icon-ellipsis-v" />
-	      //           <label htmlFor="sec-todo-1">{splan.name}</label>
-	      //           <span className="bs-label bg-red" title>必去</span>
-	      //           <a href="#" className="btn btn-xs btn-danger float-right" title>
-	      //             <i className="glyph-icon icon-remove" />
-	      //           </a>
-	      //         </li>
-	      //       );
-	      //   });
-	      // }
+
+	      var sPlans = this.props.localData.map(function (splan) {
+
+	        return _react2.default.createElement(
+	          'li',
+	          { key: splan.id, className: 'border-red' },
+	          _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'sec-todo-1' },
+	            splan.name
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'bs-label bg-red', title: true },
+	            '\u5FC5\u53BB'
+	          ),
+	          _react2.default.createElement(
+	            'a',
+	            { href: '#', className: 'btn btn-xs btn-danger float-right' },
+	            _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
+	          )
+	        );
+	      });
 
 	      return _react2.default.createElement(
 	        'div',
@@ -30381,7 +30388,8 @@
 	              _react2.default.createElement(
 	                'ul',
 	                { className: 'todo-box todo-sort' },
-	                plans
+	                plans,
+	                sPlans
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -30441,7 +30449,7 @@
 	  return WhereToGo;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_addPlan: _index.action_addPlan, action_addLocalPlan: _index.action_addLocalPlan })(WhereToGo);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_addPlan: _index.action_addPlan, action_addLocalPlan: _index.action_addLocalPlan, action_deleteLocalPlan: _index.action_deleteLocalPlan })(WhereToGo);
 
 /***/ },
 /* 294 */
