@@ -29270,7 +29270,7 @@
 /* 283 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -29286,7 +29286,6 @@
 
 		switch (action.type) {
 			case 'MAP_DATA':
-				console.log("Map reducer work!", action.payload);
 				return _extends({}, state, { mapData: action.payload });
 			default:
 				return state;
@@ -29326,7 +29325,7 @@
 /* 285 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -29342,7 +29341,6 @@
 
 		switch (action.type) {
 			case 'POS_DATA':
-				console.log("Pos reducer work!", action.payload);
 				return _extends({}, state, { posData: action.payload });
 			default:
 				return state;
@@ -30020,8 +30018,8 @@
 	    var _this = _possibleConstructorReturn(this, (WhereToGo.__proto__ || Object.getPrototypeOf(WhereToGo)).call(this, props));
 
 	    _this.state = {
-	      whereInput: localStorage.whereInput,
-	      tripNameInput: localStorage.tripName,
+	      whereInput: '',
+	      tripNameInput: '',
 	      placeInput: '',
 	      planInput: '',
 	      storagePlans: ''
@@ -30038,12 +30036,12 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var self = this;
-	      (0, _isomorphicFetch2.default)('/user.json').then(function (response) {
+	      (0, _isomorphicFetch2.default)('/api/places').then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
 	        console.log('parsed json', json);
-	        self.setState({ storagePlans: json.plans });
-	        self.props.action_addLocalPlan(json.plans);
+
+	        self.props.action_addLocalPlan(json);
 	      }).catch(function (ex) {
 	        console.log('parsing failed', ex);
 	      });
@@ -30054,23 +30052,33 @@
 	      // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
 	    }
 	  }, {
-	    key: 'searchClick',
-	    value: function searchClick() {
+	    key: 'tripCheckClick',
+	    value: function tripCheckClick() {
 	      this.setState({
 	        whereInput: this.refs.whereInputRef.value
 	      });
-	      localStorage.whereInput = this.refs.whereInputRef.value;
+	      (0, _isomorphicFetch2.default)('/user', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          tripName: this.state.tripNameInput,
+	          wherePlay: this.state.whereInput
+	        })
+	      });
+	      // localStorage.whereInput = this.refs.whereInputRef.value;
 	    }
 	  }, {
 	    key: 'onTripNameChange',
 	    value: function onTripNameChange(tripNameInput) {
 	      this.setState({ tripNameInput: tripNameInput });
-	      localStorage.tripName = this.state.tripNameInput;
+	      // localStorage.tripName = this.state.tripNameInput;
 	    }
 	  }, {
 	    key: 'onWhereInputChange',
-	    value: function onWhereInputChange(searchInput) {
-	      this.setState({ whereInput: searchInput });
+	    value: function onWhereInputChange(whereInput) {
+	      this.setState({ whereInput: whereInput });
 	    }
 	  }, {
 	    key: 'onPlaceInputChange',
@@ -30127,13 +30135,16 @@
 	    value: function onAddPlace(place) {
 	      this.props.action_addPlan(place);
 
-	      (0, _isomorphicFetch2.default)('/user', {
+	      (0, _isomorphicFetch2.default)('/api/places', {
 	        method: 'POST',
 	        headers: {
 	          'Content-Type': 'application/json'
 	        },
 	        body: JSON.stringify({
-	          plan: place
+	          name: place.name,
+	          location: place.formatted_address,
+	          rating: place.rating,
+	          place_id: place.place_id
 	        })
 	      });
 	    }
@@ -30275,7 +30286,7 @@
 
 	        return _react2.default.createElement(
 	          'li',
-	          { key: splan.id, className: 'border-red' },
+	          { key: splan.place_id, id: splan.place_id, className: 'border-red' },
 	          _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
 	          _react2.default.createElement(
 	            'label',
@@ -30284,12 +30295,14 @@
 	          ),
 	          _react2.default.createElement(
 	            'span',
-	            { className: 'bs-label bg-red', title: true },
+	            { className: 'bs-label bg-red' },
 	            '\u5FC5\u53BB'
 	          ),
 	          _react2.default.createElement(
 	            'a',
-	            { href: '#', className: 'btn btn-xs btn-danger float-right' },
+	            { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
+	                self.onRemoveClick(splan.place_id);
+	              } },
 	            _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
 	          )
 	        );
@@ -30349,7 +30362,7 @@
 	                  _react2.default.createElement(
 	                    'button',
 	                    { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
-	                        _this2.searchClick();
+	                        _this2.tripCheckClick();
 	                      } },
 	                    '\u78BA\u5B9A',
 	                    _react2.default.createElement('div', { className: 'ripple-wrapper' })
