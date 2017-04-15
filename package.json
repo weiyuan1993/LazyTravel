@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "start": "node server.js",
-    "nodemon":"nodemon server.js"
+    "nodemon": "nodemon server.js"
   },
   "author": "Weiyuan1993",
   "license": "ISC",
@@ -35,6 +35,7 @@
     "express": "*",
     "lodash": "^3.10.1",
     "mongodb": "^2.2.25",
+    "mongoose": "^4.9.4",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.0.0",

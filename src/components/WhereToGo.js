@@ -16,8 +16,8 @@ class WhereToGo extends Component {
   constructor(props){
     super(props);
     this.state = {
-      whereInput:localStorage.whereInput,
-      tripNameInput:localStorage.tripName,
+      whereInput:'',
+      tripNameInput:'',
       placeInput:'',
       planInput:'',
       storagePlans:''
@@ -30,13 +30,13 @@ class WhereToGo extends Component {
   }
   componentDidMount(){
     var self = this;
-    fetch('/user.json')
+    fetch('/api/places')
     .then(function(response) {
       return response.json()
     }).then(function(json) {
       console.log('parsed json', json);
-      self.setState({storagePlans:json.plans});
-      self.props.action_addLocalPlan(json.plans);
+
+      self.props.action_addLocalPlan(json);
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -47,18 +47,28 @@ class WhereToGo extends Component {
     // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
 
   }
-  searchClick(){
+  tripCheckClick(){
     this.setState({
       whereInput:this.refs.whereInputRef.value
     });
-    localStorage.whereInput = this.refs.whereInputRef.value;
+    fetch('/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        tripName:this.state.tripNameInput,
+        wherePlay:this.state.whereInput
+      })
+    })
+    // localStorage.whereInput = this.refs.whereInputRef.value;
   }
   onTripNameChange(tripNameInput){
     this.setState({tripNameInput:tripNameInput});
-    localStorage.tripName = this.state.tripNameInput;
+    // localStorage.tripName = this.state.tripNameInput;
   }
-  onWhereInputChange(searchInput){
-    this.setState({whereInput:searchInput});
+  onWhereInputChange(whereInput){
+    this.setState({whereInput:whereInput});
   }
   onPlaceInputChange(placeInput){
     this.setState({placeInput:placeInput});
@@ -101,13 +111,16 @@ class WhereToGo extends Component {
   onAddPlace(place){
     this.props.action_addPlan(place);
 
-    fetch('/user', {
+    fetch('/api/places', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        plan:place
+        name:place.name,
+        location:place.formatted_address,
+        rating:place.rating,
+        place_id:place.place_id
       })
     })
 
@@ -196,11 +209,11 @@ class WhereToGo extends Component {
       var sPlans = this.props.localData.map(function(splan){
 
           return(
-            <li key={splan.id} className="border-red">
+            <li key={splan.place_id} id={splan.place_id} className="border-red">
               <div className="glyph-icon sort-handle icon-ellipsis-v" />
               <label htmlFor="sec-todo-1">{splan.name}</label>
-              <span className="bs-label bg-red" title>必去</span>
-              <a href="#" className="btn btn-xs btn-danger float-right">
+              <span className="bs-label bg-red">必去</span>
+              <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(splan.place_id)}}>
                 <i className="glyph-icon icon-remove" />
               </a>
             </li>
@@ -234,7 +247,7 @@ class WhereToGo extends Component {
                 <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
                   onChange={(e)=>{this.onWhereInputChange(e.target.value)}} ref="whereInputRef"/>
                 <span className="input-group-btn" >
-                  <button className="btn btn-primary" type="button" onClick={()=>{this.searchClick();}}>確定<div className="ripple-wrapper"></div></button>
+                  <button className="btn btn-primary" type="button" onClick={()=>{this.tripCheckClick();}}>確定<div className="ripple-wrapper"></div></button>
                 </span>
               </div>
            </div>
