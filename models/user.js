@@ -5,6 +5,7 @@ var UserSchema = mongoose.Schema({
   plans:[
     {
       planName:String,
+      destination:String,
       date:Number,
       places:[
         {

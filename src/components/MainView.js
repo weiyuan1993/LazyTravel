@@ -6,7 +6,7 @@ import SearchResult from './SearchResult';
 class MainView extends Component {
   render(){
     return(
-      <div style={{marginTop:"70px"}}>
+      <div style={{marginTop:"60px"}}>
         <div className="col-md-6">
           <div className="row">
             <WhereToGo />

@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import Header from './Header';
+import { connect } from 'react-redux';
 import { Link ,browserHistory} from 'react-router';
+import { action_userData } from '../actions/user';
+
+function mapStateToProps(state){
+  return{
+    userData:state.userReducer.userData
+  }
+}
 
 class LoginPage extends Component {
   constructor(props){
@@ -17,6 +25,7 @@ class LoginPage extends Component {
     this.setState({password:password});
   }
   login(){
+    var self = this;
     fetch('/api/users/login', {
       method: 'POST',
       headers: {
@@ -34,6 +43,7 @@ class LoginPage extends Component {
           alert("此帳號尚未註冊!");
         }else{
           console.log(data);
+          self.props.action_userData(data);
           browserHistory.push("/UserPage");
         }
       })
@@ -69,7 +79,6 @@ class LoginPage extends Component {
       <div className="center-vertical">
         <div className="center-content" style={{height:"100vh"}}>
           <div action id="login-validation" className="col-md-4 col-sm-5 col-xs-11 col-lg-3 center-margin">
-            <h3 className="text-center pad25B font-gray text-transform-upr font-size-23">LazyTravel <span className="opacity-80">v1.0</span></h3>
             <div id="login-form" className="content-box bg-default">
               <div className="content-box-wrapper pad20A">
                 <img className="mrg25B center-margin radius-all-100 display-block" src="../../assets/image-resources/gravatar.jpg" alt />
@@ -133,4 +142,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+export default connect(mapStateToProps,{action_userData})(LoginPage);
