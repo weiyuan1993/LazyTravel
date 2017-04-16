@@ -26,14 +26,14 @@ class MyTrip extends Component {
             我的行程
           </h3>
           <div className="header-buttons">
-            <Link to="/NewTrip" className="btn btn-sm btn-default no-border" title="">新增<div className="ripple-wrapper"></div></Link>
+            <Link to="/UserPage/NewTrip" className="btn btn-sm btn-default no-border" title="">新增<div className="ripple-wrapper"></div></Link>
           </div>
           <div className="content-box-wrapper">
             {trips?
               <div style={{display:"inline"}}>
                 <p>行程:{trips}</p>
                 <p>地點:{this.state.where}</p>
-                <Link to="/NewTrip" className="btn btn-sm btn-primary no-border" title="">
+                <Link to="/UserPage/NewTrip" className="btn btn-sm btn-primary no-border" title="">
                 修改<div className="ripple-wrapper"></div></Link></div>:
               <p>{this.state.trips}</p>
 

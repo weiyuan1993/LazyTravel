@@ -29,7 +29,14 @@ app.use('/api', apis);
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-app.get('/NewTrip', function(req, res) {
+app.get('/LoginPage', function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+app.get('/UserPage', function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+
+});
+app.get('/UserPage/NewTrip', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 
 });

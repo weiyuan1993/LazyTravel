@@ -209,11 +209,12 @@ class WhereToGo extends Component {
       var sPlans = this.props.localData.map(function(splan){
 
           return(
-            <li key={splan.place_id} id={splan.place_id} className="border-red">
+            <li key={splan._id} id={splan._id} className="border-red">
               <div className="glyph-icon sort-handle icon-ellipsis-v" />
               <label htmlFor="sec-todo-1">{splan.name}</label>
               <span className="bs-label bg-red">必去</span>
-              <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(splan.place_id)}}>
+              <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(splan._id
+              )}}>
                 <i className="glyph-icon icon-remove" />
               </a>
             </li>

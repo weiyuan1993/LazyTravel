@@ -6,11 +6,11 @@ export default class Header extends Component {
     return (
       <div>
         <div id="page-header">
-          <Link to="/">
+          <Link to="/UserPage">
             <i className="glyph-icon icon-bicycle" style={{paddingRight:'10px'}}></i>
           </Link>
 
-         <h1 style={{lineHeight:'60px',display:'inline' }}>懶人旅行LazyTravel</h1>
+         <h1 style={{lineHeight:'60px',display:'inline' }}>LazyTravel</h1>
         </div>
       </div>
     );
