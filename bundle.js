@@ -79,7 +79,7 @@
 
 	var _route2 = _interopRequireDefault(_route);
 
-	var _reduxPromise = __webpack_require__(315);
+	var _reduxPromise = __webpack_require__(317);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
@@ -29143,7 +29143,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_Header2.default, null),
 	        _react2.default.createElement(
 	          'div',
 	          null,
@@ -29204,13 +29203,13 @@
 	          { id: 'page-header' },
 	          _react2.default.createElement(
 	            _reactRouter.Link,
-	            { to: '/' },
+	            { to: '/UserPage' },
 	            _react2.default.createElement('i', { className: 'glyph-icon icon-bicycle', style: { paddingRight: '10px' } })
 	          ),
 	          _react2.default.createElement(
 	            'h1',
 	            { style: { lineHeight: '60px', display: 'inline' } },
-	            '\u61F6\u4EBA\u65C5\u884CLazyTravel'
+	            'LazyTravel'
 	          )
 	        )
 	      );
@@ -29443,38 +29442,27 @@
 
 	var _MyTrip2 = _interopRequireDefault(_MyTrip);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _LoginPage = __webpack_require__(315);
 
-	var Page1 = function Page1() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    'I\'m page One.'
-	  );
-	};
-	var Page2 = function Page2() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    'I\'m page Two.'
-	  );
-	};
-	var Page3 = function Page3() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    'I\'m page Three.'
-	  );
-	};
+	var _LoginPage2 = _interopRequireDefault(_LoginPage);
+
+	var _UserPage = __webpack_require__(316);
+
+	var _UserPage2 = _interopRequireDefault(_UserPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: _app2.default },
-	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _MyTrip2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'NewTrip', component: _MainView2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'page1', component: Page1 }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'page2', component: Page2 }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'page3', component: Page3 }),
+	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _LoginPage2.default }),
+	  _react2.default.createElement(
+	    _reactRouter.Route,
+	    { path: '/UserPage', component: _UserPage2.default },
+	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _MyTrip2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'NewTrip', component: _MainView2.default })
+	  ),
+	  _react2.default.createElement(_reactRouter.Route, { path: 'LoginPage', component: _LoginPage2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '*', component: _MyTrip2.default })
 	);
 
@@ -30286,7 +30274,7 @@
 
 	        return _react2.default.createElement(
 	          'li',
-	          { key: splan.place_id, id: splan.place_id, className: 'border-red' },
+	          { key: splan._id, id: splan._id, className: 'border-red' },
 	          _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
 	          _react2.default.createElement(
 	            'label',
@@ -30301,7 +30289,7 @@
 	          _react2.default.createElement(
 	            'a',
 	            { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
-	                self.onRemoveClick(splan.place_id);
+	                self.onRemoveClick(splan._id);
 	              } },
 	            _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
 	          )
@@ -32276,7 +32264,7 @@
 	              { className: 'header-buttons' },
 	              _react2.default.createElement(
 	                _reactRouter.Link,
-	                { to: '/NewTrip', className: 'btn btn-sm btn-default no-border', title: '' },
+	                { to: '/UserPage/NewTrip', className: 'btn btn-sm btn-default no-border', title: '' },
 	                '\u65B0\u589E',
 	                _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	              )
@@ -32301,7 +32289,7 @@
 	                ),
 	                _react2.default.createElement(
 	                  _reactRouter.Link,
-	                  { to: '/NewTrip', className: 'btn btn-sm btn-primary no-border', title: '' },
+	                  { to: '/UserPage/NewTrip', className: 'btn btn-sm btn-primary no-border', title: '' },
 	                  '\u4FEE\u6539',
 	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	                )
@@ -32328,13 +32316,341 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Header = __webpack_require__(281);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _reactRouter = __webpack_require__(219);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var LoginPage = function (_Component) {
+	  _inherits(LoginPage, _Component);
+
+	  function LoginPage(props) {
+	    _classCallCheck(this, LoginPage);
+
+	    var _this = _possibleConstructorReturn(this, (LoginPage.__proto__ || Object.getPrototypeOf(LoginPage)).call(this, props));
+
+	    _this.state = {
+	      userName: '',
+	      password: ''
+	    };
+	    return _this;
+	  }
+
+	  _createClass(LoginPage, [{
+	    key: 'onUserInputChange',
+	    value: function onUserInputChange(userName) {
+	      this.setState({ userName: userName });
+	    }
+	  }, {
+	    key: 'onPasswordInputChange',
+	    value: function onPasswordInputChange(password) {
+	      this.setState({ password: password });
+	    }
+	  }, {
+	    key: 'login',
+	    value: function login() {
+	      fetch('/api/users/login', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          userName: this.state.userName,
+	          password: this.state.password
+	        })
+	      }).then(function (res) {
+	        res.json().then(function (data) {
+	          if (data.passwordWrong) {
+	            alert("密碼錯誤!");
+	          } else if (data.notRegisterd) {
+	            alert("此帳號尚未註冊!");
+	          } else {
+	            console.log(data);
+	            _reactRouter.browserHistory.push("/UserPage");
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'register',
+	    value: function register() {
+	      fetch('/api/users/register', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          userName: this.state.userName,
+	          password: this.state.password
+
+	        })
+	      }).then(function (res) {
+	        res.json().then(function (data) {
+	          if (data.isAlreadyRegistered) {
+	            alert("已經有人註冊過囉!");
+	          } else {
+	            alert("使用者:" + data.userName + "註冊成功!");
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_Header2.default, null),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'center-vertical' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'center-content', style: { height: "100vh" } },
+	            _react2.default.createElement(
+	              'div',
+	              { action: true, id: 'login-validation', className: 'col-md-4 col-sm-5 col-xs-11 col-lg-3 center-margin' },
+	              _react2.default.createElement(
+	                'h3',
+	                { className: 'text-center pad25B font-gray text-transform-upr font-size-23' },
+	                'LazyTravel ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'opacity-80' },
+	                  'v1.0'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'login-form', className: 'content-box bg-default' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'content-box-wrapper pad20A' },
+	                  _react2.default.createElement('img', { className: 'mrg25B center-margin radius-all-100 display-block', src: '../../assets/image-resources/gravatar.jpg', alt: true }),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'input-group' },
+	                      _react2.default.createElement(
+	                        'span',
+	                        { className: 'input-group-addon addon-inside bg-gray' },
+	                        _react2.default.createElement('i', { className: 'glyph-icon icon-envelope-o' })
+	                      ),
+	                      _react2.default.createElement('input', { type: 'email', value: this.state.userName, onChange: function onChange(e) {
+	                          return _this2.onUserInputChange(e.target.value);
+	                        }, className: 'form-control', id: 'exampleInputEmail1', placeholder: 'Enter email' })
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'input-group' },
+	                      _react2.default.createElement(
+	                        'span',
+	                        { className: 'input-group-addon addon-inside bg-gray' },
+	                        _react2.default.createElement('i', { className: 'glyph-icon icon-unlock-alt' })
+	                      ),
+	                      _react2.default.createElement('input', { type: 'password', value: this.state.password, onChange: function onChange(e) {
+	                          return _this2.onPasswordInputChange(e.target.value);
+	                        }, className: 'form-control', id: 'exampleInputPassword1', placeholder: 'Password' })
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { onClick: function onClick() {
+	                          return _this2.login();
+	                        }, className: 'btn btn-block btn-primary' },
+	                      'Login'
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { onClick: function onClick() {
+	                          return _this2.register();
+	                        }, className: 'btn btn-block btn-info' },
+	                      'Register'
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'checkbox-primary col-md-6', style: { height: 20 } },
+	                      _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        _react2.default.createElement('input', { type: 'checkbox', id: 'loginCheckbox1', className: 'custom-checkbox' }),
+	                        'Remember me'
+	                      )
+	                    ),
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'text-right col-md-6' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '#', className: 'switch-button', title: 'Recover password' },
+	                        'Forgot your password?'
+	                      )
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'login-forgot', className: 'content-box bg-default hide' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'content-box-wrapper pad20A' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    _react2.default.createElement(
+	                      'label',
+	                      { htmlFor: 'exampleInputEmail2' },
+	                      'Email address:'
+	                    ),
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'input-group' },
+	                      _react2.default.createElement(
+	                        'span',
+	                        { className: 'input-group-addon addon-inside bg-gray' },
+	                        _react2.default.createElement('i', { className: 'glyph-icon icon-envelope-o' })
+	                      ),
+	                      _react2.default.createElement('input', { type: 'email', className: 'form-control', id: 'exampleInputEmail2', placeholder: 'Enter email' })
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'button-pane text-center' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'submit', className: 'btn btn-md btn-primary' },
+	                    'Recover Password'
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { href: '#', className: 'btn btn-md btn-link switch-button', title: 'Cancel' },
+	                    'Cancel'
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return LoginPage;
+	}(_react.Component);
+
+	exports.default = LoginPage;
+
+/***/ },
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Header = __webpack_require__(281);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserPage = function (_Component) {
+	  _inherits(UserPage, _Component);
+
+	  function UserPage() {
+	    _classCallCheck(this, UserPage);
+
+	    return _possibleConstructorReturn(this, (UserPage.__proto__ || Object.getPrototypeOf(UserPage)).apply(this, arguments));
+	  }
+
+	  _createClass(UserPage, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_Header2.default, null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.props.children
+	        )
+	      );
+	    }
+	  }]);
+
+	  return UserPage;
+	}(_react.Component);
+
+	exports.default = UserPage;
+
+/***/ },
+/* 317 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(316);
+	var _fluxStandardAction = __webpack_require__(318);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -32361,7 +32677,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 316 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32372,7 +32688,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _lodashIsplainobject = __webpack_require__(317);
+	var _lodashIsplainobject = __webpack_require__(319);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -32391,7 +32707,7 @@
 	}
 
 /***/ },
-/* 317 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32402,9 +32718,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(318),
-	    isArguments = __webpack_require__(319),
-	    keysIn = __webpack_require__(320);
+	var baseFor = __webpack_require__(320),
+	    isArguments = __webpack_require__(321),
+	    keysIn = __webpack_require__(322);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -32500,7 +32816,7 @@
 
 
 /***/ },
-/* 318 */
+/* 320 */
 /***/ function(module, exports) {
 
 	/**
@@ -32554,7 +32870,7 @@
 
 
 /***/ },
-/* 319 */
+/* 321 */
 /***/ function(module, exports) {
 
 	/**
@@ -32789,7 +33105,7 @@
 
 
 /***/ },
-/* 320 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32800,8 +33116,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(319),
-	    isArray = __webpack_require__(321);
+	var isArguments = __webpack_require__(321),
+	    isArray = __webpack_require__(323);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -32927,7 +33243,7 @@
 
 
 /***/ },
-/* 321 */
+/* 323 */
 /***/ function(module, exports) {
 
 	/**

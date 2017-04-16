@@ -29,7 +29,7 @@ router.post('/users/login', function(req, res, next) {
         //驗證密碼
         if(users[i].password == req.body.password){
           console.log("User",users[i].userName,"Login successfully!");
-          return res.json(req.body);
+          return res.json(users[i]);
 
         }else{
           console.log("Wrong password!");
