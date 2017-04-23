@@ -8,7 +8,8 @@ function mapStateToProps(state){
   return{
     placeData:state.placeReducer.placeData,
     planData:state.planReducer.planData,
-    localData:state.planReducer.localData
+    localData:state.planReducer.localData,
+    userData:state.userReducer.userData
   }
 }
 
@@ -61,11 +62,11 @@ class WhereToGo extends Component {
         wherePlay:this.state.whereInput
       })
     })
-    // localStorage.whereInput = this.refs.whereInputRef.value;
+
   }
   onTripNameChange(tripNameInput){
     this.setState({tripNameInput:tripNameInput});
-    // localStorage.tripName = this.state.tripNameInput;
+
   }
   onWhereInputChange(whereInput){
     this.setState({whereInput:whereInput});
@@ -117,6 +118,7 @@ class WhereToGo extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        user:this.props.userData.userName,
         name:place.name,
         location:place.formatted_address,
         rating:place.rating,

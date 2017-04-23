@@ -21,9 +21,12 @@ router.post('/places', function(req, res, next) {
   });
 });
 
+
+
 router.post('/users/login', function(req, res, next) {
   User.find(function(err,users){
     //查詢是否有此使用者
+    console.log(users)
     for(var i=0 ;i<users.length ;i++){
       if(users[i].userName == req.body.userName){
         //驗證密碼
@@ -35,11 +38,10 @@ router.post('/users/login', function(req, res, next) {
           console.log("Wrong password!");
           return res.json({passwordWrong:true});
         }
-      }else{
-        console.log(req.body.userName,"Not register yet!");
-        return res.json({notRegisterd:true});
       }
     }
+    console.log(req.body.userName,"Not register yet!");
+    return res.json({notRegisterd:true});
   })
 });
 router.post("/users/register",function(req,res,next){
@@ -67,5 +69,14 @@ router.post("/users/register",function(req,res,next){
     })
 
 });
+
+
+router.put('/users/update',function(req,res,next){
+    User.findOneAndUpdate({userName:"ab889721"},req.body,function(err,post){
+      console.log(post,req.body)
+      if (err) return next(err);
+      res.json(post);
+    })
+})
 
 module.exports = router;

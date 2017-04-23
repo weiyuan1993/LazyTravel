@@ -81,7 +81,7 @@ class LoginPage extends Component {
           <div action id="login-validation" className="col-md-4 col-sm-5 col-xs-11 col-lg-3 center-margin">
             <div id="login-form" className="content-box bg-default">
               <div className="content-box-wrapper pad20A">
-                <img className="mrg25B center-margin radius-all-100 display-block" src="../../assets/image-resources/gravatar.jpg" alt />
+                {/* <img className="mrg25B center-margin radius-all-100 display-block" src="../../assets/image-resources/gravatar.jpg" alt /> */}
                 <div className="form-group">
                   <div className="input-group">
                     <span className="input-group-addon addon-inside bg-gray">
