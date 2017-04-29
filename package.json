@@ -36,13 +36,14 @@
     "lodash": "^3.10.1",
     "mongodb": "^2.2.25",
     "mongoose": "^4.9.4",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
     "react-redux": "^4.0.0",
     "react-router": "^2.5.0",
     "redux": "^3.0.4",
     "redux-form": "^4.2.2",
     "redux-promise": "^0.5.1",
-    "sortablejs": "^1.5.1"
+    "sortablejs": "^1.5.1",
+    "webpack": "^1.15.0"
   }
 }

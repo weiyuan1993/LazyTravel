@@ -25,7 +25,7 @@ class SearchBox extends Component {
     document.getElementById('suggestDiv').style.display = "none";
     var self = this;
     var request = {
-      location: this.props.pos,
+      location: this.props.pos||{lat: 23.973875, lng: 120.982024},
       radius: '500',
       query: this.state.searchInput
     };
