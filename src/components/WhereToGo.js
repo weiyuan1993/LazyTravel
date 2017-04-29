@@ -18,7 +18,7 @@ class WhereToGo extends Component {
     super(props);
     this.state = {
       whereInput:'',
-      tripNameInput:'',
+      tripNameInput:'我的行程',
       placeInput:'',
       planInput:'',
       storagePlans:''
@@ -167,7 +167,7 @@ class WhereToGo extends Component {
                   <p>評價:{place.rating}</p>
                   <a href="#" className="btn btn-primary float-right tooltip-button"
                     onClick={()=>self.onAddPlace(place)}>
-                    <i className="glyph-icon icon-plus"></i>
+                    <i className="fa fa-plus"></i>
                   </a>
                   <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
                     <span>搜尋</span>
@@ -226,7 +226,7 @@ class WhereToGo extends Component {
 
     return(
       <div>
-        <div className="content-box">
+        <div className="content-box" style={{backgroundColor:"white"}}>
           <h3 className="content-box-header bg-primary">
               <i className="glyph-icon icon-thumb-tack"></i>
               {this.state.tripNameInput}

@@ -7,7 +7,7 @@ export default class Header extends Component {
       <div>
         <div id="page-header" style={{textAlign:"center"}}>
           <Link to="/">
-            <i className="glyph-icon icon-bicycle"></i>
+            <i className="fa fa-bicycle"></i>
           </Link>
          <h1 style={{lineHeight:'60px',display:'inline' }}>LazyTravel</h1>
         </div>

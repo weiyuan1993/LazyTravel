@@ -26,10 +26,10 @@ class MyTrip extends Component {
     if(userData!==null&&userData.plans.length!==0){
       var plans = userData.plans.map(function(plan){
         return(
-          <div key={plan.planName} className="row">
-            <div className="col-md-12 col-xs-12" style={{marginTop:'60px'}}>
-              <div className="content-box">
-                <h3 className="content-box-header bg-primary">
+          <div key={plan.planName} className="col-md-4">
+            <div  style={{marginTop:'60px'}}>
+              <div className="content-box" style={{backgroundColor:"white",textAlign:"center"}}>
+                <h3 className="content-box-header bg-primary" style={{padding:"5px"}}>
                   {plan.planName}
                 </h3>
                 <div className="header-buttons">
@@ -52,11 +52,12 @@ class MyTrip extends Component {
 
     return(
       <div>
-        <div className="col-md-4"></div>
-        <div className="col-md-4 col-xs-12" style={{marginTop:'60px'}}>
-          <Link to="/UserPage/NewTrip" type="button" className="btn btn-info btn-lg btn-block">新增行程<div className="ripple-wrapper"></div></Link>
+        <div className="row">
+          <div className="col-md-4"></div>
+          <div className="col-md-4" style={{marginTop:'60px'}}>
+            <Link to="/UserPage/NewTrip" type="button" className="btn btn-info btn-lg btn-block">新增行程<div className="ripple-wrapper"></div></Link>
+          </div>
         </div>
-        <div className="col-md-4"></div>
         {userData==null && userData.plans.length==0?
           <div>
             <div className="col-md-4"></div>

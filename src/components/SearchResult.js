@@ -44,7 +44,7 @@ class SearchResult extends Component{
                 <h4>評分:{result.rating}</h4>
                 <a href="#" className="btn btn-primary float-right tooltip-button"
                   onClick={()=>{self.onAddPlace(result)}}>
-                  <i className="glyph-icon icon-plus"></i>
+                  <i className="fa fa-plus"></i>
                 </a>
                 <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${result.name}`} target="_blank">
                   <span>搜尋</span>
