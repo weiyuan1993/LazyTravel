@@ -3,6 +3,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Place = require('../models/place.js');
 var User = require('../models/user.js');
+
+var PlanNote = require('../models/planNote.js');
 /*Get /place 地點列表*/
 router.get('/places', function(req, res) {
   Place.find(function(err,places){
@@ -26,7 +28,7 @@ router.post('/places', function(req, res, next) {
 router.post('/users/login', function(req, res, next) {
   User.find(function(err,users){
     //查詢是否有此使用者
-    console.log(users)
+
     for(var i=0 ;i<users.length ;i++){
       if(users[i].userName == req.body.userName){
         //驗證密碼
@@ -70,13 +72,38 @@ router.post("/users/register",function(req,res,next){
 
 });
 
+router.post('/users/planNote', function(req, res, next) {
+  PlanNote.create(req.body, function (err, post) {
+    if (err) return next(err);
+    console.log("receive post!",req.body);
+    res.json(req.body);
+  });
+});
+router.get('/users/planNote/user/:userName', function(req, res) {
+  PlanNote.find({user:req.params.userName},function(err,planNote){
+    if(err)return next(err);
+    res.json(planNote);
+  });
+});
 
-router.put('/users/update',function(req,res,next){
-    User.findOneAndUpdate({userName:"ab889721"},req.body,function(err,post){
-      console.log(post,req.body)
-      if (err) return next(err);
-      res.json(post);
-    })
-})
+router.get('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
+  PlanNote.findOne({user:req.params.userName,tripName:req.params.tripName},function(err,planNote){
+    if(err)return next(err);
+    res.json(planNote);
+  });
+});
+router.put('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
+  PlanNote.findOneAndUpdate({user:req.params.userName,tripName:req.params.tripName},req.body,function(err,planNote){
+    if(err)return next(err);
+    res.json(planNote);
+  });
+});
+router.delete('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
+  PlanNote.findOneAndRemove({user:req.params.userName,tripName:req.params.tripName},function(err){
+    if(err)return next(err);
+    console.log("行程: "+req.params.tripName+"刪除成功");
+
+  });
+});
 
 module.exports = router;

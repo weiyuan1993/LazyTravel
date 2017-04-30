@@ -50,6 +50,12 @@ export function action_addPlan(plan){
     payload:plan
   }
 }
+export function action_getPlanNote(planNote){
+  return{
+    type:'GET_PLAN_NOTE',
+    payload:planNote
+  }
+}
 export function action_addLocalPlan(plan){
   return{
     type:'ADD_LOCAL_PLAN',

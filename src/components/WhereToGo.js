@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Link,browserHistory } from 'react-router';
 import SearchBox from './SearchBox';
 import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan } from '../actions/index';
 function mapStateToProps(state){
@@ -9,7 +10,8 @@ function mapStateToProps(state){
     placeData:state.placeReducer.placeData,
     planData:state.planReducer.planData,
     localData:state.planReducer.localData,
-    userData:state.userReducer.userData
+    userData:state.userReducer.userData,
+    planNoteData:state.planReducer.planNoteData
   }
 }
 
@@ -21,47 +23,23 @@ class WhereToGo extends Component {
       tripNameInput:'我的行程',
       placeInput:'',
       planInput:'',
-      storagePlans:''
+      planNote:''
     };
-    //若本機有資料
-    // if(typeof localStorage.plansArray !=='undefined'){
-    //   this.props.action_addPlan(JSON.parse(localStorage.plansArray));
-    // }
-
+    if(this.props.userData==null){
+       window.location="/";
+    }
   }
   componentDidMount(){
-    var self = this;
-    fetch('/api/places')
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) {
-      console.log('parsed json', json);
-
-      self.props.action_addLocalPlan(json);
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
     //loading autocomplete serach box
     var input = document.getElementById('where-to-go');
-    // var placeInput = document.getElementById('place-input');
     var searchBox = new google.maps.places.SearchBox(input);
-    // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
-
-  }
-  tripCheckClick(){
-    this.setState({
-      whereInput:this.refs.whereInputRef.value
-    });
-    fetch('/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        tripName:this.state.tripNameInput,
-        wherePlay:this.state.whereInput
-      })
-    })
+    if(this.props.planNoteData !== null){
+      this.setState(
+        {
+          tripNameInput:this.props.planNoteData.tripName,
+          whereInput:this.props.planNoteData.wherePlay
+      });
+    }
 
   }
   onTripNameChange(tripNameInput){
@@ -70,6 +48,9 @@ class WhereToGo extends Component {
   }
   onWhereInputChange(whereInput){
     this.setState({whereInput:whereInput});
+  }
+  onPlanNoteChange(planNoteInput){
+    this.setState({planNote:planNoteInput});
   }
   onPlaceInputChange(placeInput){
     this.setState({placeInput:placeInput});
@@ -82,9 +63,44 @@ class WhereToGo extends Component {
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
   }
-  savePlanClick(){
-      localStorage.planInput = this.state.planInput;
-      this.props.action_addPlan(this.state.planInput);
+  // savePlanClick(){
+  //     localStorage.planInput = this.state.planInput;
+  //     this.props.action_addPlan(this.state.planInput);
+  // }
+  savePlanNoteClick(){
+    fetch('/api/users/planNote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user:this.props.userData.userName,
+        tripName:this.state.tripNameInput,
+        wherePlay:this.state.whereInput,
+        planNote:this.state.planNote
+      })
+    })
+    browserHistory.push("UserPage");
+  }
+  updatePlanNoteClick(){
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user:this.props.userData.userName,
+        tripName:this.state.tripNameInput,
+        wherePlay:this.state.whereInput,
+        planNote:this.state.planNote
+      })
+    })
+  }
+  deletePlanNoteClick(){
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
+      method: 'DELETE'
+    })
+    browserHistory.push("UserPage");
   }
   suggestPlace(){
 
@@ -143,8 +159,9 @@ class WhereToGo extends Component {
       })
     })
   }
+
   render(){
-    const { placeData ,planData } = this.props;
+    const { placeData ,planData,planNoteData } = this.props;
     var self = this;
     if(placeData.length!==0){
 
@@ -181,49 +198,6 @@ class WhereToGo extends Component {
         );
       });
     }
-    var plans = planData.map(function(plan){
-
-      if(typeof plan ==="object"){
-        return(
-          <li id={plan.id} key={plan.id} className="border-red">
-            <div className="glyph-icon sort-handle icon-ellipsis-v" />
-            <label htmlFor="sec-todo-1">{plan.name}</label>
-            <span className="bs-label bg-red" title>必去</span>
-            <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(plan.id)}}>
-              <i className="glyph-icon icon-remove" />
-            </a>
-          </li>
-        )
-      }else{
-        return(
-          <li key={plan} className="border-green">
-            <div className="glyph-icon sort-handle icon-ellipsis-v" />
-            <label htmlFor="sec-todo-1">{plan}</label>
-            <span className="bs-label bg-green" title>想去</span>
-            <a href="#" className="btn btn-xs btn-danger float-right" title>
-              <i className="glyph-icon icon-remove" />
-            </a>
-          </li>
-        )
-      }
-    })
-
-      var sPlans = this.props.localData.map(function(splan){
-
-          return(
-            <li key={splan._id} id={splan._id} className="border-red">
-              <div className="glyph-icon sort-handle icon-ellipsis-v" />
-              <label htmlFor="sec-todo-1">{splan.name}</label>
-              <span className="bs-label bg-red">必去</span>
-              <a href="#" className="btn btn-xs btn-danger float-right" onClick={()=>{self.onRemoveClick(splan._id
-              )}}>
-                <i className="glyph-icon icon-remove" />
-              </a>
-            </li>
-          );
-      });
-
-
     return(
       <div>
         <div className="content-box" style={{backgroundColor:"white"}}>
@@ -249,27 +223,37 @@ class WhereToGo extends Component {
               <div className="input-group">
                 <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
                   onChange={(e)=>{this.onWhereInputChange(e.target.value)}} ref="whereInputRef"/>
-                <span className="input-group-btn" >
-                  <button className="btn btn-primary" type="button" onClick={()=>{this.tripCheckClick();}}>確定<div className="ripple-wrapper"></div></button>
-                </span>
+
               </div>
            </div>
 
               <h3>旅行摘要</h3>
-              <a className="btn btn-sm btn-yellow no-border" title="">新增天數<div className="ripple-wrapper"></div></a>
-              <a className="btn btn-sm btn-danger no-border"
-                onClick={()=>{this.onRemovePlanClick()}} >清空行程<div className="ripple-wrapper"></div></a>
-              <h4>第一天</h4>
-              <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
+
+                {planNoteData!==null?
+                  <pre>{planNoteData.planNote}</pre>
+                : <span></span>
+                }
+
+              <div className="input-group">
+                  <textarea onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
+                    value={this.state.planNote} className="form-control custom-control" rows="5" style={{resize:"none"}}></textarea>
+                  <span onClick={()=>{this.savePlanNoteClick()}} className="input-group-addon btn btn-primary">儲存</span>
+                  <span onClick={()=>{this.updatePlanNoteClick()}} className="input-group-addon btn btn-info">更新</span>
+                  <a className="input-group-addon btn btn-sm btn-danger"
+                    onClick={()=>{this.deletePlanNoteClick()}} >刪除行程</a>
+              </div>
+              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary">推薦景點</a>
+              <a onClick={()=>{this.suggestFood()}} className="btn btn-success">推薦美食</a>
+              {/* <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
                 <ul className="todo-box todo-sort">
                   {plans}
                   {sPlans}
                 </ul>
-              </div>
+              </div> */}
 
 
 
-            <div className="input-group">
+            {/* <div className="input-group">
                <input className="form-control"
                  onChange={(e)=>{this.onPlanInputChange(e.target.value)}}
                  value={this.state.planInput}
@@ -277,9 +261,8 @@ class WhereToGo extends Component {
                <span className="input-group-btn" >
                  <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>新增<div className="ripple-wrapper"></div></button>
                </span>
-            </div>
-            <button onClick={()=>{this.suggestPlace()}} className="btn btn-sm btn-primary">推薦景點</button>
-            <button onClick={()=>{this.suggestFood()}} className="btn btn-sm btn-success">推薦美食</button>
+            </div> */}
+
              <SearchBox />
 
              <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
