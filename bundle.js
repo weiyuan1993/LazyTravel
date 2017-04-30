@@ -30088,7 +30088,7 @@
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var INITIAL_STATE = { planData: [], localData: [] };
+	var INITIAL_STATE = { planData: [], localData: [], planNoteData: null };
 
 	function planReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
@@ -30099,6 +30099,8 @@
 	      return _extends({}, state, { planData: [].concat(_toConsumableArray(state.planData), [action.payload]) });
 	    case "ADD_LOCAL_PLAN":
 	      return _extends({}, state, { localData: action.payload });
+	    case "GET_PLAN_NOTE":
+	      return _extends({}, state, { planNoteData: action.payload });
 	    case "DELETE_ALL_LOCAL_PLAN":
 	      return _extends({}, state, { localData: [] });
 	    default:
@@ -30460,6 +30462,7 @@
 	exports.action_nextPage = action_nextPage;
 	exports.action_pagination = action_pagination;
 	exports.action_addPlan = action_addPlan;
+	exports.action_getPlanNote = action_getPlanNote;
 	exports.action_addLocalPlan = action_addLocalPlan;
 	exports.action_deleteLocalPlan = action_deleteLocalPlan;
 	function saveMapData(map) {
@@ -30512,6 +30515,12 @@
 	  return {
 	    type: 'ADD_PLAN',
 	    payload: plan
+	  };
+	}
+	function action_getPlanNote(planNote) {
+	  return {
+	    type: 'GET_PLAN_NOTE',
+	    payload: planNote
 	  };
 	}
 	function action_addLocalPlan(plan) {
@@ -30678,8 +30687,6 @@
 	  value: true
 	});
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -30695,6 +30702,8 @@
 	var _axios2 = _interopRequireDefault(_axios);
 
 	var _reactRedux = __webpack_require__(179);
+
+	var _reactRouter = __webpack_require__(224);
 
 	var _SearchBox = __webpack_require__(298);
 
@@ -30715,7 +30724,8 @@
 	    placeData: state.placeReducer.placeData,
 	    planData: state.planReducer.planData,
 	    localData: state.planReducer.localData,
-	    userData: state.userReducer.userData
+	    userData: state.userReducer.userData,
+	    planNoteData: state.planReducer.planNoteData
 	  };
 	}
 
@@ -30732,51 +30742,26 @@
 	      tripNameInput: '我的行程',
 	      placeInput: '',
 	      planInput: '',
-	      storagePlans: ''
+	      planNote: ''
 	    };
-	    //若本機有資料
-	    // if(typeof localStorage.plansArray !=='undefined'){
-	    //   this.props.action_addPlan(JSON.parse(localStorage.plansArray));
-	    // }
-
+	    if (_this.props.userData == null) {
+	      window.location = "/";
+	    }
 	    return _this;
 	  }
 
 	  _createClass(WhereToGo, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var self = this;
-	      (0, _isomorphicFetch2.default)('/api/places').then(function (response) {
-	        return response.json();
-	      }).then(function (json) {
-	        console.log('parsed json', json);
-
-	        self.props.action_addLocalPlan(json);
-	      }).catch(function (ex) {
-	        console.log('parsing failed', ex);
-	      });
 	      //loading autocomplete serach box
 	      var input = document.getElementById('where-to-go');
-	      // var placeInput = document.getElementById('place-input');
 	      var searchBox = new google.maps.places.SearchBox(input);
-	      // var placeSearchBox = new google.maps.places.SearchBox(placeInput);
-	    }
-	  }, {
-	    key: 'tripCheckClick',
-	    value: function tripCheckClick() {
-	      this.setState({
-	        whereInput: this.refs.whereInputRef.value
-	      });
-	      (0, _isomorphicFetch2.default)('/user', {
-	        method: 'POST',
-	        headers: {
-	          'Content-Type': 'application/json'
-	        },
-	        body: JSON.stringify({
-	          tripName: this.state.tripNameInput,
-	          wherePlay: this.state.whereInput
-	        })
-	      });
+	      if (this.props.planNoteData !== null) {
+	        this.setState({
+	          tripNameInput: this.props.planNoteData.tripName,
+	          whereInput: this.props.planNoteData.wherePlay
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'onTripNameChange',
@@ -30787,6 +30772,11 @@
 	    key: 'onWhereInputChange',
 	    value: function onWhereInputChange(whereInput) {
 	      this.setState({ whereInput: whereInput });
+	    }
+	  }, {
+	    key: 'onPlanNoteChange',
+	    value: function onPlanNoteChange(planNoteInput) {
+	      this.setState({ planNote: planNoteInput });
 	    }
 	  }, {
 	    key: 'onPlaceInputChange',
@@ -30805,11 +30795,51 @@
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
 	    }
+	    // savePlanClick(){
+	    //     localStorage.planInput = this.state.planInput;
+	    //     this.props.action_addPlan(this.state.planInput);
+	    // }
+
 	  }, {
-	    key: 'savePlanClick',
-	    value: function savePlanClick() {
-	      localStorage.planInput = this.state.planInput;
-	      this.props.action_addPlan(this.state.planInput);
+	    key: 'savePlanNoteClick',
+	    value: function savePlanNoteClick() {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          user: this.props.userData.userName,
+	          tripName: this.state.tripNameInput,
+	          wherePlay: this.state.whereInput,
+	          planNote: this.state.planNote
+	        })
+	      });
+	      _reactRouter.browserHistory.push("UserPage");
+	    }
+	  }, {
+	    key: 'updatePlanNoteClick',
+	    value: function updatePlanNoteClick() {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + this.state.tripNameInput, {
+	        method: 'PUT',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          user: this.props.userData.userName,
+	          tripName: this.state.tripNameInput,
+	          wherePlay: this.state.whereInput,
+	          planNote: this.state.planNote
+	        })
+	      });
+	    }
+	  }, {
+	    key: 'deletePlanNoteClick',
+	    value: function deletePlanNoteClick() {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + this.state.tripNameInput, {
+	        method: 'DELETE'
+	      });
+	      _reactRouter.browserHistory.push("UserPage");
 	    }
 	  }, {
 	    key: 'suggestPlace',
@@ -30883,7 +30913,8 @@
 
 	      var _props = this.props,
 	          placeData = _props.placeData,
-	          planData = _props.planData;
+	          planData = _props.planData,
+	          planNoteData = _props.planNoteData;
 
 	      var self = this;
 	      if (placeData.length !== 0) {
@@ -30942,81 +30973,6 @@
 	          );
 	        });
 	      }
-	      var plans = planData.map(function (plan) {
-
-	        if ((typeof plan === 'undefined' ? 'undefined' : _typeof(plan)) === "object") {
-	          return _react2.default.createElement(
-	            'li',
-	            { id: plan.id, key: plan.id, className: 'border-red' },
-	            _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'sec-todo-1' },
-	              plan.name
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'bs-label bg-red', title: true },
-	              '\u5FC5\u53BB'
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
-	                  self.onRemoveClick(plan.id);
-	                } },
-	              _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
-	            )
-	          );
-	        } else {
-	          return _react2.default.createElement(
-	            'li',
-	            { key: plan, className: 'border-green' },
-	            _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'sec-todo-1' },
-	              plan
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'bs-label bg-green', title: true },
-	              '\u60F3\u53BB'
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { href: '#', className: 'btn btn-xs btn-danger float-right', title: true },
-	              _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
-	            )
-	          );
-	        }
-	      });
-
-	      var sPlans = this.props.localData.map(function (splan) {
-
-	        return _react2.default.createElement(
-	          'li',
-	          { key: splan._id, id: splan._id, className: 'border-red' },
-	          _react2.default.createElement('div', { className: 'glyph-icon sort-handle icon-ellipsis-v' }),
-	          _react2.default.createElement(
-	            'label',
-	            { htmlFor: 'sec-todo-1' },
-	            splan.name
-	          ),
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'bs-label bg-red' },
-	            '\u5FC5\u53BB'
-	          ),
-	          _react2.default.createElement(
-	            'a',
-	            { href: '#', className: 'btn btn-xs btn-danger float-right', onClick: function onClick() {
-	                self.onRemoveClick(splan._id);
-	              } },
-	            _react2.default.createElement('i', { className: 'glyph-icon icon-remove' })
-	          )
-	        );
-	      });
-
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -31064,19 +31020,7 @@
 	                _react2.default.createElement('input', { className: 'form-control', id: 'where-to-go', placeholder: '\u60F3\u53BB\u54EA\u73A9?', value: this.state.whereInput,
 	                  onChange: function onChange(e) {
 	                    _this2.onWhereInputChange(e.target.value);
-	                  }, ref: 'whereInputRef' }),
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'input-group-btn' },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
-	                        _this2.tripCheckClick();
-	                      } },
-	                    '\u78BA\u5B9A',
-	                    _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	                  )
-	                )
+	                  }, ref: 'whereInputRef' })
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -31084,70 +31028,53 @@
 	              null,
 	              '\u65C5\u884C\u6458\u8981'
 	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-sm btn-yellow no-border', title: '' },
-	              '\u65B0\u589E\u5929\u6578',
-	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-sm btn-danger no-border',
-	                onClick: function onClick() {
-	                  _this2.onRemovePlanClick();
-	                } },
-	              '\u6E05\u7A7A\u884C\u7A0B',
-	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	            ),
-	            _react2.default.createElement(
-	              'h4',
+	            planNoteData !== null ? _react2.default.createElement(
+	              'pre',
 	              null,
-	              '\u7B2C\u4E00\u5929'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'scrollable-content scrollable-nice scrollable-medium', style: { height: "auto" } },
-	              _react2.default.createElement(
-	                'ul',
-	                { className: 'todo-box todo-sort' },
-	                plans,
-	                sPlans
-	              )
-	            ),
+	              planNoteData.planNote
+	            ) : _react2.default.createElement('span', null),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'input-group' },
-	              _react2.default.createElement('input', { className: 'form-control',
-	                onChange: function onChange(e) {
-	                  _this2.onPlanInputChange(e.target.value);
+	              _react2.default.createElement('textarea', { onChange: function onChange(e) {
+	                  _this2.onPlanNoteChange(e.target.value);
 	                },
-	                value: this.state.planInput,
-	                placeholder: '\u958B\u59CB\u52D5\u624B\u898F\u5283!' }),
+	                value: this.state.planNote, className: 'form-control custom-control', rows: '5', style: { resize: "none" } }),
 	              _react2.default.createElement(
 	                'span',
-	                { className: 'input-group-btn' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
-	                      _this2.savePlanClick();
-	                    } },
-	                  '\u65B0\u589E',
-	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	                )
+	                { onClick: function onClick() {
+	                    _this2.savePlanNoteClick();
+	                  }, className: 'input-group-addon btn btn-primary' },
+	                '\u5132\u5B58'
+	              ),
+	              _react2.default.createElement(
+	                'span',
+	                { onClick: function onClick() {
+	                    _this2.updatePlanNoteClick();
+	                  }, className: 'input-group-addon btn btn-info' },
+	                '\u66F4\u65B0'
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'input-group-addon btn btn-sm btn-danger',
+	                  onClick: function onClick() {
+	                    _this2.deletePlanNoteClick();
+	                  } },
+	                '\u522A\u9664\u884C\u7A0B'
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'button',
+	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestPlace();
-	                }, className: 'btn btn-sm btn-primary' },
+	                }, className: 'btn btn-primary' },
 	              '\u63A8\u85A6\u666F\u9EDE'
 	            ),
 	            _react2.default.createElement(
-	              'button',
+	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestFood();
-	                }, className: 'btn btn-sm btn-success' },
+	                }, className: 'btn btn-success' },
 	              '\u63A8\u85A6\u7F8E\u98DF'
 	            ),
 	            _react2.default.createElement(_SearchBox2.default, null),
@@ -32917,6 +32844,8 @@
 	  value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -32937,6 +32866,8 @@
 
 	var _user = __webpack_require__(321);
 
+	var _index = __webpack_require__(297);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32948,7 +32879,8 @@
 	function mapStateToProps(state) {
 	  return {
 	    placeData: state.placeReducer.placeData,
-	    userData: state.userReducer.userData
+	    userData: state.userReducer.userData,
+	    planNoteData: state.planReducer.planNoteData
 	  };
 	}
 
@@ -32962,41 +32894,94 @@
 
 	    _this.state = { trips: '目前還沒有規劃行程哦!點擊右上角新增來安排假期吧' };
 	    if (_this.props.userData == null) {
-	      console.log("123");
 	      window.location = "/";
 	    }
 	    return _this;
 	  }
 
 	  _createClass(MyTrip, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var self = this;
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName, {
+	        method: 'GET',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        }
+	      }).then(function (res) {
+	        return res.json();
+	      }).then(function (data) {
+	        console.log(data);
+	        self.setState({ trips: data });
+	      }).catch(function (ex) {
+	        console.log('parsing failed', ex);
+	      });
+	    }
+	  }, {
+	    key: 'modifyPlan',
+	    value: function modifyPlan(tripName) {
+	      var self = this;
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripName, {
+	        method: 'GET',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        }
+	      }).then(function (res) {
+	        return res.json();
+	      }).then(function (data) {
+	        console.log(data);
+	        self.props.action_getPlanNote(data);
+	        _reactRouter.browserHistory.push("UserPage/NewTrip");
+	      }).catch(function (ex) {
+	        console.log('parsing failed', ex);
+	      });
+	    }
+	  }, {
+	    key: 'deletePlanNoteClick',
+	    value: function deletePlanNoteClick(tripName) {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripName, {
+	        method: 'DELETE'
+	      });
+	      document.getElementById('trip._id').style.display = 'none';
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var userData = this.props.userData;
 
-	      if (userData !== null && userData.plans.length !== 0) {
-	        var plans = userData.plans.map(function (plan) {
+	      var self = this;
+	      if (_typeof(this.state.trips) == "object") {
+	        var plans = this.state.trips.map(function (trip) {
 	          return _react2.default.createElement(
 	            'div',
-	            { key: plan.planName, className: 'col-md-4' },
+	            { key: trip._id, className: 'col-md-4' },
 	            _react2.default.createElement(
 	              'div',
-	              { style: { marginTop: '60px' } },
+	              { style: { marginTop: '5px' } },
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'content-box', style: { backgroundColor: "white", textAlign: "center" } },
 	                _react2.default.createElement(
 	                  'h3',
 	                  { className: 'content-box-header bg-primary', style: { padding: "5px" } },
-	                  plan.planName
+	                  trip.tripName
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'header-buttons' },
 	                  _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: '/UserPage/NewTrip', className: 'btn btn-sm btn-default no-border', title: '' },
-	                    '\u4FEE\u6539',
-	                    _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	                    'button',
+	                    { onClick: function onClick() {
+	                        self.modifyPlan(trip.tripName);
+	                      }, className: 'btn btn-sm btn-default' },
+	                    '\u4FEE\u6539'
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { onClick: function onClick() {
+	                        self.deletePlanNoteClick(trip.tripName, trip._id);
+	                      }, className: 'btn btn-sm btn-danger' },
+	                    '\u522A\u9664'
 	                  )
 	                ),
 	                _react2.default.createElement(
@@ -33006,7 +32991,13 @@
 	                    'b',
 	                    null,
 	                    '\u5730\u9EDE:',
-	                    plan.destination
+	                    trip.wherePlay
+	                  ),
+	                  _react2.default.createElement(
+	                    'pre',
+	                    { style: { maxHeight: "200px", overflow: "auto" } },
+	                    '\u884C\u7A0B\u5167\u5BB9:',
+	                    trip.planNote
 	                  )
 	                )
 	              )
@@ -33024,7 +33015,7 @@
 	          _react2.default.createElement('div', { className: 'col-md-4' }),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-md-4', style: { marginTop: '60px' } },
+	            { className: 'col-md-4', style: { marginTop: '5px' } },
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: '/UserPage/NewTrip', type: 'button', className: 'btn btn-info btn-lg btn-block' },
@@ -33033,43 +33024,7 @@
 	            )
 	          )
 	        ),
-	        userData == null && userData.plans.length == 0 ? _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement('div', { className: 'col-md-4' }),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-md-4 col-xs-12', style: { marginTop: '60px' } },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'content-box' },
-	              _react2.default.createElement(
-	                'h3',
-	                { className: 'content-box-header bg-primary' },
-	                '\u6211\u7684\u884C\u7A0B'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'header-buttons' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { to: '/UserPage/NewTrip', className: 'btn btn-sm btn-default no-border', title: '' },
-	                  '\u65B0\u589E',
-	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'content-box-wrapper' },
-	                _react2.default.createElement(
-	                  'b',
-	                  null,
-	                  this.state.trips
-	                )
-	              )
-	            )
-	          )
-	        ) : _react2.default.createElement(
+	        _react2.default.createElement(
 	          'div',
 	          null,
 	          plans
@@ -33081,7 +33036,7 @@
 	  return MyTrip;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_userData: _user.action_userData })(MyTrip);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_userData: _user.action_userData, action_getPlanNote: _index.action_getPlanNote })(MyTrip);
 
 /***/ }),
 /* 321 */
