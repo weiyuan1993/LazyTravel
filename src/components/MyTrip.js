@@ -99,7 +99,7 @@ class MyTrip extends Component {
         <div className="row">
           <div className="col-md-4"></div>
           <div className="col-md-4" style={{marginTop:'5px'}}>
-            <Link to="/UserPage/NewTrip" type="button" className="btn btn-info btn-lg btn-block">新增行程<div className="ripple-wrapper"></div></Link>
+            <Link to="/UserPage/NewTrip" type="button" className="btn btn-info btn-lg btn-block">新增行程</Link>
           </div>
         </div>
 

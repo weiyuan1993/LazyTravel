@@ -95,6 +95,7 @@ class WhereToGo extends Component {
         planNote:this.state.planNote
       })
     })
+    browserHistory.push("UserPage");
   }
   deletePlanNoteClick(){
     fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
