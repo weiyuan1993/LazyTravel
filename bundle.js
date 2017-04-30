@@ -30832,6 +30832,7 @@
 	          planNote: this.state.planNote
 	        })
 	      });
+	      _reactRouter.browserHistory.push("UserPage");
 	    }
 	  }, {
 	    key: 'deletePlanNoteClick',
@@ -33019,8 +33020,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: '/UserPage/NewTrip', type: 'button', className: 'btn btn-info btn-lg btn-block' },
-	              '\u65B0\u589E\u884C\u7A0B',
-	              _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	              '\u65B0\u589E\u884C\u7A0B'
 	            )
 	          )
 	        ),
