@@ -1,5 +1,5 @@
 # LazyTravel
-A lazy travel web app that help people plan their weekend easily.
+使用React+Redux+Node.js+MongoDB建置的旅行規劃WebApp
 
 [進入網站](https://lazytravel.herokuapp.com/)
 
