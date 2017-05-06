@@ -80,7 +80,7 @@ class WhereToGo extends Component {
         planNote:this.state.planNote
       })
     })
-    browserHistory.push("UserPage");
+    browserHistory.push("/UserPage");
   }
   updatePlanNoteClick(){
     fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
@@ -95,13 +95,13 @@ class WhereToGo extends Component {
         planNote:this.state.planNote
       })
     })
-    browserHistory.push("UserPage");
+    browserHistory.push("/UserPage");
   }
   deletePlanNoteClick(){
     fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
       method: 'DELETE'
     })
-    browserHistory.push("UserPage");
+    browserHistory.push("/UserPage");
   }
   suggestPlace(){
 
@@ -201,6 +201,7 @@ class WhereToGo extends Component {
     }
     return(
       <div>
+        <Link to="/UserPage" className="btn btn-danger btn-lg btn-block">返回主畫面</Link>
         <div className="content-box" style={{backgroundColor:"white"}}>
           <h3 className="content-box-header bg-primary">
               <i className="glyph-icon icon-thumb-tack"></i>

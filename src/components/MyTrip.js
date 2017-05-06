@@ -69,8 +69,8 @@ class MyTrip extends Component {
           return(
             <div key={trip._id} className="col-md-4">
               <div  style={{marginTop:'5px'}}>
-                <div className="content-box" style={{backgroundColor:"white",textAlign:"center"}}>
-                  <h3 className="content-box-header bg-primary" style={{padding:"5px"}}>
+                <div className="content-box" style={{backgroundColor:"white",textAlign:"center",borderRadius: "5px"}}>
+                  <h3 className="content-box-header bg-primary" style={{padding:"5px",borderRadius: "5px"}}>
                     {trip.tripName}
                   </h3>
                   <div className="header-buttons">

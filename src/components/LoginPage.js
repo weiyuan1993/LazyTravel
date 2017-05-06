@@ -18,6 +18,36 @@ class LoginPage extends Component {
       password:''
     }
   }
+  componentDidMount(){
+    if(typeof localStorage.userName === "undefined"){
+      console.log("未存有localStorage");
+    }else{
+      var self = this;
+      fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName:localStorage.userName,
+          password:localStorage.password
+        })
+      }).then(function(res){
+        res.json().then(function(data){
+          if(data.passwordWrong){
+            alert("密碼錯誤!");
+          }else if(data.notRegisterd){
+            alert("此帳號尚未註冊!");
+          }else{
+            console.log(data);
+            self.props.action_userData(data);
+            browserHistory.push("/UserPage");
+
+          }
+        })
+      })
+    }
+  }
   onUserInputChange(userName){
     this.setState({userName:userName});
   }
@@ -43,8 +73,12 @@ class LoginPage extends Component {
           alert("此帳號尚未註冊!");
         }else{
           console.log(data);
+          localStorage.setItem("userName", self.state.userName);
+          localStorage.setItem("password", self.state.password);
+
           self.props.action_userData(data);
           browserHistory.push("/UserPage");
+
         }
       })
     })
