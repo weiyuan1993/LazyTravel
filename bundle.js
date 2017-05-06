@@ -29881,8 +29881,17 @@
 	  }
 
 	  _createClass(Header, [{
+	    key: 'logOut',
+	    value: function logOut() {
+	      localStorage.clear('userName');
+	      localStorage.clear('password');
+	      _reactRouter.browserHistory.push("/");
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -29891,7 +29900,9 @@
 	          { id: 'page-header', style: { textAlign: "center" } },
 	          _react2.default.createElement(
 	            _reactRouter.Link,
-	            { to: '/' },
+	            { onClick: function onClick() {
+	                return _this2.logOut();
+	              } },
 	            _react2.default.createElement('i', { className: 'fa fa-bicycle' })
 	          ),
 	          _react2.default.createElement(
@@ -30815,7 +30826,7 @@
 	          planNote: this.state.planNote
 	        })
 	      });
-	      _reactRouter.browserHistory.push("UserPage");
+	      _reactRouter.browserHistory.push("/UserPage");
 	    }
 	  }, {
 	    key: 'updatePlanNoteClick',
@@ -30832,7 +30843,7 @@
 	          planNote: this.state.planNote
 	        })
 	      });
-	      _reactRouter.browserHistory.push("UserPage");
+	      _reactRouter.browserHistory.push("/UserPage");
 	    }
 	  }, {
 	    key: 'deletePlanNoteClick',
@@ -30840,7 +30851,7 @@
 	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + this.state.tripNameInput, {
 	        method: 'DELETE'
 	      });
-	      _reactRouter.browserHistory.push("UserPage");
+	      _reactRouter.browserHistory.push("/UserPage");
 	    }
 	  }, {
 	    key: 'suggestPlace',
@@ -30977,6 +30988,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/UserPage', className: 'btn btn-danger btn-lg btn-block' },
+	          '\u8FD4\u56DE\u4E3B\u756B\u9762'
+	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content-box', style: { backgroundColor: "white" } },
@@ -32961,10 +32977,10 @@
 	              { style: { marginTop: '5px' } },
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'content-box', style: { backgroundColor: "white", textAlign: "center" } },
+	                { className: 'content-box', style: { backgroundColor: "white", textAlign: "center", borderRadius: "5px" } },
 	                _react2.default.createElement(
 	                  'h3',
-	                  { className: 'content-box-header bg-primary', style: { padding: "5px" } },
+	                  { className: 'content-box-header bg-primary', style: { padding: "5px", borderRadius: "5px" } },
 	                  trip.tripName
 	                ),
 	                _react2.default.createElement(
@@ -33111,6 +33127,37 @@
 	  }
 
 	  _createClass(LoginPage, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (typeof localStorage.userName === "undefined") {
+	        console.log("未存有localStorage");
+	      } else {
+	        var self = this;
+	        fetch('/api/users/login', {
+	          method: 'POST',
+	          headers: {
+	            'Content-Type': 'application/json'
+	          },
+	          body: JSON.stringify({
+	            userName: localStorage.userName,
+	            password: localStorage.password
+	          })
+	        }).then(function (res) {
+	          res.json().then(function (data) {
+	            if (data.passwordWrong) {
+	              alert("密碼錯誤!");
+	            } else if (data.notRegisterd) {
+	              alert("此帳號尚未註冊!");
+	            } else {
+	              console.log(data);
+	              self.props.action_userData(data);
+	              _reactRouter.browserHistory.push("/UserPage");
+	            }
+	          });
+	        });
+	      }
+	    }
+	  }, {
 	    key: 'onUserInputChange',
 	    value: function onUserInputChange(userName) {
 	      this.setState({ userName: userName });
@@ -33141,6 +33188,9 @@
 	            alert("此帳號尚未註冊!");
 	          } else {
 	            console.log(data);
+	            localStorage.setItem("userName", self.state.userName);
+	            localStorage.setItem("password", self.state.password);
+
 	            self.props.action_userData(data);
 	            _reactRouter.browserHistory.push("/UserPage");
 	          }
