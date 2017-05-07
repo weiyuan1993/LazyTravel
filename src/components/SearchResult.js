@@ -57,9 +57,6 @@ class SearchResult extends Component{
       })
       return(
         <div ref="resultDiv" className="content-box" style={{height:"500px",overflow:"scroll"}}>
-          <h2 className="content-box-header bg-default">
-            <span style={{fontSize:"20px"}}>搜尋結果</span>
-          </h2>
             {displayResult}
             {nextPage?
               <button id="moreResult" type="button" className="btn btn-primary btn-lg btn-block"

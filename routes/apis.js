@@ -86,8 +86,8 @@ router.get('/users/planNote/user/:userName', function(req, res) {
   });
 });
 
-router.get('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
-  PlanNote.findOne({user:req.params.userName,tripName:req.params.tripName},function(err,planNote){
+router.get('/users/planNote/user/:userName/trip/:tripId', function(req, res) {
+  PlanNote.findOne({user:req.params.userName,_id:req.params.tripId},function(err,planNote){
     if(err)return next(err);
     res.json(planNote);
   });
@@ -98,10 +98,10 @@ router.put('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
     res.json(planNote);
   });
 });
-router.delete('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
-  PlanNote.findOneAndRemove({user:req.params.userName,tripName:req.params.tripName},function(err){
+router.delete('/users/planNote/user/:userName/trip/:tripId', function(req, res) {
+  PlanNote.findOneAndRemove({user:req.params.userName,_id:req.params.tripId},function(err){
     if(err)return next(err);
-    console.log("行程: "+req.params.tripName+"刪除成功");
+    console.log("行程: "+req.params.tripId+"刪除成功");
 
   });
 });

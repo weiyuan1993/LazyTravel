@@ -23,6 +23,9 @@ class MyTrip extends Component {
     }
   }
   componentDidMount(){
+    this.fetchUserTrips();
+  }
+  fetchUserTrips(){
     var self = this;
     fetch('/api/users/planNote/user/'+this.props.userData.userName, {
       method: 'GET',
@@ -38,9 +41,9 @@ class MyTrip extends Component {
       console.log('parsing failed', ex)
     })
   }
-  modifyPlan(tripName){
+  modifyPlan(tripId){
     var self = this;
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripName, {
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -55,11 +58,12 @@ class MyTrip extends Component {
       console.log('parsing failed', ex)
     })
   }
-  deletePlanNoteClick(tripName){
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripName, {
+  deletePlanNoteClick(tripId){
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
       method: 'DELETE'
     })
-    document.getElementById('trip._id').style.display = 'none';
+    // document.getElementById('trip._id').style.display = 'none';
+    this.fetchUserTrips();
   }
   render(){
     const {userData} = this.props;
@@ -68,18 +72,24 @@ class MyTrip extends Component {
         var plans = this.state.trips.map(function(trip){
           return(
             <div key={trip._id} className="col-md-4">
-              <div  style={{marginTop:'5px'}}>
+              <div>
                 <div className="content-box" style={{backgroundColor:"white",textAlign:"center",borderRadius: "5px"}}>
                   <h3 className="content-box-header bg-primary" style={{padding:"5px",borderRadius: "5px"}}>
                     {trip.tripName}
+                    <div style={{float:"right"}}>
+                      <button onClick={()=>{self.modifyPlan(trip._id)}} className="btn btn-sm btn-default">
+                        <i className="fa fa-pencil"></i>
+                        修改</button>
+                    </div>
+                    <div style={{float:"left"}}>
+                      <button onClick={()=>{self.deletePlanNoteClick(trip._id)}} className="btn btn-sm btn-danger">
+                        <i className="fa fa-trash-o"></i>
+                        刪除</button>
+                    </div>
                   </h3>
-                  <div className="header-buttons">
-                    <button onClick={()=>{self.modifyPlan(trip.tripName)}} className="btn btn-sm btn-default">修改</button>
-                    <button onClick={()=>{self.deletePlanNoteClick(trip.tripName,trip._id)}} className="btn btn-sm btn-danger">刪除</button>
-                  </div>
                   <div className="content-box-wrapper">
                     <b>地點:{trip.wherePlay}</b>
-                    <pre style={{maxHeight:"200px",overflow:"auto"}}>行程內容:{trip.planNote}</pre>
+                    <pre style={{maxHeight:"200px",overflow:"auto",fontSize:"18px"}}>行程內容:{trip.planNote}</pre>
                   </div>
                 </div>
               </div>
@@ -87,19 +97,13 @@ class MyTrip extends Component {
           );
         })
       }
-
-
-
-
-
-
-
     return(
-      <div>
+      <div style={{paddingBottom:"10px"}}>
         <div className="row">
           <div className="col-md-4"></div>
-          <div className="col-md-4" style={{marginTop:'5px'}}>
-            <Link to="/UserPage/NewTrip" type="button" className="btn btn-info btn-lg btn-block">新增行程</Link>
+          <div className="col-md-4" style={{marginTop:'5px',paddingLeft:"15px",paddingEight:"15px",textAlign:"center"}}>
+            <Link to="/UserPage/NewTrip" type="button"
+             className="btn btn-info" style={{width:"80%"}}><i className="fa fa-sticky-note-o" style={{marginRight:"5px"}}></i>新增行程</Link>
           </div>
         </div>
 

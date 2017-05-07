@@ -201,27 +201,29 @@ class WhereToGo extends Component {
     }
     return(
       <div>
-        <Link to="/UserPage" className="btn btn-danger btn-lg btn-block">返回主畫面</Link>
-        <div className="content-box" style={{backgroundColor:"white"}}>
-          <h3 className="content-box-header bg-primary">
-              <i className="glyph-icon icon-thumb-tack"></i>
-              {this.state.tripNameInput}
-          </h3>
-
-          <div className="content-box-wrapper">
+        <div className="content-box" style={{backgroundColor:"white",borderRadius:"5px"}}>
+          <div>
+            <p className="bg-primary" style={{fontSize:"24px",textAlign:"center",borderRadius:"5px"}}>
+                {this.state.tripNameInput}
+                <Link to="/UserPage" style={{float:"left",color:"white"}}>
+                <i className="fa fa-arrow-left" style={{paddingLeft:"10px"}}></i></Link>
+            </p>
+         </div>
+          <div className="content-box-wrapper" style={{padding: "0px 10px 10px 10px"}}>
             <div className="col-md-6" style={{padding:"0"}}>
-              <h3>旅程名稱</h3>
+              <p style={{fontSize:"20px"}}>
+                <i className="fa fa-thumb-tack"></i>
+                旅程名稱</p>
               <div className="input-group">
                 <input className="form-control" placeholder="想個旅程名稱吧!" value={this.state.tripNameInput}
                   onChange={(e)=>{this.onTripNameChange(e.target.value)}}
                 />
-                {/* <span className="input-group-btn" >
-                  <button className="btn btn-primary" type="button">確定<div className="ripple-wrapper"></div></button>
-                </span> */}
               </div>
             </div>
             <div className="col-md-6" style={{padding:"0"}}>
-              <h3>去哪玩?</h3>
+              <p style={{fontSize:"20px"}}>
+                <i className="fa fa-map-marker"></i>
+                去哪玩?</p>
               <div className="input-group">
                 <input className="form-control" id="where-to-go" placeholder="想去哪玩?" value={this.state.whereInput}
                   onChange={(e)=>{this.onWhereInputChange(e.target.value)}} ref="whereInputRef"/>
@@ -229,14 +231,12 @@ class WhereToGo extends Component {
               </div>
            </div>
 
-              <h3>旅行摘要</h3>
-
+              <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>旅行摘要</p>
                 {planNoteData!==null?
-                  <pre>{planNoteData.planNote}</pre>
+                  <pre style={{fontSize:"18px",maxHeight:"400px",overflow:"auto"}}>{planNoteData.planNote}</pre>
                 : <span></span>
                 }
-
-              <div className="input-group">
+              <div className="input-group" style={{marginBottom: "10px"}}>
                   <textarea onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
                     value={this.state.planNote} className="form-control custom-control" rows="5" style={{resize:"none"}}></textarea>
                   <span onClick={()=>{this.savePlanNoteClick()}} className="input-group-addon btn btn-primary">儲存</span>
@@ -244,8 +244,8 @@ class WhereToGo extends Component {
                   <a className="input-group-addon btn btn-sm btn-danger"
                     onClick={()=>{this.deletePlanNoteClick()}} >刪除行程</a>
               </div>
-              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary">推薦景點</a>
-              <a onClick={()=>{this.suggestFood()}} className="btn btn-success">推薦美食</a>
+              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px"}}>推薦景點</a>
+              <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px"}}>推薦美食</a>
               {/* <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
                 <ul className="todo-box todo-sort">
                   {plans}

@@ -30254,10 +30254,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { style: { marginTop: "60px" } },
+	        { style: { padding: "10px" } },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-6' },
+	          { className: 'col-md-6', style: { marginBottom: "10px" } },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'row' },
@@ -30989,28 +30989,32 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/UserPage', className: 'btn btn-danger btn-lg btn-block' },
-	          '\u8FD4\u56DE\u4E3B\u756B\u9762'
-	        ),
-	        _react2.default.createElement(
 	          'div',
-	          { className: 'content-box', style: { backgroundColor: "white" } },
+	          { className: 'content-box', style: { backgroundColor: "white", borderRadius: "5px" } },
 	          _react2.default.createElement(
-	            'h3',
-	            { className: 'content-box-header bg-primary' },
-	            _react2.default.createElement('i', { className: 'glyph-icon icon-thumb-tack' }),
-	            this.state.tripNameInput
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'p',
+	              { className: 'bg-primary', style: { fontSize: "24px", textAlign: "center", borderRadius: "5px" } },
+	              this.state.tripNameInput,
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/UserPage', style: { float: "left", color: "white" } },
+	                _react2.default.createElement('i', { className: 'fa fa-arrow-left', style: { paddingLeft: "10px" } })
+	              )
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'content-box-wrapper' },
+	            { className: 'content-box-wrapper', style: { padding: "0px 10px 10px 10px" } },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'col-md-6', style: { padding: "0" } },
 	              _react2.default.createElement(
-	                'h3',
-	                null,
+	                'p',
+	                { style: { fontSize: "20px" } },
+	                _react2.default.createElement('i', { className: 'fa fa-thumb-tack' }),
 	                '\u65C5\u7A0B\u540D\u7A31'
 	              ),
 	              _react2.default.createElement(
@@ -31027,8 +31031,9 @@
 	              'div',
 	              { className: 'col-md-6', style: { padding: "0" } },
 	              _react2.default.createElement(
-	                'h3',
-	                null,
+	                'p',
+	                { style: { fontSize: "20px" } },
+	                _react2.default.createElement('i', { className: 'fa fa-map-marker' }),
 	                '\u53BB\u54EA\u73A9?'
 	              ),
 	              _react2.default.createElement(
@@ -31041,18 +31046,18 @@
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'h3',
-	              null,
+	              'p',
+	              { style: { fontSize: "20px", marginBottom: "5px", marginTop: "10px" } },
 	              '\u65C5\u884C\u6458\u8981'
 	            ),
 	            planNoteData !== null ? _react2.default.createElement(
 	              'pre',
-	              null,
+	              { style: { fontSize: "18px", maxHeight: "400px", overflow: "auto" } },
 	              planNoteData.planNote
 	            ) : _react2.default.createElement('span', null),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'input-group' },
+	              { className: 'input-group', style: { marginBottom: "10px" } },
 	              _react2.default.createElement('textarea', { onChange: function onChange(e) {
 	                  _this2.onPlanNoteChange(e.target.value);
 	                },
@@ -31084,14 +31089,14 @@
 	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestPlace();
-	                }, className: 'btn btn-primary' },
+	                }, className: 'btn btn-primary', style: { marginBottom: "10px" } },
 	              '\u63A8\u85A6\u666F\u9EDE'
 	            ),
 	            _react2.default.createElement(
 	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestFood();
-	                }, className: 'btn btn-success' },
+	                }, className: 'btn btn-success', style: { marginBottom: "10px" } },
 	              '\u63A8\u85A6\u7F8E\u98DF'
 	            ),
 	            _react2.default.createElement(_SearchBox2.default, null),
@@ -32819,15 +32824,6 @@
 	        return _react2.default.createElement(
 	          'div',
 	          { ref: 'resultDiv', className: 'content-box', style: { height: "500px", overflow: "scroll" } },
-	          _react2.default.createElement(
-	            'h2',
-	            { className: 'content-box-header bg-default' },
-	            _react2.default.createElement(
-	              'span',
-	              { style: { fontSize: "20px" } },
-	              '\u641C\u5C0B\u7D50\u679C'
-	            )
-	          ),
 	          displayResult,
 	          nextPage ? _react2.default.createElement(
 	            'button',
@@ -32919,6 +32915,11 @@
 	  _createClass(MyTrip, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      this.fetchUserTrips();
+	    }
+	  }, {
+	    key: 'fetchUserTrips',
+	    value: function fetchUserTrips() {
 	      var self = this;
 	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName, {
 	        method: 'GET',
@@ -32936,9 +32937,9 @@
 	    }
 	  }, {
 	    key: 'modifyPlan',
-	    value: function modifyPlan(tripName) {
+	    value: function modifyPlan(tripId) {
 	      var self = this;
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripName, {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
 	        method: 'GET',
 	        headers: {
 	          'Content-Type': 'application/json'
@@ -32955,11 +32956,12 @@
 	    }
 	  }, {
 	    key: 'deletePlanNoteClick',
-	    value: function deletePlanNoteClick(tripName) {
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripName, {
+	    value: function deletePlanNoteClick(tripId) {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
 	        method: 'DELETE'
 	      });
-	      document.getElementById('trip._id').style.display = 'none';
+	      // document.getElementById('trip._id').style.display = 'none';
+	      this.fetchUserTrips();
 	    }
 	  }, {
 	    key: 'render',
@@ -32974,31 +32976,37 @@
 	            { key: trip._id, className: 'col-md-4' },
 	            _react2.default.createElement(
 	              'div',
-	              { style: { marginTop: '5px' } },
+	              null,
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'content-box', style: { backgroundColor: "white", textAlign: "center", borderRadius: "5px" } },
 	                _react2.default.createElement(
 	                  'h3',
 	                  { className: 'content-box-header bg-primary', style: { padding: "5px", borderRadius: "5px" } },
-	                  trip.tripName
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'header-buttons' },
+	                  trip.tripName,
 	                  _react2.default.createElement(
-	                    'button',
-	                    { onClick: function onClick() {
-	                        self.modifyPlan(trip.tripName);
-	                      }, className: 'btn btn-sm btn-default' },
-	                    '\u4FEE\u6539'
+	                    'div',
+	                    { style: { float: "right" } },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { onClick: function onClick() {
+	                          self.modifyPlan(trip._id);
+	                        }, className: 'btn btn-sm btn-default' },
+	                      _react2.default.createElement('i', { className: 'fa fa-pencil' }),
+	                      '\u4FEE\u6539'
+	                    )
 	                  ),
 	                  _react2.default.createElement(
-	                    'button',
-	                    { onClick: function onClick() {
-	                        self.deletePlanNoteClick(trip.tripName, trip._id);
-	                      }, className: 'btn btn-sm btn-danger' },
-	                    '\u522A\u9664'
+	                    'div',
+	                    { style: { float: "left" } },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { onClick: function onClick() {
+	                          self.deletePlanNoteClick(trip._id);
+	                        }, className: 'btn btn-sm btn-danger' },
+	                      _react2.default.createElement('i', { className: 'fa fa-trash-o' }),
+	                      '\u522A\u9664'
+	                    )
 	                  )
 	                ),
 	                _react2.default.createElement(
@@ -33012,7 +33020,7 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'pre',
-	                    { style: { maxHeight: "200px", overflow: "auto" } },
+	                    { style: { maxHeight: "200px", overflow: "auto", fontSize: "18px" } },
 	                    '\u884C\u7A0B\u5167\u5BB9:',
 	                    trip.planNote
 	                  )
@@ -33022,20 +33030,21 @@
 	          );
 	        });
 	      }
-
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { style: { paddingBottom: "10px" } },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'row' },
 	          _react2.default.createElement('div', { className: 'col-md-4' }),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-md-4', style: { marginTop: '5px' } },
+	            { className: 'col-md-4', style: { marginTop: '5px', paddingLeft: "15px", paddingEight: "15px", textAlign: "center" } },
 	            _react2.default.createElement(
 	              _reactRouter.Link,
-	              { to: '/UserPage/NewTrip', type: 'button', className: 'btn btn-info btn-lg btn-block' },
+	              { to: '/UserPage/NewTrip', type: 'button',
+	                className: 'btn btn-info', style: { width: "80%" } },
+	              _react2.default.createElement('i', { className: 'fa fa-sticky-note-o', style: { marginRight: "5px" } }),
 	              '\u65B0\u589E\u884C\u7A0B'
 	            )
 	          )
