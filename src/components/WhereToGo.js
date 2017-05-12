@@ -9,7 +9,6 @@ function mapStateToProps(state){
   return{
     placeData:state.placeReducer.placeData,
     planData:state.planReducer.planData,
-    localData:state.planReducer.localData,
     userData:state.userReducer.userData,
     planNoteData:state.planReducer.planNoteData
   }
@@ -31,13 +30,15 @@ class WhereToGo extends Component {
   }
   componentDidMount(){
     //loading autocomplete serach box
+    console.log("收藏景點:  "+this.props.planData)
     var input = document.getElementById('where-to-go');
     var searchBox = new google.maps.places.SearchBox(input);
     if(this.props.planNoteData !== null){
       this.setState(
         {
-          tripNameInput:this.props.planNoteData.tripName,
-          whereInput:this.props.planNoteData.wherePlay
+          tripNameInput:this.props.planNoteData.tripName||'我的行程',
+          whereInput:this.props.planNoteData.wherePlay||'',
+          planNote:this.props.planNoteData.planNote
       });
     }
 
@@ -82,8 +83,8 @@ class WhereToGo extends Component {
     })
     browserHistory.push("/UserPage");
   }
-  updatePlanNoteClick(){
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
+  updatePlanNoteClick(tripId){
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -97,8 +98,8 @@ class WhereToGo extends Component {
     })
     browserHistory.push("/UserPage");
   }
-  deletePlanNoteClick(){
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+this.state.tripNameInput, {
+  deletePlanNoteClick(tripId){
+    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
       method: 'DELETE'
     })
     browserHistory.push("/UserPage");
@@ -128,7 +129,6 @@ class WhereToGo extends Component {
   }
   onAddPlace(place){
     this.props.action_addPlan(place);
-
     fetch('/api/places', {
       method: 'POST',
       headers: {
@@ -142,7 +142,6 @@ class WhereToGo extends Component {
         place_id:place.place_id
       })
     })
-
   }
   onRemoveClick(id){
     document.getElementById(id).style.display = 'none';
@@ -233,17 +232,21 @@ class WhereToGo extends Component {
 
               <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>旅行摘要</p>
                 {planNoteData!==null?
-                  <pre style={{fontSize:"18px",maxHeight:"400px",overflow:"auto"}}>{planNoteData.planNote}</pre>
+                  <textarea value={this.state.planNote}
+                    onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
+                    style={{fontSize:"18px",height:"400px",overflow:"auto",width:"100%",resize:"none"}}>
+                    {/* {planNoteData.planNote} */}
+                  </textarea>
                 : <span></span>
                 }
-              <div className="input-group" style={{marginBottom: "10px"}}>
-                  <textarea onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
-                    value={this.state.planNote} className="form-control custom-control" rows="5" style={{resize:"none"}}></textarea>
+              {/* <div className="input-group" style={{marginBottom: "10px"}}> */}
+                  {/* <textarea onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
+                    value={this.state.planNote} className="form-control custom-control" rows="5" style={{resize:"none"}}></textarea> */}
                   <span onClick={()=>{this.savePlanNoteClick()}} className="input-group-addon btn btn-primary">儲存</span>
-                  <span onClick={()=>{this.updatePlanNoteClick()}} className="input-group-addon btn btn-info">更新</span>
+                  <span onClick={()=>{this.updatePlanNoteClick(planNoteData._id)}} className="input-group-addon btn btn-info">更新</span>
                   <a className="input-group-addon btn btn-sm btn-danger"
-                    onClick={()=>{this.deletePlanNoteClick()}} >刪除行程</a>
-              </div>
+                    onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</a>
+              {/* </div> */}
               <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px"}}>推薦景點</a>
               <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px"}}>推薦美食</a>
               {/* <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
@@ -266,7 +269,6 @@ class WhereToGo extends Component {
             </div> */}
 
              <SearchBox />
-
              <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
                {placeNames}
              </div>

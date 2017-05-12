@@ -74,17 +74,17 @@ class MyTrip extends Component {
             <div key={trip._id} className="col-md-4">
               <div>
                 <div className="content-box" style={{backgroundColor:"white",textAlign:"center",borderRadius: "5px"}}>
-                  <h3 className="content-box-header bg-primary" style={{padding:"5px",borderRadius: "5px"}}>
+                  <h3 className="content-box-header bg-default" style={{padding:"10px 10px 0px 10px",borderRadius: "5px",marginTop:"5px"}}>
                     {trip.tripName}
                     <div style={{float:"right"}}>
-                      <button onClick={()=>{self.modifyPlan(trip._id)}} className="btn btn-sm btn-default">
-                        <i className="fa fa-pencil"></i>
-                        修改</button>
+                      <button onClick={()=>{self.modifyPlan(trip._id)}} className="btn btn-md btn-link">
+                        <i style={{fontSize:"20px"}} className="fa fa-pencil"></i>
+                        </button>
                     </div>
                     <div style={{float:"left"}}>
-                      <button onClick={()=>{self.deletePlanNoteClick(trip._id)}} className="btn btn-sm btn-danger">
-                        <i className="fa fa-trash-o"></i>
-                        刪除</button>
+                      <button onClick={()=>{self.deletePlanNoteClick(trip._id)}} className="btn btn-md btn-link">
+                        <i style={{fontSize:"20px",color:"red"}} className="fa fa-trash-o"></i>
+                        </button>
                     </div>
                   </h3>
                   <div className="content-box-wrapper">
@@ -103,7 +103,7 @@ class MyTrip extends Component {
           <div className="col-md-4"></div>
           <div className="col-md-4" style={{marginTop:'5px',paddingLeft:"15px",paddingEight:"15px",textAlign:"center"}}>
             <Link to="/UserPage/NewTrip" type="button"
-             className="btn btn-info" style={{width:"80%"}}><i className="fa fa-sticky-note-o" style={{marginRight:"5px"}}></i>新增行程</Link>
+             className="btn btn-info" style={{width:"90%",fontSize:"18px"}}><i className="fa fa-sticky-note-o" style={{marginRight:"5px"}}></i>新增行程</Link>
           </div>
         </div>
 

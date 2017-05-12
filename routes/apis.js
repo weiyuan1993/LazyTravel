@@ -92,8 +92,8 @@ router.get('/users/planNote/user/:userName/trip/:tripId', function(req, res) {
     res.json(planNote);
   });
 });
-router.put('/users/planNote/user/:userName/trip/:tripName', function(req, res) {
-  PlanNote.findOneAndUpdate({user:req.params.userName,tripName:req.params.tripName},req.body,function(err,planNote){
+router.put('/users/planNote/user/:userName/trip/:tripId', function(req, res) {
+  PlanNote.findOneAndUpdate({user:req.params.userName,_id:req.params.tripId},req.body,function(err,planNote){
     if(err)return next(err);
     res.json(planNote);
   });

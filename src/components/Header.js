@@ -14,7 +14,7 @@ export default class Header extends Component {
           <Link onClick={()=>this.logOut()}>
             <i className="fa fa-bicycle"></i>
           </Link>
-         <h1 style={{lineHeight:'60px',display:'inline' }}>LazyTravel</h1>
+         <h1 style={{lineHeight:'50px',display:'inline' }}>LazyTravel</h1>
         </div>
       </div>
     );

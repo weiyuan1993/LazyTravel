@@ -29907,7 +29907,7 @@
 	          ),
 	          _react2.default.createElement(
 	            'h1',
-	            { style: { lineHeight: '60px', display: 'inline' } },
+	            { style: { lineHeight: '50px', display: 'inline' } },
 	            'LazyTravel'
 	          )
 	        )
@@ -30099,7 +30099,7 @@
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var INITIAL_STATE = { planData: [], localData: [], planNoteData: null };
+	var INITIAL_STATE = { planData: [], planNoteData: { planNote: "來新增一些行程吧!" } };
 
 	function planReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
@@ -30108,12 +30108,9 @@
 	  switch (action.type) {
 	    case "ADD_PLAN":
 	      return _extends({}, state, { planData: [].concat(_toConsumableArray(state.planData), [action.payload]) });
-	    case "ADD_LOCAL_PLAN":
-	      return _extends({}, state, { localData: action.payload });
 	    case "GET_PLAN_NOTE":
 	      return _extends({}, state, { planNoteData: action.payload });
-	    case "DELETE_ALL_LOCAL_PLAN":
-	      return _extends({}, state, { localData: [] });
+
 	    default:
 	      return state;
 	  }
@@ -30734,7 +30731,6 @@
 	  return {
 	    placeData: state.placeReducer.placeData,
 	    planData: state.planReducer.planData,
-	    localData: state.planReducer.localData,
 	    userData: state.userReducer.userData,
 	    planNoteData: state.planReducer.planNoteData
 	  };
@@ -30765,12 +30761,14 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      //loading autocomplete serach box
+	      console.log("收藏景點:  " + this.props.planData);
 	      var input = document.getElementById('where-to-go');
 	      var searchBox = new google.maps.places.SearchBox(input);
 	      if (this.props.planNoteData !== null) {
 	        this.setState({
-	          tripNameInput: this.props.planNoteData.tripName,
-	          whereInput: this.props.planNoteData.wherePlay
+	          tripNameInput: this.props.planNoteData.tripName || '我的行程',
+	          whereInput: this.props.planNoteData.wherePlay || '',
+	          planNote: this.props.planNoteData.planNote
 	        });
 	      }
 	    }
@@ -30830,8 +30828,8 @@
 	    }
 	  }, {
 	    key: 'updatePlanNoteClick',
-	    value: function updatePlanNoteClick() {
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + this.state.tripNameInput, {
+	    value: function updatePlanNoteClick(tripId) {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
 	        method: 'PUT',
 	        headers: {
 	          'Content-Type': 'application/json'
@@ -30847,8 +30845,8 @@
 	    }
 	  }, {
 	    key: 'deletePlanNoteClick',
-	    value: function deletePlanNoteClick() {
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + this.state.tripNameInput, {
+	    value: function deletePlanNoteClick(tripId) {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
 	        method: 'DELETE'
 	      });
 	      _reactRouter.browserHistory.push("/UserPage");
@@ -30884,7 +30882,6 @@
 	    key: 'onAddPlace',
 	    value: function onAddPlace(place) {
 	      this.props.action_addPlan(place);
-
 	      (0, _isomorphicFetch2.default)('/api/places', {
 	        method: 'POST',
 	        headers: {
@@ -31050,40 +31047,32 @@
 	              { style: { fontSize: "20px", marginBottom: "5px", marginTop: "10px" } },
 	              '\u65C5\u884C\u6458\u8981'
 	            ),
-	            planNoteData !== null ? _react2.default.createElement(
-	              'pre',
-	              { style: { fontSize: "18px", maxHeight: "400px", overflow: "auto" } },
-	              planNoteData.planNote
-	            ) : _react2.default.createElement('span', null),
+	            planNoteData !== null ? _react2.default.createElement('textarea', { value: this.state.planNote,
+	              onChange: function onChange(e) {
+	                _this2.onPlanNoteChange(e.target.value);
+	              },
+	              style: { fontSize: "18px", height: "400px", overflow: "auto", width: "100%", resize: "none" } }) : _react2.default.createElement('span', null),
 	            _react2.default.createElement(
-	              'div',
-	              { className: 'input-group', style: { marginBottom: "10px" } },
-	              _react2.default.createElement('textarea', { onChange: function onChange(e) {
-	                  _this2.onPlanNoteChange(e.target.value);
-	                },
-	                value: this.state.planNote, className: 'form-control custom-control', rows: '5', style: { resize: "none" } }),
-	              _react2.default.createElement(
-	                'span',
-	                { onClick: function onClick() {
-	                    _this2.savePlanNoteClick();
-	                  }, className: 'input-group-addon btn btn-primary' },
-	                '\u5132\u5B58'
-	              ),
-	              _react2.default.createElement(
-	                'span',
-	                { onClick: function onClick() {
-	                    _this2.updatePlanNoteClick();
-	                  }, className: 'input-group-addon btn btn-info' },
-	                '\u66F4\u65B0'
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { className: 'input-group-addon btn btn-sm btn-danger',
-	                  onClick: function onClick() {
-	                    _this2.deletePlanNoteClick();
-	                  } },
-	                '\u522A\u9664\u884C\u7A0B'
-	              )
+	              'span',
+	              { onClick: function onClick() {
+	                  _this2.savePlanNoteClick();
+	                }, className: 'input-group-addon btn btn-primary' },
+	              '\u5132\u5B58'
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { onClick: function onClick() {
+	                  _this2.updatePlanNoteClick(planNoteData._id);
+	                }, className: 'input-group-addon btn btn-info' },
+	              '\u66F4\u65B0'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'input-group-addon btn btn-sm btn-danger',
+	                onClick: function onClick() {
+	                  _this2.deletePlanNoteClick(planNoteData._id);
+	                } },
+	              '\u522A\u9664\u884C\u7A0B'
 	            ),
 	            _react2.default.createElement(
 	              'a',
@@ -32982,7 +32971,7 @@
 	                { className: 'content-box', style: { backgroundColor: "white", textAlign: "center", borderRadius: "5px" } },
 	                _react2.default.createElement(
 	                  'h3',
-	                  { className: 'content-box-header bg-primary', style: { padding: "5px", borderRadius: "5px" } },
+	                  { className: 'content-box-header bg-default', style: { padding: "10px 10px 0px 10px", borderRadius: "5px", marginTop: "5px" } },
 	                  trip.tripName,
 	                  _react2.default.createElement(
 	                    'div',
@@ -32991,9 +32980,8 @@
 	                      'button',
 	                      { onClick: function onClick() {
 	                          self.modifyPlan(trip._id);
-	                        }, className: 'btn btn-sm btn-default' },
-	                      _react2.default.createElement('i', { className: 'fa fa-pencil' }),
-	                      '\u4FEE\u6539'
+	                        }, className: 'btn btn-md btn-link' },
+	                      _react2.default.createElement('i', { style: { fontSize: "20px" }, className: 'fa fa-pencil' })
 	                    )
 	                  ),
 	                  _react2.default.createElement(
@@ -33003,9 +32991,8 @@
 	                      'button',
 	                      { onClick: function onClick() {
 	                          self.deletePlanNoteClick(trip._id);
-	                        }, className: 'btn btn-sm btn-danger' },
-	                      _react2.default.createElement('i', { className: 'fa fa-trash-o' }),
-	                      '\u522A\u9664'
+	                        }, className: 'btn btn-md btn-link' },
+	                      _react2.default.createElement('i', { style: { fontSize: "20px", color: "red" }, className: 'fa fa-trash-o' })
 	                    )
 	                  )
 	                ),
@@ -33043,7 +33030,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: '/UserPage/NewTrip', type: 'button',
-	                className: 'btn btn-info', style: { width: "80%" } },
+	                className: 'btn btn-info', style: { width: "90%", fontSize: "18px" } },
 	              _react2.default.createElement('i', { className: 'fa fa-sticky-note-o', style: { marginRight: "5px" } }),
 	              '\u65B0\u589E\u884C\u7A0B'
 	            )

@@ -4,8 +4,8 @@ html, body {
   padding: 0;
 }
 body {
-  background-image:url('../img/back2.jpg');
-  background-size:cover;
+  background-image:url('../img/back7.png');
+  background-size:center;
 }
 #map {
   height: 700px;
@@ -53,8 +53,8 @@ font-weight: 300;
 }
 
 #page-header{
-  line-height: 60px !important;
-  background-color: rgba(0,0,0,0.35) !important;
+  /*background-color: rgba(0,0,0,0.35) !important;*/
+  background-color:black;
   color:white;
   padding: 0px !important;
 }
