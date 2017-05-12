@@ -40,44 +40,7 @@ app.get('/UserPage/NewTrip', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 
 });
-// app.post('/user', function(req, res) {
-//
-//     fs.readFile('./user.json', 'utf-8', function(err, data) {
-//     	if (err) throw err
-//
-//     	var arrayOfObjects = JSON.parse(data)
-//       if(req.body.plan){
-//         arrayOfObjects.plans.push(req.body.plan)
-//       }
-//       if(req.body.tripName&&req.body.wherePlay){
-//         arrayOfObjects.tripName = req.body.tripName;
-//         arrayOfObjects.wherePlay = req.body.wherePlay;
-//       }
-//
-//     	console.log(arrayOfObjects)
-//
-//     	fs.writeFile('./user.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-//     		if (err) throw err
-//     		console.log('Done!')
-//     	})
-//     })
-// });
-//
-// app.post('/deleteAllPlan', function(req, res) {
-//     fs.readFile('./user.json', 'utf-8', function(err, data) {
-//     	if (err) throw err
-//
-//     	var arrayOfObjects = JSON.parse(data)
-//     	arrayOfObjects.plans =[]
-//
-//     	console.log(arrayOfObjects)
-//
-//     	fs.writeFile('./user.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-//     		if (err) throw err
-//     		console.log('Delete Done!')
-//     	})
-//     })
-// });
+
 
 app.all('/*',function(req,res,next){
     res.header('Access-Control-Allow-Origin','*');
