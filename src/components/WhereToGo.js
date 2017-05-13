@@ -230,43 +230,27 @@ class WhereToGo extends Component {
               </div>
            </div>
 
-              <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>旅行摘要</p>
+              <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>
+                <i className="fa fa-sticky-note"></i>
+                旅行摘要</p>
                 {planNoteData!==null?
                   <textarea value={this.state.planNote}
                     onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
                     style={{fontSize:"18px",height:"400px",overflow:"auto",width:"100%",resize:"none"}}>
-                    {/* {planNoteData.planNote} */}
                   </textarea>
                 : <span></span>
                 }
-              {/* <div className="input-group" style={{marginBottom: "10px"}}> */}
-                  {/* <textarea onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
-                    value={this.state.planNote} className="form-control custom-control" rows="5" style={{resize:"none"}}></textarea> */}
                   <span onClick={()=>{this.savePlanNoteClick()}} className="input-group-addon btn btn-primary">儲存</span>
                   <span onClick={()=>{this.updatePlanNoteClick(planNoteData._id)}} className="input-group-addon btn btn-info">更新</span>
-                  <a className="input-group-addon btn btn-sm btn-danger"
-                    onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</a>
-              {/* </div> */}
-              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px"}}>推薦景點</a>
-              <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px"}}>推薦美食</a>
-              {/* <div className="scrollable-content scrollable-nice scrollable-medium" style={{height:"auto"}}>
-                <ul className="todo-box todo-sort">
-                  {plans}
-                  {sPlans}
-                </ul>
-              </div> */}
+                  <span className="input-group-addon btn btn-sm btn-danger"
+                    onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</span>
+
+              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
+              <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
 
 
 
-            {/* <div className="input-group">
-               <input className="form-control"
-                 onChange={(e)=>{this.onPlanInputChange(e.target.value)}}
-                 value={this.state.planInput}
-                 placeholder="開始動手規劃!"/>
-               <span className="input-group-btn" >
-                 <button className="btn btn-primary" type="button" onClick={()=>{this.savePlanClick();}}>新增<div className="ripple-wrapper"></div></button>
-               </span>
-            </div> */}
+
 
              <SearchBox />
              <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
@@ -276,15 +260,6 @@ class WhereToGo extends Component {
                onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
                id="pac-input" className="controls"
                type="text" placeholder="地圖搜尋"/>
-              {/* <div className="input-group">
-                <input id="place-input" className="form-control" value={this.state.placeInput}
-                  onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
-                  type="text" placeholder="搜尋景點、美食"/>
-                    <span className="input-group-btn" >
-                      <button className="btn btn-primary" type="button" onClick={()=>{this.placeSearchClick();}}>確定<div className="ripple-wrapper"></div></button>
-                    </span>
-              </div> */}
-
 
 
           </div>

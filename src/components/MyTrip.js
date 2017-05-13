@@ -89,7 +89,7 @@ class MyTrip extends Component {
                   </h3>
                   <div className="content-box-wrapper">
                     <b>地點:{trip.wherePlay}</b>
-                    <pre style={{maxHeight:"200px",overflow:"auto",fontSize:"18px"}}>行程內容:{trip.planNote}</pre>
+                    <pre style={{maxHeight:"200px",overflow:"auto",fontSize:"18px"}}>{trip.planNote}</pre>
                   </div>
                 </div>
               </div>

@@ -31045,6 +31045,7 @@
 	            _react2.default.createElement(
 	              'p',
 	              { style: { fontSize: "20px", marginBottom: "5px", marginTop: "10px" } },
+	              _react2.default.createElement('i', { className: 'fa fa-sticky-note' }),
 	              '\u65C5\u884C\u6458\u8981'
 	            ),
 	            planNoteData !== null ? _react2.default.createElement('textarea', { value: this.state.planNote,
@@ -31067,7 +31068,7 @@
 	              '\u66F4\u65B0'
 	            ),
 	            _react2.default.createElement(
-	              'a',
+	              'span',
 	              { className: 'input-group-addon btn btn-sm btn-danger',
 	                onClick: function onClick() {
 	                  _this2.deletePlanNoteClick(planNoteData._id);
@@ -31078,14 +31079,14 @@
 	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestPlace();
-	                }, className: 'btn btn-primary', style: { marginBottom: "10px" } },
+	                }, className: 'btn btn-primary', style: { marginBottom: "10px", marginTop: "10px" } },
 	              '\u63A8\u85A6\u666F\u9EDE'
 	            ),
 	            _react2.default.createElement(
 	              'a',
 	              { onClick: function onClick() {
 	                  _this2.suggestFood();
-	                }, className: 'btn btn-success', style: { marginBottom: "10px" } },
+	                }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
 	              '\u63A8\u85A6\u7F8E\u98DF'
 	            ),
 	            _react2.default.createElement(_SearchBox2.default, null),
@@ -33008,7 +33009,6 @@
 	                  _react2.default.createElement(
 	                    'pre',
 	                    { style: { maxHeight: "200px", overflow: "auto", fontSize: "18px" } },
-	                    '\u884C\u7A0B\u5167\u5BB9:',
 	                    trip.planNote
 	                  )
 	                )
