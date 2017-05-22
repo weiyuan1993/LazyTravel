@@ -37,6 +37,7 @@
     "mongodb": "^2.2.25",
     "mongoose": "^4.9.4",
     "react": "15.4.2",
+    "react-date-range": "^0.9.4",
     "react-dom": "15.4.2",
     "react-redux": "^4.0.0",
     "react-router": "^2.5.0",

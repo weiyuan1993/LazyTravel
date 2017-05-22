@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Link,browserHistory } from 'react-router';
 import SearchBox from './SearchBox';
 import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan } from '../actions/index';
+
+
 function mapStateToProps(state){
   return{
     placeData:state.placeReducer.placeData,
@@ -22,7 +24,9 @@ class WhereToGo extends Component {
       tripNameInput:'我的行程',
       placeInput:'',
       planInput:'',
-      planNote:''
+      planNote:'',
+      startDate:'',
+      endDate:''
     };
     if(this.props.userData==null){
        window.location="/";
@@ -38,10 +42,21 @@ class WhereToGo extends Component {
         {
           tripNameInput:this.props.planNoteData.tripName||'我的行程',
           whereInput:this.props.planNoteData.wherePlay||'',
-          planNote:this.props.planNoteData.planNote
+          planNote:this.props.planNoteData.planNote,
+          // startDate:this.props.planNoteData.startDate,
+          // endDate:this.props.planNoteData.endDate
       });
+      if(this.props.planNoteData.startDate){
+        this.setState({startDate:this.props.planNoteData.startDate});
+      }
+      if(this.props.planNoteData.endDate){
+        this.setState({endDate:this.props.planNoteData.endDate});
+      }
     }
-
+    document.querySelector(".dropdown-menu").onclick = function(e){
+      e.stopPropagation();
+    }
+    // console.log(this.state.startDate);
   }
   onTripNameChange(tripNameInput){
     this.setState({tripNameInput:tripNameInput});
@@ -78,7 +93,9 @@ class WhereToGo extends Component {
         user:this.props.userData.userName,
         tripName:this.state.tripNameInput,
         wherePlay:this.state.whereInput,
-        planNote:this.state.planNote
+        planNote:this.state.planNote,
+        startDate:this.state.startDate,
+        endDate:this.state.endDate
       })
     })
     browserHistory.push("/UserPage");
@@ -93,7 +110,9 @@ class WhereToGo extends Component {
         user:this.props.userData.userName,
         tripName:this.state.tripNameInput,
         wherePlay:this.state.whereInput,
-        planNote:this.state.planNote
+        planNote:this.state.planNote,
+        startDate:this.state.startDate,
+        endDate:this.state.endDate
       })
     })
     browserHistory.push("/UserPage");
@@ -159,6 +178,14 @@ class WhereToGo extends Component {
       })
     })
   }
+  onChangeStartDate(startDate){
+    console.log(startDate);
+    this.setState({startDate:startDate});
+  }
+  onChangeEndDate(endDate){
+    console.log(endDate);
+    this.setState({endDate:endDate});
+  }
 
   render(){
     const { placeData ,planData,planNoteData } = this.props;
@@ -209,7 +236,7 @@ class WhereToGo extends Component {
             </p>
          </div>
           <div className="content-box-wrapper" style={{padding: "0px 10px 10px 10px"}}>
-            <div className="col-md-6" style={{padding:"0"}}>
+            <div className="col-md-4" style={{padding:"0"}}>
               <p style={{fontSize:"20px"}}>
                 <i className="fa fa-thumb-tack"></i>
                 旅程名稱</p>
@@ -219,7 +246,7 @@ class WhereToGo extends Component {
                 />
               </div>
             </div>
-            <div className="col-md-6" style={{padding:"0"}}>
+            <div className="col-md-4" style={{padding:"0"}}>
               <p style={{fontSize:"20px"}}>
                 <i className="fa fa-map-marker"></i>
                 去哪玩?</p>
@@ -229,14 +256,44 @@ class WhereToGo extends Component {
 
               </div>
            </div>
+           <div className="col-md-4" style={{padding:"0"}}>
+             <p style={{fontSize:"20px"}}>
+               <i className="fa fa-calendar"></i>
+               日期</p>
+               <div className="row">
+                 <div className="dropdown" style={{display: "inline"}} >
+                   <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{this.state.startDate||<b>出發日期</b>}
+                     <span className="caret" /></button>
+                   <ul className="dropdown-menu">
+                    <li>
+                      <label>出發日期:</label>
+                      <input onChange={(e)=>{this.onChangeStartDate(e.target.value)}} value={this.state.startDate} id="startDate" type="date" />
+                    </li>
+                   </ul>
+                 </div>
+                 <div className="dropdown" style={{display: "inline"}}>
+                   <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{this.state.endDate||<b>回程日期</b>}
+                     <span className="caret" /></button>
+                   <ul className="dropdown-menu">
+                    <li>
+                      <label>回程日期:</label>
+                      <input onChange={(e)=>{this.onChangeEndDate(e.target.value)}} value={this.state.endDate} id="endDate" type="date" />
+                    </li>
+                   </ul>
+                 </div>
+             </div>
 
-              <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>
-                <i className="fa fa-sticky-note"></i>
-                旅行摘要</p>
+           </div>
+           <div className="col-md-12" style={{padding:"0"}}>
+             <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>
+               <i className="fa fa-sticky-note"></i>
+               旅行摘要</p>
+           </div>
+
                 {planNoteData!==null?
                   <textarea value={this.state.planNote}
                     onChange={(e)=>{this.onPlanNoteChange(e.target.value)}}
-                    style={{fontSize:"18px",height:"400px",overflow:"auto",width:"100%",resize:"none"}}>
+                    style={{fontSize:"18px",height:"300px",overflow:"auto",width:"100%",resize:"none"}}>
                   </textarea>
                 : <span></span>
                 }
@@ -244,11 +301,27 @@ class WhereToGo extends Component {
                   <span onClick={()=>{this.updatePlanNoteClick(planNoteData._id)}} className="input-group-addon btn btn-info">更新</span>
                   <span className="input-group-addon btn btn-sm btn-danger"
                     onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</span>
+              <div>
+                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
+                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
 
-              <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
-              <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
-
-
+                <div className="dropdown" style={{display: "inline"}} >
+                  <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
+                    <span className="caret" /></button>
+                  <ul className="dropdown-menu">
+                   <li>
+                     <a target="_blank" className= "btn btn-primary" style={{backgroundColor:"#003580",height:"34px"}} href="https://www.booking.com/">
+                       <img style={{ width: "150px",height: "25px"}} src="/img/booking.png" />
+                     </a>
+                   </li>
+                   <li>
+                     <a target="_blank" href="https://www.agoda.com/" className="btn btn-default" style={{marginBottom: "10px",marginTop: "10px",height:"34px"}}>
+                      <img style={{ width: "89px",height: "25px"}} src="/img/agoda-logo.svg" />
+                     </a>
+                   </li>
+                  </ul>
+                </div>
+              </div>
 
 
 

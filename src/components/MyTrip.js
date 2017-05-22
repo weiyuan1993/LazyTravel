@@ -62,7 +62,7 @@ class MyTrip extends Component {
     fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
       method: 'DELETE'
     })
-    // document.getElementById('trip._id').style.display = 'none';
+
     this.fetchUserTrips();
   }
   render(){
@@ -88,6 +88,12 @@ class MyTrip extends Component {
                     </div>
                   </h3>
                   <div className="content-box-wrapper">
+                    {trip.startDate?
+                      <b style={{display:"block"}}>{trip.startDate} ~ {trip.endDate}</b>
+                    :
+                      <b style={{display:"block"}}>日期未定</b>
+                    }
+
                     <b>地點:{trip.wherePlay}</b>
                     <pre style={{maxHeight:"200px",overflow:"auto",fontSize:"18px"}}>{trip.planNote}</pre>
                   </div>
