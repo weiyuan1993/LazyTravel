@@ -7,7 +7,7 @@ class MainView extends Component {
   render(){
     return(
       <div style={{padding:"10px"}}>
-        <div className="col-md-6" style={{marginBottom:"10px"}}>
+        <div className="col-md-7" style={{marginBottom:"10px"}}>
           <div className="row">
             <WhereToGo />
           </div>
@@ -15,7 +15,7 @@ class MainView extends Component {
             <SearchResult />
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           <Map />
         </div>
       </div>

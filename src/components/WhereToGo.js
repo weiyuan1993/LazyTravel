@@ -260,8 +260,8 @@ class WhereToGo extends Component {
              <p style={{fontSize:"20px"}}>
                <i className="fa fa-calendar"></i>
                日期</p>
-               <div className="row">
-                 <div className="dropdown" style={{display: "inline"}} >
+
+                 <div className="dropdown" style={{display: "inline",marginRight:"15px"}} >
                    <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{this.state.startDate||<b>出發日期</b>}
                      <span className="caret" /></button>
                    <ul className="dropdown-menu">
@@ -281,7 +281,7 @@ class WhereToGo extends Component {
                     </li>
                    </ul>
                  </div>
-             </div>
+
 
            </div>
            <div className="col-md-12" style={{padding:"0"}}>
@@ -302,11 +302,8 @@ class WhereToGo extends Component {
                   <span className="input-group-addon btn btn-sm btn-danger"
                     onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</span>
               <div>
-                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-primary" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
-                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
-
                 <div className="dropdown" style={{display: "inline"}} >
-                  <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
+                  <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
                     <span className="caret" /></button>
                   <ul className="dropdown-menu">
                    <li>
@@ -321,6 +318,8 @@ class WhereToGo extends Component {
                    </li>
                   </ul>
                 </div>
+                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-danger" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
+                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
               </div>
 
 

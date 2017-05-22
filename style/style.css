@@ -4,11 +4,14 @@ html, body {
   padding: 0;
 }
 body {
+  /*background-color: lightgray !important;*/
   background-image:url('../img/19.png');
-  background-size:cover;
+  /*background-position: center;
+  background-repeat: no-repeat;
+  background-size: 200px 200px;*/
 }
 #map {
-  height: 700px;
+  height: 590px;
 }
 .controls {
 margin-top: 10px;

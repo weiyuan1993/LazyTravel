@@ -29906,9 +29906,14 @@
 	            _react2.default.createElement('i', { className: 'fa fa-bicycle' })
 	          ),
 	          _react2.default.createElement(
-	            'h1',
-	            { style: { lineHeight: '50px', display: 'inline' } },
-	            'LazyTravel'
+	            _reactRouter.Link,
+	            { to: '/UserPage' },
+	            ' ',
+	            _react2.default.createElement(
+	              'h1',
+	              { style: { lineHeight: '50px', display: 'inline' } },
+	              'LazyTravel'
+	            )
 	          )
 	        )
 	      );
@@ -30254,7 +30259,7 @@
 	        { style: { padding: "10px" } },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-6', style: { marginBottom: "10px" } },
+	          { className: 'col-md-7', style: { marginBottom: "10px" } },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'row' },
@@ -30268,7 +30273,7 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-6' },
+	          { className: 'col-md-5' },
 	          _react2.default.createElement(_Map2.default, null)
 	        )
 	      );
@@ -31081,65 +31086,61 @@
 	              ),
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'row' },
+	                { className: 'dropdown', style: { display: "inline", marginRight: "15px" } },
 	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown', style: { display: "inline" } },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
-	                    this.state.startDate || _react2.default.createElement(
-	                      'b',
-	                      null,
-	                      '\u51FA\u767C\u65E5\u671F'
-	                    ),
-	                    _react2.default.createElement('span', { className: 'caret' })
+	                  'button',
+	                  { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                  this.state.startDate || _react2.default.createElement(
+	                    'b',
+	                    null,
+	                    '\u51FA\u767C\u65E5\u671F'
 	                  ),
-	                  _react2.default.createElement(
-	                    'ul',
-	                    { className: 'dropdown-menu' },
-	                    _react2.default.createElement(
-	                      'li',
-	                      null,
-	                      _react2.default.createElement(
-	                        'label',
-	                        null,
-	                        '\u51FA\u767C\u65E5\u671F:'
-	                      ),
-	                      _react2.default.createElement('input', { onChange: function onChange(e) {
-	                          _this2.onChangeStartDate(e.target.value);
-	                        }, value: this.state.startDate, id: 'startDate', type: 'date' })
-	                    )
-	                  )
+	                  _react2.default.createElement('span', { className: 'caret' })
 	                ),
 	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown', style: { display: "inline" } },
+	                  'ul',
+	                  { className: 'dropdown-menu' },
 	                  _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
-	                    this.state.endDate || _react2.default.createElement(
-	                      'b',
-	                      null,
-	                      '\u56DE\u7A0B\u65E5\u671F'
-	                    ),
-	                    _react2.default.createElement('span', { className: 'caret' })
-	                  ),
-	                  _react2.default.createElement(
-	                    'ul',
-	                    { className: 'dropdown-menu' },
+	                    'li',
+	                    null,
 	                    _react2.default.createElement(
-	                      'li',
+	                      'label',
 	                      null,
-	                      _react2.default.createElement(
-	                        'label',
-	                        null,
-	                        '\u56DE\u7A0B\u65E5\u671F:'
-	                      ),
-	                      _react2.default.createElement('input', { onChange: function onChange(e) {
-	                          _this2.onChangeEndDate(e.target.value);
-	                        }, value: this.state.endDate, id: 'endDate', type: 'date' })
-	                    )
+	                      '\u51FA\u767C\u65E5\u671F:'
+	                    ),
+	                    _react2.default.createElement('input', { onChange: function onChange(e) {
+	                        _this2.onChangeStartDate(e.target.value);
+	                      }, value: this.state.startDate, id: 'startDate', type: 'date' })
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'dropdown', style: { display: "inline" } },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                  this.state.endDate || _react2.default.createElement(
+	                    'b',
+	                    null,
+	                    '\u56DE\u7A0B\u65E5\u671F'
+	                  ),
+	                  _react2.default.createElement('span', { className: 'caret' })
+	                ),
+	                _react2.default.createElement(
+	                  'ul',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'li',
+	                    null,
+	                    _react2.default.createElement(
+	                      'label',
+	                      null,
+	                      '\u56DE\u7A0B\u65E5\u671F:'
+	                    ),
+	                    _react2.default.createElement('input', { onChange: function onChange(e) {
+	                        _this2.onChangeEndDate(e.target.value);
+	                      }, value: this.state.endDate, id: 'endDate', type: 'date' })
 	                  )
 	                )
 	              )
@@ -31185,25 +31186,11 @@
 	              'div',
 	              null,
 	              _react2.default.createElement(
-	                'a',
-	                { onClick: function onClick() {
-	                    _this2.suggestPlace();
-	                  }, className: 'btn btn-primary', style: { marginBottom: "10px", marginTop: "10px" } },
-	                '\u63A8\u85A6\u666F\u9EDE'
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { onClick: function onClick() {
-	                    _this2.suggestFood();
-	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
-	                '\u63A8\u85A6\u7F8E\u98DF'
-	              ),
-	              _react2.default.createElement(
 	                'div',
 	                { className: 'dropdown', style: { display: "inline" } },
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                  { className: 'btn btn-info dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
 	                  '\u8A02\u98EF\u5E97',
 	                  _react2.default.createElement('span', { className: 'caret' })
 	                ),
@@ -31229,6 +31216,20 @@
 	                    )
 	                  )
 	                )
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestPlace();
+	                  }, className: 'btn btn-danger', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u666F\u9EDE'
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestFood();
+	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u7F8E\u98DF'
 	              )
 	            ),
 	            _react2.default.createElement(_SearchBox2.default, null),
