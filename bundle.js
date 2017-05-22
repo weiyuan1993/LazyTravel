@@ -30749,7 +30749,9 @@
 	      tripNameInput: '我的行程',
 	      placeInput: '',
 	      planInput: '',
-	      planNote: ''
+	      planNote: '',
+	      startDate: '',
+	      endDate: ''
 	    };
 	    if (_this.props.userData == null) {
 	      window.location = "/";
@@ -30770,7 +30772,17 @@
 	          whereInput: this.props.planNoteData.wherePlay || '',
 	          planNote: this.props.planNoteData.planNote
 	        });
+	        if (this.props.planNoteData.startDate) {
+	          this.setState({ startDate: this.props.planNoteData.startDate });
+	        }
+	        if (this.props.planNoteData.endDate) {
+	          this.setState({ endDate: this.props.planNoteData.endDate });
+	        }
 	      }
+	      document.querySelector(".dropdown-menu").onclick = function (e) {
+	        e.stopPropagation();
+	      };
+	      // console.log(this.state.startDate);
 	    }
 	  }, {
 	    key: 'onTripNameChange',
@@ -30821,7 +30833,9 @@
 	          user: this.props.userData.userName,
 	          tripName: this.state.tripNameInput,
 	          wherePlay: this.state.whereInput,
-	          planNote: this.state.planNote
+	          planNote: this.state.planNote,
+	          startDate: this.state.startDate,
+	          endDate: this.state.endDate
 	        })
 	      });
 	      _reactRouter.browserHistory.push("/UserPage");
@@ -30838,7 +30852,9 @@
 	          user: this.props.userData.userName,
 	          tripName: this.state.tripNameInput,
 	          wherePlay: this.state.whereInput,
-	          planNote: this.state.planNote
+	          planNote: this.state.planNote,
+	          startDate: this.state.startDate,
+	          endDate: this.state.endDate
 	        })
 	      });
 	      _reactRouter.browserHistory.push("/UserPage");
@@ -30914,6 +30930,18 @@
 	          users: []
 	        })
 	      });
+	    }
+	  }, {
+	    key: 'onChangeStartDate',
+	    value: function onChangeStartDate(startDate) {
+	      console.log(startDate);
+	      this.setState({ startDate: startDate });
+	    }
+	  }, {
+	    key: 'onChangeEndDate',
+	    value: function onChangeEndDate(endDate) {
+	      console.log(endDate);
+	      this.setState({ endDate: endDate });
 	    }
 	  }, {
 	    key: 'render',
@@ -31007,7 +31035,7 @@
 	            { className: 'content-box-wrapper', style: { padding: "0px 10px 10px 10px" } },
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6', style: { padding: "0" } },
+	              { className: 'col-md-4', style: { padding: "0" } },
 	              _react2.default.createElement(
 	                'p',
 	                { style: { fontSize: "20px" } },
@@ -31026,7 +31054,7 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6', style: { padding: "0" } },
+	              { className: 'col-md-4', style: { padding: "0" } },
 	              _react2.default.createElement(
 	                'p',
 	                { style: { fontSize: "20px" } },
@@ -31043,16 +31071,94 @@
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'p',
-	              { style: { fontSize: "20px", marginBottom: "5px", marginTop: "10px" } },
-	              _react2.default.createElement('i', { className: 'fa fa-sticky-note' }),
-	              '\u65C5\u884C\u6458\u8981'
+	              'div',
+	              { className: 'col-md-4', style: { padding: "0" } },
+	              _react2.default.createElement(
+	                'p',
+	                { style: { fontSize: "20px" } },
+	                _react2.default.createElement('i', { className: 'fa fa-calendar' }),
+	                '\u65E5\u671F'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown', style: { display: "inline" } },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                    this.state.startDate || _react2.default.createElement(
+	                      'b',
+	                      null,
+	                      '\u51FA\u767C\u65E5\u671F'
+	                    ),
+	                    _react2.default.createElement('span', { className: 'caret' })
+	                  ),
+	                  _react2.default.createElement(
+	                    'ul',
+	                    { className: 'dropdown-menu' },
+	                    _react2.default.createElement(
+	                      'li',
+	                      null,
+	                      _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        '\u51FA\u767C\u65E5\u671F:'
+	                      ),
+	                      _react2.default.createElement('input', { onChange: function onChange(e) {
+	                          _this2.onChangeStartDate(e.target.value);
+	                        }, value: this.state.startDate, id: 'startDate', type: 'date' })
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown', style: { display: "inline" } },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                    this.state.endDate || _react2.default.createElement(
+	                      'b',
+	                      null,
+	                      '\u56DE\u7A0B\u65E5\u671F'
+	                    ),
+	                    _react2.default.createElement('span', { className: 'caret' })
+	                  ),
+	                  _react2.default.createElement(
+	                    'ul',
+	                    { className: 'dropdown-menu' },
+	                    _react2.default.createElement(
+	                      'li',
+	                      null,
+	                      _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        '\u56DE\u7A0B\u65E5\u671F:'
+	                      ),
+	                      _react2.default.createElement('input', { onChange: function onChange(e) {
+	                          _this2.onChangeEndDate(e.target.value);
+	                        }, value: this.state.endDate, id: 'endDate', type: 'date' })
+	                    )
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-12', style: { padding: "0" } },
+	              _react2.default.createElement(
+	                'p',
+	                { style: { fontSize: "20px", marginBottom: "5px", marginTop: "10px" } },
+	                _react2.default.createElement('i', { className: 'fa fa-sticky-note' }),
+	                '\u65C5\u884C\u6458\u8981'
+	              )
 	            ),
 	            planNoteData !== null ? _react2.default.createElement('textarea', { value: this.state.planNote,
 	              onChange: function onChange(e) {
 	                _this2.onPlanNoteChange(e.target.value);
 	              },
-	              style: { fontSize: "18px", height: "400px", overflow: "auto", width: "100%", resize: "none" } }) : _react2.default.createElement('span', null),
+	              style: { fontSize: "18px", height: "300px", overflow: "auto", width: "100%", resize: "none" } }) : _react2.default.createElement('span', null),
 	            _react2.default.createElement(
 	              'span',
 	              { onClick: function onClick() {
@@ -31076,18 +31182,54 @@
 	              '\u522A\u9664\u884C\u7A0B'
 	            ),
 	            _react2.default.createElement(
-	              'a',
-	              { onClick: function onClick() {
-	                  _this2.suggestPlace();
-	                }, className: 'btn btn-primary', style: { marginBottom: "10px", marginTop: "10px" } },
-	              '\u63A8\u85A6\u666F\u9EDE'
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { onClick: function onClick() {
-	                  _this2.suggestFood();
-	                }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
-	              '\u63A8\u85A6\u7F8E\u98DF'
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestPlace();
+	                  }, className: 'btn btn-primary', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u666F\u9EDE'
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestFood();
+	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u7F8E\u98DF'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'dropdown', style: { display: "inline" } },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-primary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown' },
+	                  '\u8A02\u98EF\u5E97',
+	                  _react2.default.createElement('span', { className: 'caret' })
+	                ),
+	                _react2.default.createElement(
+	                  'ul',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'li',
+	                    null,
+	                    _react2.default.createElement(
+	                      'a',
+	                      { target: '_blank', className: 'btn btn-primary', style: { backgroundColor: "#003580", height: "34px" }, href: 'https://www.booking.com/' },
+	                      _react2.default.createElement('img', { style: { width: "150px", height: "25px" }, src: '/img/booking.png' })
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    null,
+	                    _react2.default.createElement(
+	                      'a',
+	                      { target: '_blank', href: 'https://www.agoda.com/', className: 'btn btn-default', style: { marginBottom: "10px", marginTop: "10px", height: "34px" } },
+	                      _react2.default.createElement('img', { style: { width: "89px", height: "25px" }, src: '/img/agoda-logo.svg' })
+	                    )
+	                  )
+	                )
+	              )
 	            ),
 	            _react2.default.createElement(_SearchBox2.default, null),
 	            _react2.default.createElement(
@@ -32950,7 +33092,7 @@
 	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
 	        method: 'DELETE'
 	      });
-	      // document.getElementById('trip._id').style.display = 'none';
+
 	      this.fetchUserTrips();
 	    }
 	  }, {
@@ -33000,6 +33142,17 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'content-box-wrapper' },
+	                  trip.startDate ? _react2.default.createElement(
+	                    'b',
+	                    { style: { display: "block" } },
+	                    trip.startDate,
+	                    ' ~ ',
+	                    trip.endDate
+	                  ) : _react2.default.createElement(
+	                    'b',
+	                    { style: { display: "block" } },
+	                    '\u65E5\u671F\u672A\u5B9A'
+	                  ),
 	                  _react2.default.createElement(
 	                    'b',
 	                    null,
