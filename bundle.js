@@ -32976,7 +32976,7 @@
 	            { key: result.id, className: 'suggest col-md-4 col-xs-6' },
 	            _react2.default.createElement(
 	              'li',
-	              { className: 'list-group-item' },
+	              { className: 'list-group-item', style: { padding: "5px" } },
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'video-list media', style: { textAlign: "center" } },
@@ -32993,13 +32993,9 @@
 	                  'div',
 	                  { className: 'media-body' },
 	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'media-heading', href: '#' },
-	                    _react2.default.createElement(
-	                      'h4',
-	                      { style: { margin: "0" } },
-	                      result.name
-	                    )
+	                    'h4',
+	                    { style: { margin: "0" } },
+	                    result.name
 	                  ),
 	                  _react2.default.createElement(
 	                    'h4',

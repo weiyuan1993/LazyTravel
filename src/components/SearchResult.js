@@ -27,7 +27,7 @@ class SearchResult extends Component{
       var displayResult = searchingData.map(function(result){
         return(
           <div key={result.id} className="suggest col-md-4 col-xs-6">
-          <li  className="list-group-item">
+          <li  className="list-group-item"  style={{padding:"5px"}}>
             <div className="video-list media" style={{textAlign:"center"}}>
 
                 <a href="#" className="prettyphoto" rel="prettyPhoto[pp_gal]" title={result.name}>
@@ -39,9 +39,7 @@ class SearchResult extends Component{
                 </a>
 
               <div className="media-body">
-                <a className="media-heading" href="#">
                   <h4 style={{margin:"0"}}>{result.name}</h4>
-                </a>
                 <h4>評分:{result.rating}</h4>
                 <a href="#" className="btn btn-primary float-right tooltip-button"
                   onClick={()=>{self.onAddPlace(result)}}>
