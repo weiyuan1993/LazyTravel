@@ -77,14 +77,14 @@ class MyTrip extends Component {
                   <h3 className="content-box-header bg-default" style={{padding:"10px 10px 0px 10px",borderRadius: "5px",marginTop:"5px"}}>
                     {trip.tripName}
                     <div style={{float:"right"}}>
-                      <button onClick={()=>{self.modifyPlan(trip._id)}} className="btn btn-md btn-link">
+                      <a onClick={()=>{self.modifyPlan(trip._id)}} className="btn btn-md btn-link">
                         <i style={{fontSize:"20px"}} className="fa fa-pencil"></i>
-                        </button>
+                      </a>
                     </div>
                     <div style={{float:"left"}}>
-                      <button onClick={()=>{self.deletePlanNoteClick(trip._id)}} className="btn btn-md btn-link">
+                      <a onClick={()=>{self.deletePlanNoteClick(trip._id)}} className="btn btn-md btn-link">
                         <i style={{fontSize:"20px",color:"red"}} className="fa fa-trash-o"></i>
-                        </button>
+                      </a>
                     </div>
                   </h3>
                   <div className="content-box-wrapper">

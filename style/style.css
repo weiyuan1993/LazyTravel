@@ -3,6 +3,8 @@ html, body {
   margin: 0;
   padding: 0;
 }
+button:focus {outline:none;}
+a:focus {outline:none;}
 body {
   /*background-color: lightgray !important;*/
   background-image:url('../img/19.png');
@@ -57,7 +59,7 @@ font-weight: 300;
 
 #page-header{
   /*background-color: rgba(0,0,0,0.35) !important;*/
-  background-color:black;
+  background-color:#3a3a3a;
   color:white;
   padding: 0px !important;
 }
@@ -74,16 +76,14 @@ font-weight: 300;
 }
 @media (max-width:800px){
   #page-header>h1,#page-header>a>i{
-    font-size: 28px;
+    font-size: 45px;
   }
   #map {
     height:300px;
   }
 }
 @media (max-width:600px){
-  #page-header>h1,#page-header>a>i{
-    font-size: 22px;
-  }
+
   .searchPhotos{
     max-width:100px;
     max-height:100px;

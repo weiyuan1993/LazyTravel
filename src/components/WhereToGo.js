@@ -190,6 +190,8 @@ class WhereToGo extends Component {
   render(){
     const { placeData ,planData,planNoteData } = this.props;
     var self = this;
+
+    //推薦景點、美食顯示
     if(placeData.length!==0){
 
       var placeNames = placeData.map(function(place){
@@ -207,7 +209,7 @@ class WhereToGo extends Component {
               </div>
               <div className="media-body">
                 <div className="media-heading">
-                  {place.name}
+                  <h3 style={{margin:"0"}}>{place.name}</h3>
                   <p>評價:{place.rating}</p>
                   <a href="#" className="btn btn-primary float-right tooltip-button"
                     onClick={()=>self.onAddPlace(place)}>
@@ -215,7 +217,7 @@ class WhereToGo extends Component {
                   </a>
                   <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
                     <span>搜尋</span>
-                    <i className="glyph-icon icon-search"></i>
+                    <i className="fa fa-search"></i>
                   </a>
                  </div>
               </div>
@@ -297,15 +299,20 @@ class WhereToGo extends Component {
                   </textarea>
                 : <span></span>
                 }
-                  <span onClick={()=>{this.savePlanNoteClick()}} className="input-group-addon btn btn-primary">儲存</span>
-                  <span onClick={()=>{this.updatePlanNoteClick(planNoteData._id)}} className="input-group-addon btn btn-info">更新</span>
-                  <span className="input-group-addon btn btn-sm btn-danger"
-                    onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</span>
-              <div>
+                <div className="btn-group" role="group">
+                  <button onClick={()=>{this.savePlanNoteClick()}} className=" btn btn-primary">儲存</button>
+                  <button onClick={()=>{this.updatePlanNoteClick(planNoteData._id)}} className=" btn btn-info">更新</button>
+                  <button className=" btn btn-danger"
+                    onClick={()=>{this.deletePlanNoteClick(planNoteData._id)}} >刪除行程</button>
+                </div>
+              <div style={{marginTop:"10px"}}>
+                <SearchBox />
+                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-danger" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
+                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
                 <div className="dropdown" style={{display: "inline"}} >
                   <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
                     <span className="caret" /></button>
-                  <ul className="dropdown-menu">
+                  <ul className="dropdown-menu dropdown-menu-right">
                    <li>
                      <a target="_blank" className= "btn btn-primary" style={{backgroundColor:"#003580",height:"34px"}} href="https://www.booking.com/">
                        <img style={{ width: "150px",height: "25px"}} src="/img/booking.png" />
@@ -318,13 +325,11 @@ class WhereToGo extends Component {
                    </li>
                   </ul>
                 </div>
-                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-danger" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
-                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
               </div>
 
 
 
-             <SearchBox />
+
              <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
                {placeNames}
              </div>

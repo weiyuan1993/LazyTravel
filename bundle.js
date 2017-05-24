@@ -29900,9 +29900,7 @@
 	          { id: 'page-header', style: { textAlign: "center" } },
 	          _react2.default.createElement(
 	            _reactRouter.Link,
-	            { onClick: function onClick() {
-	                return _this2.logOut();
-	              } },
+	            null,
 	            _react2.default.createElement('i', { className: 'fa fa-bicycle' })
 	          ),
 	          _react2.default.createElement(
@@ -29913,6 +29911,52 @@
 	              'h1',
 	              { style: { lineHeight: '50px', display: 'inline' } },
 	              'LazyTravel'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'dropdown', style: { float: "right" } },
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'btn btn-default btn-lg dropdown-toggle', type: 'button', 'data-toggle': 'dropdown', style: { color: "white", backgroundColor: "transparent", border: "0" } },
+	              _react2.default.createElement('i', { className: 'fa fa-bars', style: { fontSize: "35px" } })
+	            ),
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'dropdown-menu dropdown-menu-right', style: { textAlign: "center" } },
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  _react2.default.createElement(
+	                    'a',
+	                    { href: '#', onClick: function onClick() {
+	                        return _this2.logOut();
+	                      } },
+	                    _react2.default.createElement(
+	                      'h3',
+	                      null,
+	                      '\u767B\u51FA'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement('li', { role: 'separator', className: 'divider' }),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  _react2.default.createElement(
+	                    'a',
+	                    { href: 'https://github.com/weiyuan1993/LazyTravel' },
+	                    _react2.default.createElement(
+	                      'h3',
+	                      null,
+	                      '\u95DC\u65BC'
+	                    )
+	                  )
+	                )
+	              )
 	            )
 	          )
 	        )
@@ -30959,6 +31003,8 @@
 	          planNoteData = _props.planNoteData;
 
 	      var self = this;
+
+	      //推薦景點、美食顯示
 	      if (placeData.length !== 0) {
 
 	        var placeNames = placeData.map(function (place) {
@@ -30984,7 +31030,11 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'media-heading' },
-	                  place.name,
+	                  _react2.default.createElement(
+	                    'h3',
+	                    { style: { margin: "0" } },
+	                    place.name
+	                  ),
 	                  _react2.default.createElement(
 	                    'p',
 	                    null,
@@ -31007,7 +31057,7 @@
 	                      null,
 	                      '\u641C\u5C0B'
 	                    ),
-	                    _react2.default.createElement('i', { className: 'glyph-icon icon-search' })
+	                    _react2.default.createElement('i', { className: 'fa fa-search' })
 	                  )
 	                )
 	              )
@@ -31161,30 +31211,49 @@
 	              },
 	              style: { fontSize: "18px", height: "300px", overflow: "auto", width: "100%", resize: "none" } }) : _react2.default.createElement('span', null),
 	            _react2.default.createElement(
-	              'span',
-	              { onClick: function onClick() {
-	                  _this2.savePlanNoteClick();
-	                }, className: 'input-group-addon btn btn-primary' },
-	              '\u5132\u5B58'
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { onClick: function onClick() {
-	                  _this2.updatePlanNoteClick(planNoteData._id);
-	                }, className: 'input-group-addon btn btn-info' },
-	              '\u66F4\u65B0'
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'input-group-addon btn btn-sm btn-danger',
-	                onClick: function onClick() {
-	                  _this2.deletePlanNoteClick(planNoteData._id);
-	                } },
-	              '\u522A\u9664\u884C\u7A0B'
+	              'div',
+	              { className: 'btn-group', role: 'group' },
+	              _react2.default.createElement(
+	                'button',
+	                { onClick: function onClick() {
+	                    _this2.savePlanNoteClick();
+	                  }, className: ' btn btn-primary' },
+	                '\u5132\u5B58'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { onClick: function onClick() {
+	                    _this2.updatePlanNoteClick(planNoteData._id);
+	                  }, className: ' btn btn-info' },
+	                '\u66F4\u65B0'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: ' btn btn-danger',
+	                  onClick: function onClick() {
+	                    _this2.deletePlanNoteClick(planNoteData._id);
+	                  } },
+	                '\u522A\u9664\u884C\u7A0B'
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              null,
+	              { style: { marginTop: "10px" } },
+	              _react2.default.createElement(_SearchBox2.default, null),
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestPlace();
+	                  }, className: 'btn btn-danger', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u666F\u9EDE'
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { onClick: function onClick() {
+	                    _this2.suggestFood();
+	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
+	                '\u63A8\u85A6\u7F8E\u98DF'
+	              ),
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'dropdown', style: { display: "inline" } },
@@ -31196,7 +31265,7 @@
 	                ),
 	                _react2.default.createElement(
 	                  'ul',
-	                  { className: 'dropdown-menu' },
+	                  { className: 'dropdown-menu dropdown-menu-right' },
 	                  _react2.default.createElement(
 	                    'li',
 	                    null,
@@ -31216,23 +31285,8 @@
 	                    )
 	                  )
 	                )
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { onClick: function onClick() {
-	                    _this2.suggestPlace();
-	                  }, className: 'btn btn-danger', style: { marginBottom: "10px", marginTop: "10px" } },
-	                '\u63A8\u85A6\u666F\u9EDE'
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { onClick: function onClick() {
-	                    _this2.suggestFood();
-	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
-	                '\u63A8\u85A6\u7F8E\u98DF'
 	              )
 	            ),
-	            _react2.default.createElement(_SearchBox2.default, null),
 	            _react2.default.createElement(
 	              'div',
 	              { id: 'suggestDiv', style: { maxHeight: "500px", overflow: "scroll", overflowX: "hidden" } },
@@ -33121,7 +33175,7 @@
 	                    'div',
 	                    { style: { float: "right" } },
 	                    _react2.default.createElement(
-	                      'button',
+	                      'a',
 	                      { onClick: function onClick() {
 	                          self.modifyPlan(trip._id);
 	                        }, className: 'btn btn-md btn-link' },
@@ -33132,7 +33186,7 @@
 	                    'div',
 	                    { style: { float: "left" } },
 	                    _react2.default.createElement(
-	                      'button',
+	                      'a',
 	                      { onClick: function onClick() {
 	                          self.deletePlanNoteClick(trip._id);
 	                        }, className: 'btn btn-md btn-link' },
