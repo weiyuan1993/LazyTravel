@@ -29928,32 +29928,28 @@
 	                'li',
 	                null,
 	                _react2.default.createElement(
-	                  'li',
-	                  null,
+	                  'a',
+	                  { href: '#', onClick: function onClick() {
+	                      return _this2.logOut();
+	                    } },
 	                  _react2.default.createElement(
-	                    'a',
-	                    { href: '#', onClick: function onClick() {
-	                        return _this2.logOut();
-	                      } },
-	                    _react2.default.createElement(
-	                      'h3',
-	                      null,
-	                      '\u767B\u51FA'
-	                    )
+	                    'h3',
+	                    null,
+	                    '\u767B\u51FA'
 	                  )
-	                ),
-	                _react2.default.createElement('li', { role: 'separator', className: 'divider' }),
+	                )
+	              ),
+	              _react2.default.createElement('li', { role: 'separator', className: 'divider' }),
+	              _react2.default.createElement(
+	                'li',
+	                null,
 	                _react2.default.createElement(
-	                  'li',
-	                  null,
+	                  'a',
+	                  { href: 'https://github.com/weiyuan1993/LazyTravel' },
 	                  _react2.default.createElement(
-	                    'a',
-	                    { href: 'https://github.com/weiyuan1993/LazyTravel' },
-	                    _react2.default.createElement(
-	                      'h3',
-	                      null,
-	                      '\u95DC\u65BC'
-	                    )
+	                    'h3',
+	                    null,
+	                    '\u95DC\u65BC'
 	                  )
 	                )
 	              )
@@ -30308,11 +30304,6 @@
 	            'div',
 	            { className: 'row' },
 	            _react2.default.createElement(_WhereToGo2.default, null)
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(_SearchResult2.default, null)
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -30623,7 +30614,10 @@
 	function mapStateToProps(state) {
 	  return {
 	    map: state.mapReducer.mapData,
-	    pos: state.posReducer.posData
+	    pos: state.posReducer.posData,
+	    searchingData: state.searchingDataReducer.searchingData,
+	    nextPage: state.searchingDataReducer.nextPage,
+	    pagination: state.searchingDataReducer.pagination
 	  };
 	}
 
@@ -30653,7 +30647,7 @@
 	  }, {
 	    key: 'searchButtonClick',
 	    value: function searchButtonClick() {
-	      document.getElementById('suggestDiv').style.display = "none";
+	      document.getElementById('resultDiv').scrollTop = 0;
 	      var self = this;
 	      var request = {
 	        location: this.props.pos || { lat: 23.973875, lng: 120.982024 },
@@ -30664,14 +30658,16 @@
 	        if (status == google.maps.places.PlacesServiceStatus.OK) {
 	          self.props.action_searchingData(results);
 	          if (pagination.hasNextPage) {
-	            self.refs.moreButton.className = "btn btn-default";
+	            // self.refs.moreButton.className = "btn btn-default";
+	            document.getElementById('resultDiv').scrollTop = 0;
 	            self.props.action_nextPage(pagination.hasNextPage);
 	            self.props.action_pagination(pagination);
 	            self.setState({ pagination: pagination });
 	            document.getElementById('moreResult').style.display = "initial";
 	            console.log(results, pagination);
 	          } else {
-	            self.refs.moreButton.className = "btn btn-default disabled";
+	            // self.refs.moreButton.className = "btn btn-default disabled";
+	            document.getElementById('resultDiv').scrollTop = 0;
 	            document.getElementById('moreResult').style.display = "none";
 	          }
 	        }
@@ -30706,22 +30702,10 @@
 	          { className: 'input-group-btn' },
 	          _react2.default.createElement(
 	            'button',
-	            { className: 'btn btn-primary', type: 'button', onClick: function onClick() {
+	            { 'data-toggle': 'modal', 'data-target': '#myModal2', className: 'btn btn-primary', type: 'button', onClick: function onClick() {
 	                _this2.searchButtonClick();
 	              } },
 	            '\u641C\u5C0B',
-	            _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'input-group-btn' },
-	          _react2.default.createElement(
-	            'button',
-	            { ref: 'moreButton', className: 'btn btn-default disabled', type: 'button', onClick: function onClick() {
-	                _this2.moreResult();
-	              } },
-	            '\u66F4\u591A\u7D50\u679C',
 	            _react2.default.createElement('div', { className: 'ripple-wrapper' })
 	          )
 	        )
@@ -30765,6 +30749,10 @@
 	var _SearchBox = __webpack_require__(298);
 
 	var _SearchBox2 = _interopRequireDefault(_SearchBox);
+
+	var _SearchResult = __webpack_require__(319);
+
+	var _SearchResult2 = _interopRequireDefault(_SearchResult);
 
 	var _index = __webpack_require__(297);
 
@@ -30928,7 +30916,7 @@
 	      }
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
-	      document.getElementById('suggestDiv').style.display = "initial";
+	      // document.getElementById('suggestDiv').style.display ="initial";
 	    }
 	  }, {
 	    key: 'suggestFood',
@@ -30941,7 +30929,7 @@
 	      }
 	      google.maps.event.trigger(placeInput, 'focus');
 	      google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
-	      document.getElementById('suggestDiv').style.display = "initial";
+	      // document.getElementById('suggestDiv').style.display ="initial";
 	    }
 	  }, {
 	    key: 'onAddPlace',
@@ -31010,54 +30998,46 @@
 	        var placeNames = placeData.map(function (place) {
 	          // document.getElementById('suggestDiv').style.display = "initial";
 	          return _react2.default.createElement(
-	            'li',
-	            { key: place.id, className: 'list-group-item' },
+	            'div',
+	            { className: 'suggest col-md-4 col-xs-6', key: place.id },
 	            _react2.default.createElement(
-	              'div',
-	              { className: 'video-list media' },
+	              'li',
+	              { className: 'list-group-item', style: { padding: "5px" } },
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'media-left' },
-	                place.photos ? _react2.default.createElement('img', { style: { width: "100px" }, className: 'searchPhotos', src: place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
+	                { className: 'video-list media', style: { textAlign: "center" } },
+	                place.photos ? _react2.default.createElement('img', { style: { height: "150px" }, className: 'searchPhotos', src: place.photos[0].getUrl({ 'maxWidth': 300, 'maxHeight': 300 }) }) : _react2.default.createElement(
 	                  'div',
-	                  { style: { width: "100px" } },
+	                  { style: { height: "150px" } },
 	                  '\u7121\u5716\u7247'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'media-body' },
+	                ),
 	                _react2.default.createElement(
 	                  'div',
-	                  { className: 'media-heading' },
+	                  { className: 'media-body' },
 	                  _react2.default.createElement(
-	                    'h3',
-	                    { style: { margin: "0" } },
-	                    place.name
-	                  ),
-	                  _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    '\u8A55\u50F9:',
-	                    place.rating
-	                  ),
-	                  _react2.default.createElement(
-	                    'a',
-	                    { href: '#', className: 'btn btn-primary float-right tooltip-button',
-	                      onClick: function onClick() {
-	                        return self.onAddPlace(place);
-	                      } },
-	                    _react2.default.createElement('i', { className: 'fa fa-plus' })
-	                  ),
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + place.name, target: '_blank' },
+	                    'div',
+	                    { className: 'media-heading' },
 	                    _react2.default.createElement(
-	                      'span',
-	                      null,
-	                      '\u641C\u5C0B'
+	                      'h4',
+	                      { style: { margin: "0" } },
+	                      place.name
 	                    ),
-	                    _react2.default.createElement('i', { className: 'fa fa-search' })
+	                    _react2.default.createElement(
+	                      'p',
+	                      null,
+	                      '\u8A55\u50F9:',
+	                      place.rating
+	                    ),
+	                    _react2.default.createElement(
+	                      'a',
+	                      { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + place.name, target: '_blank' },
+	                      _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '\u641C\u5C0B'
+	                      ),
+	                      _react2.default.createElement('i', { className: 'fa fa-search' })
+	                    )
 	                  )
 	                )
 	              )
@@ -31244,14 +31224,16 @@
 	                'a',
 	                { onClick: function onClick() {
 	                    _this2.suggestPlace();
-	                  }, className: 'btn btn-danger', style: { marginBottom: "10px", marginTop: "10px" } },
+	                  }, className: 'btn btn-danger', style: { marginBottom: "10px", marginTop: "10px" },
+	                  'data-toggle': 'modal', 'data-target': '#myModal' },
 	                '\u63A8\u85A6\u666F\u9EDE'
 	              ),
 	              _react2.default.createElement(
 	                'a',
 	                { onClick: function onClick() {
 	                    _this2.suggestFood();
-	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" } },
+	                  }, className: 'btn btn-success', style: { marginBottom: "10px", marginTop: "10px" },
+	                  'data-toggle': 'modal', 'data-target': '#myModal' },
 	                '\u63A8\u85A6\u7F8E\u98DF'
 	              ),
 	              _react2.default.createElement(
@@ -31289,9 +31271,49 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { id: 'suggestDiv', style: { maxHeight: "500px", overflow: "scroll", overflowX: "hidden" } },
-	              placeNames
+	              { className: 'modal fade', id: 'myModal', tabIndex: -1, role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'modal-dialog modal-lg', role: 'document' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'modal-content' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal-header' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                      _react2.default.createElement(
+	                        'span',
+	                        { 'aria-hidden': 'true' },
+	                        '\xD7'
+	                      )
+	                    ),
+	                    _react2.default.createElement(
+	                      'h4',
+	                      { className: 'modal-title', id: 'myModalLabel' },
+	                      '\u63A8\u85A6'
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal-body', style: { maxHeight: "650px", overflow: "scroll", overflowX: "hidden", backgroundColor: "white" } },
+	                    placeNames
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal-footer' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+	                      'Close'
+	                    )
+	                  )
+	                )
+	              )
 	            ),
+	            _react2.default.createElement(_SearchResult2.default, null),
 	            _react2.default.createElement('input', { value: this.state.placeInput,
 	              onChange: function onChange(e) {
 	                _this2.onPlaceInputChange(e.target.value);
@@ -32950,82 +32972,153 @@
 	        var self = this;
 	        var displayResult = searchingData.map(function (result) {
 	          return _react2.default.createElement(
-	            'li',
-	            { key: result.id, className: 'list-group-item' },
+	            'div',
+	            { key: result.id, className: 'suggest col-md-4 col-xs-6' },
 	            _react2.default.createElement(
-	              'div',
-	              { className: 'video-list media' },
+	              'li',
+	              { className: 'list-group-item' },
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'media-left' },
+	                { className: 'video-list media', style: { textAlign: "center" } },
 	                _react2.default.createElement(
 	                  'a',
 	                  { href: '#', className: 'prettyphoto', rel: 'prettyPhoto[pp_gal]', title: result.name },
-	                  result.photos ? _react2.default.createElement('img', { style: { width: "100px" }, className: 'searchPhotos', src: result.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 }) }) : _react2.default.createElement(
+	                  result.photos ? _react2.default.createElement('img', { style: { height: "150px" }, className: 'searchPhotos', src: result.photos[0].getUrl({ 'maxWidth': 300, 'maxHeight': 300 }) }) : _react2.default.createElement(
 	                    'div',
-	                    { style: { width: "100px" } },
+	                    { style: { height: "150px" } },
 	                    '\u7121\u5716\u7247'
 	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'media-body' },
+	                ),
 	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'media-heading', href: '#' },
+	                  'div',
+	                  { className: 'media-body' },
 	                  _react2.default.createElement(
-	                    'h3',
-	                    null,
-	                    result.name
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'h4',
-	                  null,
-	                  '\u8A55\u5206:',
-	                  result.rating
-	                ),
-	                _react2.default.createElement(
-	                  'a',
-	                  { href: '#', className: 'btn btn-primary float-right tooltip-button',
-	                    onClick: function onClick() {
-	                      self.onAddPlace(result);
-	                    } },
-	                  _react2.default.createElement('i', { className: 'fa fa-plus' })
-	                ),
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + result.name, target: '_blank' },
-	                  _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    '\u641C\u5C0B'
+	                    'a',
+	                    { className: 'media-heading', href: '#' },
+	                    _react2.default.createElement(
+	                      'h4',
+	                      { style: { margin: "0" } },
+	                      result.name
+	                    )
 	                  ),
-	                  _react2.default.createElement('i', { className: 'glyph-icon icon-search' })
+	                  _react2.default.createElement(
+	                    'h4',
+	                    null,
+	                    '\u8A55\u5206:',
+	                    result.rating
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { href: '#', className: 'btn btn-primary float-right tooltip-button',
+	                      onClick: function onClick() {
+	                        self.onAddPlace(result);
+	                      } },
+	                    _react2.default.createElement('i', { className: 'fa fa-plus' })
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'btn btn-alt btn-hover btn-default float-right', href: 'http://www.google.com/#hl=zh-TW&source=hp&q=' + result.name, target: '_blank' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      null,
+	                      '\u641C\u5C0B'
+	                    ),
+	                    _react2.default.createElement('i', { className: 'glyph-icon icon-search' })
+	                  )
 	                )
 	              )
 	            )
 	          );
 	        });
-	        return _react2.default.createElement(
-	          'div',
-	          { ref: 'resultDiv', className: 'content-box', style: { height: "500px", overflow: "scroll" } },
-	          displayResult,
-	          nextPage ? _react2.default.createElement(
-	            'button',
-	            { id: 'moreResult', type: 'button', className: 'btn btn-primary btn-lg btn-block',
-	              onClick: function onClick() {
-	                _this2.moreResult();
-	              }
-	            },
-	            '\u66F4\u591A\u7D50\u679C',
-	            _react2.default.createElement('div', { className: 'ripple-wrapper' })
-	          ) : _react2.default.createElement('div', null)
-	        );
-	      } else {
-	        return _react2.default.createElement('div', null);
 	      }
+	      return (
+	        // <div ref="resultDiv" className="content-box" style={{height:"500px",overflow:"scroll"}}>
+	        //     {displayResult}
+	        //     {nextPage?
+	        //       <button id="moreResult" type="button" className="btn btn-primary btn-lg btn-block"
+	        //         onClick={()=>{this.moreResult();}}
+	        //         >
+	        //         更多結果<div className="ripple-wrapper"></div></button>
+	        //       :
+	        //       <div></div>
+	        //     }
+	        //
+	        // </div>
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'modal fade', id: 'myModal2', tabIndex: -1, role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modal-dialog modal-lg', role: 'document' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'modal-content' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'modal-header' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { 'aria-hidden': 'true' },
+	                    '\xD7'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'h4',
+	                  { className: 'modal-title', id: 'myModalLabel2' },
+	                  '\u641C\u5C0B\u7D50\u679C'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'modal-body', id: 'resultDiv', ref: 'resultDiv', style: { maxHeight: "650px", overflow: "scroll", overflowX: "hidden", backgroundColor: "white" } },
+	                displayResult,
+	                nextPage ? _react2.default.createElement(
+	                  'button',
+	                  { id: 'moreResult', type: 'button', className: 'btn btn-primary btn-lg btn-block',
+	                    onClick: function onClick() {
+	                      _this2.moreResult();
+	                    }
+	                  },
+	                  '\u66F4\u591A\u7D50\u679C',
+	                  _react2.default.createElement('div', { className: 'ripple-wrapper' })
+	                ) : _react2.default.createElement('div', null)
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'modal-footer' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+	                  'Close'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	      // }else{
+	      //   return(
+	      //     <div className="modal fade" id="myModal2" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+	      //       <div className="modal-dialog modal-lg" role="document">
+	      //         <div className="modal-content">
+	      //           <div className="modal-header">
+	      //             <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	      //             <h4 className="modal-title" id="myModalLabel2">搜尋結果</h4>
+	      //           </div>
+	      //           <div className="modal-body" style={{maxHeight:"650px",overflow:"scroll",overflowX:"hidden",backgroundColor:"white"}}>
+	      //             {displayResult}
+	      //           </div>
+	      //           <div className="modal-footer">
+	      //             <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+	      //           </div>
+	      //         </div>
+	      //       </div>
+	      //     </div>
+	      //   );
+	      // }
 	    }
 	  }]);
 

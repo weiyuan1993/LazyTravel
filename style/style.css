@@ -89,3 +89,6 @@ font-weight: 300;
     max-height:100px;
   }
 }
+.suggest{
+  padding:0 !important;
+}

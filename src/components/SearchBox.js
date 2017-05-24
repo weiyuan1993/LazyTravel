@@ -4,7 +4,10 @@ import { action_searchingData,action_nextPage,action_pagination } from '../actio
 function mapStateToProps(state){
   return{
     map:state.mapReducer.mapData,
-    pos:state.posReducer.posData
+    pos:state.posReducer.posData,
+    searchingData:state.searchingDataReducer.searchingData,
+    nextPage:state.searchingDataReducer.nextPage,
+    pagination:state.searchingDataReducer.pagination
   }
 }
 class SearchBox extends Component {
@@ -22,7 +25,7 @@ class SearchBox extends Component {
 
   }
   searchButtonClick(){
-    document.getElementById('suggestDiv').style.display = "none";
+    document.getElementById('resultDiv').scrollTop = 0;
     var self = this;
     var request = {
       location: this.props.pos||{lat: 23.973875, lng: 120.982024},
@@ -33,15 +36,17 @@ class SearchBox extends Component {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         self.props.action_searchingData(results);
         if (pagination.hasNextPage) {
-          self.refs.moreButton.className = "btn btn-default";
+          // self.refs.moreButton.className = "btn btn-default";
+          document.getElementById('resultDiv').scrollTop = 0;
           self.props.action_nextPage(pagination.hasNextPage);
           self.props.action_pagination(pagination);
           self.setState({pagination:pagination});
           document.getElementById('moreResult').style.display = "initial";
           console.log(results,pagination);
         }else{
-          self.refs.moreButton.className = "btn btn-default disabled";
-          document.getElementById('moreResult').style.display = "none";
+          // self.refs.moreButton.className = "btn btn-default disabled";
+          document.getElementById('resultDiv').scrollTop = 0;
+           document.getElementById('moreResult').style.display = "none";
         }
       }
     }
@@ -65,15 +70,15 @@ class SearchBox extends Component {
           onChange={(e)=>{this.onSearchInputChange(e.target.value);}}
           type="text" placeholder="搜尋景點、美食"/>
             <span className="input-group-btn" >
-              <button className="btn btn-primary" type="button" onClick={()=>{this.searchButtonClick();}}>
+              <button   data-toggle="modal" data-target="#myModal2" className="btn btn-primary" type="button" onClick={()=>{this.searchButtonClick();}}>
                 搜尋<div className="ripple-wrapper"></div>
               </button>
             </span>
-            <span className="input-group-btn" >
+            {/* <span className="input-group-btn" >
               <button ref="moreButton" className="btn btn-default disabled" type="button" onClick={()=>{this.moreResult();}}>
                 更多結果<div className="ripple-wrapper"></div>
               </button>
-            </span>
+            </span> */}
       </div>
     )
   }

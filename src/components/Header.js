@@ -19,11 +19,9 @@ export default class Header extends Component {
           <a className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" style={{color:"white",backgroundColor:"transparent",border:"0"}}>
             <i className="fa fa-bars" style={{fontSize:"35px"}}></i></a>
           <ul className="dropdown-menu dropdown-menu-right" style={{textAlign:"center"}}>
-           <li>
              <li><a href="#" onClick={()=>this.logOut()}><h3>登出</h3></a></li>
              <li role="separator" className="divider"></li>
              <li><a href="https://github.com/weiyuan1993/LazyTravel"><h3>關於</h3></a></li>
-           </li>
           </ul>
         </div>
         </div>

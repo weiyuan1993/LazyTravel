@@ -4,8 +4,8 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Link,browserHistory } from 'react-router';
 import SearchBox from './SearchBox';
+import SearchResult from './SearchResult';
 import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan } from '../actions/index';
-
 
 function mapStateToProps(state){
   return{
@@ -133,7 +133,7 @@ class WhereToGo extends Component {
       }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
-      document.getElementById('suggestDiv').style.display ="initial";
+      // document.getElementById('suggestDiv').style.display ="initial";
   }
   suggestFood(){
       var placeInput = document.getElementById('pac-input');
@@ -144,7 +144,7 @@ class WhereToGo extends Component {
       }
       google.maps.event.trigger(placeInput, 'focus')
       google.maps.event.trigger(placeInput, 'keydown', { keyCode: 13 });
-      document.getElementById('suggestDiv').style.display ="initial";
+      // document.getElementById('suggestDiv').style.display ="initial";
   }
   onAddPlace(place){
     this.props.action_addPlan(place);
@@ -197,33 +197,32 @@ class WhereToGo extends Component {
       var placeNames = placeData.map(function(place){
         // document.getElementById('suggestDiv').style.display = "initial";
         return(
-          <li key={place.id} className="list-group-item">
-             <div className="video-list media">
-              <div className="media-left">
+          <div className="suggest col-md-4 col-xs-6" key={place.id}>
+          <li  className="list-group-item" style={{padding:"5px"}}>
+             <div className="video-list media" style={{textAlign:"center"}}>
                 {place.photos?
-                  <img style={{width:"100px"}} className="searchPhotos" src={place.photos[0].getUrl({ 'maxWidth': 150, 'maxHeight': 150 })}/>
+                  <img style={{height:"150px"}} className="searchPhotos" src={place.photos[0].getUrl({ 'maxWidth': 300, 'maxHeight': 300 })}/>
                   :
-                  <div style={{width:"100px"}}>無圖片</div>
+                  <div style={{height:"150px"}}>無圖片</div>
                 }
-
-              </div>
-              <div className="media-body">
+                <div className="media-body">
                 <div className="media-heading">
-                  <h3 style={{margin:"0"}}>{place.name}</h3>
+                  <h4 style={{margin:"0"}}>{place.name}</h4>
                   <p>評價:{place.rating}</p>
-                  <a href="#" className="btn btn-primary float-right tooltip-button"
+                  {/* <a href="#" className="btn btn-primary"
                     onClick={()=>self.onAddPlace(place)}>
                     <i className="fa fa-plus"></i>
-                  </a>
+                  </a> */}
                   <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
                     <span>搜尋</span>
                     <i className="fa fa-search"></i>
                   </a>
                  </div>
-              </div>
+               </div>
             </div>
-
           </li>
+        </div>
+
         );
       });
     }
@@ -307,8 +306,10 @@ class WhereToGo extends Component {
                 </div>
               <div style={{marginTop:"10px"}}>
                 <SearchBox />
-                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-danger" style={{marginBottom: "10px",marginTop: "10px"}}>推薦景點</a>
-                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}>推薦美食</a>
+                <a onClick={()=>{this.suggestPlace()}} className= "btn btn-danger" style={{marginBottom: "10px",marginTop: "10px"}}
+                  data-toggle="modal" data-target="#myModal">推薦景點</a>
+                <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}
+                  data-toggle="modal" data-target="#myModal">推薦美食</a>
                 <div className="dropdown" style={{display: "inline"}} >
                   <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
                     <span className="caret" /></button>
@@ -330,9 +331,28 @@ class WhereToGo extends Component {
 
 
 
-             <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden"}}>
+             {/* <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden",backgroundColor:"white"}}>
                {placeNames}
-             </div>
+             </div> */}
+
+               <div className="modal fade" id="myModal" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+                 <div className="modal-dialog modal-lg" role="document">
+                   <div className="modal-content">
+                     <div className="modal-header">
+                       <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                       <h4 className="modal-title" id="myModalLabel">推薦</h4>
+                     </div>
+                     <div className="modal-body" style={{maxHeight:"650px",overflow:"scroll",overflowX:"hidden",backgroundColor:"white"}}>
+                       {placeNames}
+                     </div>
+                     <div className="modal-footer">
+                       <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <SearchResult/>
              <input value={this.state.placeInput}
                onChange={(e)=>{this.onPlaceInputChange(e.target.value);}}
                id="pac-input" className="controls"

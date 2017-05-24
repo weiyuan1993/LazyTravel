@@ -11,9 +11,9 @@ class MainView extends Component {
           <div className="row">
             <WhereToGo />
           </div>
-          <div className="row">
+          {/* <div className="row">
             <SearchResult />
-          </div>
+          </div> */}
         </div>
         <div className="col-md-5">
           <Map />
