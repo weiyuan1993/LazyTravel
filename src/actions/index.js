@@ -50,6 +50,14 @@ export function action_addPlan(plan){
     payload:plan
   }
 }
+export function action_nowDay(nowDay){
+  return{
+    type:'NOW_DAY',
+    payload:nowDay
+  }
+}
+
+
 export function action_getPlanNote(planNote){
   return{
     type:'GET_PLAN_NOTE',

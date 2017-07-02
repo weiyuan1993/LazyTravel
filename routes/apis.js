@@ -106,4 +106,20 @@ router.delete('/users/planNote/user/:userName/trip/:tripId', function(req, res) 
   });
 });
 
+router.post('/users/myLovePlace', function(req, res, next) {
+  Place.create(req.body, function (err, post) {
+    if (err) return next(err);
+    console.log("receive love place post!",req.body);
+    res.json(req.body);
+  });
+});
+router.get('/users/myLovePlace/user/:userName', function(req, res) {
+  Place.find({user:req.params.userName},function(err,myLovePlace){
+    if(err)return next(err);
+    res.json(myLovePlace);
+  });
+});
+
+
+
 module.exports = router;

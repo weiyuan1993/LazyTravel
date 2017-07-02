@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 var PlaceSchema = mongoose.Schema({
   user:String,
-  name:String,
-  location:String,
-  rating:Number,
+  placeName:String,
+  rating:String,
   place_id:String,
-  day:Number
+  address:String
 });
 module.exports = mongoose.model('Place' , PlaceSchema);

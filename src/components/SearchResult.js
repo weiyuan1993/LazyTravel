@@ -7,7 +7,8 @@ function mapStateToProps(state){
     searchingData:state.searchingDataReducer.searchingData,
     nextPage:state.searchingDataReducer.nextPage,
     pagination:state.searchingDataReducer.pagination,
-    planData:state.planReducer.planData
+    planData:state.planReducer.planData,
+    nowDay:state.planReducer.nowDay
   }
 }
 
@@ -17,8 +18,17 @@ class SearchResult extends Component{
     this.refs.resultDiv.scrollTop = 0;
   }
   onAddPlace(place){
-    this.props.action_addPlan(place);
-
+    this.props.action_addPlan({place:place});
+    fetch('/api/users/myLovePlace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user:this.props.userData.userName,
+        place:place
+      })
+    })
   }
   render(){
     const { searchingData ,nextPage,pagination} = this.props;
@@ -40,8 +50,9 @@ class SearchResult extends Component{
 
               <div className="media-body">
                   <h4 style={{margin:"0"}}>{result.name}</h4>
-                <h4>評分:{result.rating}</h4>
-                <a href="#" className="btn btn-primary float-right tooltip-button"
+                  <p style={{color:"lightcoral"}}>評價:{result.rating}</p>
+                  <p style={{color:"gray"}}>地址:{result.formatted_address}</p>
+                <a href="#" className="btn btn-primary plus"
                   onClick={()=>{self.onAddPlace(result)}}>
                   <i className="fa fa-plus"></i>
                 </a>

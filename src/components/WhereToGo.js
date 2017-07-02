@@ -5,14 +5,15 @@ import { connect } from 'react-redux';
 import { Link,browserHistory } from 'react-router';
 import SearchBox from './SearchBox';
 import SearchResult from './SearchResult';
-import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan } from '../actions/index';
-
+import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay } from '../actions/index';
+import Sortable from 'sortablejs';
 function mapStateToProps(state){
   return{
     placeData:state.placeReducer.placeData,
     planData:state.planReducer.planData,
     userData:state.userReducer.userData,
-    planNoteData:state.planReducer.planNoteData
+    planNoteData:state.planReducer.planNoteData,
+    nowDay:state.planReducer.nowDay
   }
 }
 
@@ -26,15 +27,19 @@ class WhereToGo extends Component {
       planInput:'',
       planNote:'',
       startDate:'',
-      endDate:''
+      endDate:'',
+      nowDay:"day1",
+      myLovePlace:''
     };
     if(this.props.userData==null){
        window.location="/";
     }
   }
   componentDidMount(){
+
+
     //loading autocomplete serach box
-    console.log("收藏景點:  "+this.props.planData)
+    console.log("收藏景點:  ",this.props.planData)
     var input = document.getElementById('where-to-go');
     var searchBox = new google.maps.places.SearchBox(input);
     if(this.props.planNoteData !== null){
@@ -56,7 +61,8 @@ class WhereToGo extends Component {
     document.querySelector(".dropdown-menu").onclick = function(e){
       e.stopPropagation();
     }
-    // console.log(this.state.startDate);
+
+
   }
   onTripNameChange(tripNameInput){
     this.setState({tripNameInput:tripNameInput});
@@ -148,17 +154,17 @@ class WhereToGo extends Component {
   }
   onAddPlace(place){
     this.props.action_addPlan(place);
-    fetch('/api/places', {
+    fetch('/api/users/myLovePlace', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         user:this.props.userData.userName,
-        name:place.name,
-        location:place.formatted_address,
+        placeName:place.name,
         rating:place.rating,
-        place_id:place.place_id
+        place_id:place.place_id,
+        address:place.formatted_address
       })
     })
   }
@@ -186,7 +192,22 @@ class WhereToGo extends Component {
     console.log(endDate);
     this.setState({endDate:endDate});
   }
-
+  getMyLovePlace(){
+    var self = this;
+    fetch('/api/users/myLovePlace/user/'+this.props.userData.userName, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(function(res){
+      return res.json();
+    }).then(function(data){
+      console.log(data);
+      self.setState({myLovePlace:data});
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
   render(){
     const { placeData ,planData,planNoteData } = this.props;
     var self = this;
@@ -208,11 +229,12 @@ class WhereToGo extends Component {
                 <div className="media-body">
                 <div className="media-heading">
                   <h4 style={{margin:"0"}}>{place.name}</h4>
-                  <p>評價:{place.rating}</p>
-                  {/* <a href="#" className="btn btn-primary"
+                  <p style={{color:"lightcoral"}}>評價:{place.rating}</p>
+                  <p style={{color:"gray"}}>地址:{place.formatted_address}</p>
+                  <a href="#" className="btn btn-primary"
                     onClick={()=>self.onAddPlace(place)}>
                     <i className="fa fa-plus"></i>
-                  </a> */}
+                  </a>
                   <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
                     <span>搜尋</span>
                     <i className="fa fa-search"></i>
@@ -226,6 +248,33 @@ class WhereToGo extends Component {
         );
       });
     }
+    //收藏景點顯示
+    if(this.state.myLovePlace.length!==0){
+
+      var myLovePlaceDOM = this.state.myLovePlace.map(function(place){
+        return(
+          <div className="suggest col-md-4 col-xs-6" key={place._id}>
+          <li  className="list-group-item" style={{padding:"5px"}}>
+             <div className="video-list media" style={{textAlign:"center"}}>
+                <div className="media-body">
+                <div className="media-heading">
+                  <h4 style={{margin:"0"}}>{place.placeName}</h4>
+                  <p style={{color:"lightcoral"}}>評價:{place.rating}</p>
+                  <p style={{color:"gray"}}>地址:{place.address}</p>
+                  <a className="btn btn-alt btn-hover btn-default float-right" href={`http://www.google.com/#hl=zh-TW&source=hp&q=${place.name}`} target="_blank">
+                    <span>搜尋</span>
+                    <i className="fa fa-search"></i>
+                  </a>
+                 </div>
+               </div>
+            </div>
+          </li>
+        </div>
+
+        );
+      });
+    }
+
     return(
       <div>
         <div className="content-box" style={{backgroundColor:"white",borderRadius:"5px"}}>
@@ -257,7 +306,7 @@ class WhereToGo extends Component {
 
               </div>
            </div>
-           <div className="col-md-4" style={{padding:"0"}}>
+           <div className="col-md-4" style={{padding:"0",marginBottom:"10px"}}>
              <p style={{fontSize:"20px"}}>
                <i className="fa fa-calendar"></i>
                日期</p>
@@ -285,11 +334,10 @@ class WhereToGo extends Component {
 
 
            </div>
-           <div className="col-md-12" style={{padding:"0"}}>
+
              <p style={{fontSize:"20px",marginBottom:"5px",marginTop:"10px"}}>
                <i className="fa fa-sticky-note"></i>
                旅行摘要</p>
-           </div>
 
                 {planNoteData!==null?
                   <textarea value={this.state.planNote}
@@ -310,18 +358,35 @@ class WhereToGo extends Component {
                   data-toggle="modal" data-target="#myModal">推薦景點</a>
                 <a onClick={()=>{this.suggestFood()}} className="btn btn-success" style={{marginBottom: "10px",marginTop: "10px"}}
                   data-toggle="modal" data-target="#myModal">推薦美食</a>
+                <a onClick={()=>{this.getMyLovePlace()}} className="btn btn-warning" style={{marginBottom: "10px",marginTop: "10px"}}
+                  data-toggle="modal" data-target="#myLovePlaceModal">已收藏</a>
                 <div className="dropdown" style={{display: "inline"}} >
                   <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
                     <span className="caret" /></button>
-                  <ul className="dropdown-menu dropdown-menu-right">
+                  <ul className="dropdown-menu dropdown-menu-right" style={{padding:"5px"}}>
                    <li>
                      <a target="_blank" className= "btn btn-primary" style={{backgroundColor:"#003580",height:"34px"}} href="https://www.booking.com/">
-                       <img style={{ width: "150px",height: "25px"}} src="/img/booking.png" />
+                       <img style={{height: "25px"}} src="/img/booking.png" />
                      </a>
                    </li>
                    <li>
                      <a target="_blank" href="https://www.agoda.com/" className="btn btn-default" style={{marginBottom: "10px",marginTop: "10px",height:"34px"}}>
-                      <img style={{ width: "89px",height: "25px"}} src="/img/agoda-logo.svg" />
+                      <img style={{height: "25px"}} src="/img/agoda-logo.svg" />
+                     </a>
+                   </li>
+                   <li>
+                     <a target="_blank" href="https://tw.hotels.com/" className="btn btn-default" style={{marginBottom: "10px",marginTop: "10px",height:"34px"}}>
+                      <img style={{height: "25px"}} src="/img/hotels.png" />
+                     </a>
+                   </li>
+                   <li>
+                     <a target="_blank" href="https://www.trivago.com.tw/" className="btn btn-default" style={{marginBottom: "10px",marginTop: "10px",height:"34px"}}>
+                      <img style={{height: "25px"}} src="/img/trivago.png" />
+                     </a>
+                   </li>
+                   <li>
+                     <a target="_blank" href="https://www.hotelscombined.com.tw/" className="btn btn-default" style={{marginBottom: "10px",marginTop: "10px",height:"34px"}}>
+                      <img style={{height: "25px"}} src="/img/hotelscombined.png" />
                      </a>
                    </li>
                   </ul>
@@ -330,10 +395,6 @@ class WhereToGo extends Component {
 
 
 
-
-             {/* <div id="suggestDiv" style={{maxHeight:"500px",overflow:"scroll",overflowX:"hidden",backgroundColor:"white"}}>
-               {placeNames}
-             </div> */}
 
                <div className="modal fade" id="myModal" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
                  <div className="modal-dialog modal-lg" role="document">
@@ -351,6 +412,24 @@ class WhereToGo extends Component {
                    </div>
                  </div>
                </div>
+               <div className="modal fade" id="myLovePlaceModal" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+                 <div className="modal-dialog modal-lg" role="document">
+                   <div className="modal-content">
+                     <div className="modal-header">
+                       <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                       <h4 className="modal-title" id="myModalLabel">收藏景點</h4>
+                     </div>
+                     <div className="modal-body" style={{maxHeight:"650px",overflow:"scroll",overflowX:"hidden",backgroundColor:"white"}}>
+                       {myLovePlaceDOM}
+                     </div>
+                     <div className="modal-footer">
+                       <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+
 
                <SearchResult/>
              <input value={this.state.placeInput}
@@ -371,4 +450,4 @@ class WhereToGo extends Component {
     )
   }
 }
-export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan,action_deleteLocalPlan})(WhereToGo);
+export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay})(WhereToGo);
