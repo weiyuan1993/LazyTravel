@@ -31,11 +31,7 @@ class WhereToGo extends Component {
       nowDay:"day1",
       myLovePlace:''
     };
-    if(localStorage.tempTripId==null){
-       window.location="/";
-    }else{
-      this.getTripData();
-    }
+
   }
   getTripData(){
     var self = this;
@@ -67,6 +63,7 @@ class WhereToGo extends Component {
     })
   }
   componentDidMount(){
+    console.log(localStorage.tempTripId);
 
 
     //loading autocomplete serach box
@@ -90,6 +87,18 @@ class WhereToGo extends Component {
     }
     document.querySelector(".dropdown-menu").onclick = function(e){
       e.stopPropagation();
+    }
+    if(localStorage.tempTripId=='noID'){
+      this.setState(
+        {
+          tripNameInput:'我的行程',
+          whereInput:'',
+          planNote:'來新增一些行程吧!',
+          startDate:'',
+          endDate:''
+      });
+    }else{
+      this.getTripData();
     }
 
 

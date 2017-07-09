@@ -30829,11 +30829,7 @@
 	      nowDay: "day1",
 	      myLovePlace: ''
 	    };
-	    if (localStorage.tempTripId == null) {
-	      window.location = "/";
-	    } else {
-	      _this.getTripData();
-	    }
+
 	    return _this;
 	  }
 
@@ -30868,6 +30864,7 @@
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      console.log(localStorage.tempTripId);
 
 	      //loading autocomplete serach box
 	      var input = document.getElementById('where-to-go');
@@ -30888,6 +30885,17 @@
 	      document.querySelector(".dropdown-menu").onclick = function (e) {
 	        e.stopPropagation();
 	      };
+	      if (localStorage.tempTripId == 'noID') {
+	        this.setState({
+	          tripNameInput: '我的行程',
+	          whereInput: '',
+	          planNote: '來新增一些行程吧!',
+	          startDate: '',
+	          endDate: ''
+	        });
+	      } else {
+	        this.getTripData();
+	      }
 	    }
 	  }, {
 	    key: 'onTripNameChange',
@@ -34966,6 +34974,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'addNewPlan',
+	    value: function addNewPlan() {
+	      localStorage.tempTripId = 'noID';
+	    }
+	  }, {
 	    key: 'modifyPlan',
 	    value: function modifyPlan(tripId) {
 	      var self = this;
@@ -34998,6 +35011,8 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      var userData = this.props.userData;
 
 	      var self = this;
@@ -35082,7 +35097,9 @@
 	            { className: 'col-md-4', style: { marginTop: '5px', paddingLeft: "15px", paddingEight: "15px", textAlign: "center" } },
 	            _react2.default.createElement(
 	              _reactRouter.Link,
-	              { to: '/UserPage/NewTrip', type: 'button',
+	              { to: '/UserPage/NewTrip', type: 'button', onClick: function onClick() {
+	                  return _this2.addNewPlan();
+	                },
 	                className: 'btn btn-info', style: { width: "90%", fontSize: "18px" } },
 	              _react2.default.createElement('i', { className: 'fa fa-sticky-note-o', style: { marginRight: "5px" } }),
 	              '\u65B0\u589E\u884C\u7A0B'

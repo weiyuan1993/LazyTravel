@@ -60,6 +60,9 @@ class MyTrip extends Component {
       console.log('parsing failed', ex)
     })
   }
+  addNewPlan(){
+    localStorage.tempTripId = 'noID';
+  }
   modifyPlan(tripId){
     var self = this;
     fetch('/api/users/planNote/user/'+localStorage.userName+'/trip/'+tripId, {
@@ -127,7 +130,7 @@ class MyTrip extends Component {
         <div className="row">
           <div className="col-md-4"></div>
           <div className="col-md-4" style={{marginTop:'5px',paddingLeft:"15px",paddingEight:"15px",textAlign:"center"}}>
-            <Link to="/UserPage/NewTrip" type="button"
+            <Link to="/UserPage/NewTrip" type="button" onClick={()=>this.addNewPlan()}
              className="btn btn-info" style={{width:"90%",fontSize:"18px"}}><i className="fa fa-sticky-note-o" style={{marginRight:"5px"}}></i>新增行程</Link>
           </div>
         </div>
