@@ -18,16 +18,35 @@ class MyTrip extends Component {
   constructor(props){
     super(props);
     this.state={trips:'目前還沒有規劃行程哦!點擊右上角新增來安排假期吧'};
-    if(this.props.userData==null){
-       window.location="/";
-    }
+    // if(this.props.userData==null){
+    //    window.location="/";
+    // }
   }
   componentDidMount(){
+    this.login();
     this.fetchUserTrips();
+  }
+  login(){
+      var self = this;
+      fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName:localStorage.userName,
+          password:localStorage.password
+        })
+      }).then(function(res){
+        res.json().then(function(data){
+            console.log(data.userName+"已登入");
+            self.props.action_userData(data);
+        })
+      })
   }
   fetchUserTrips(){
     var self = this;
-    fetch('/api/users/planNote/user/'+this.props.userData.userName, {
+    fetch('/api/users/planNote/user/'+localStorage.userName, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -43,7 +62,7 @@ class MyTrip extends Component {
   }
   modifyPlan(tripId){
     var self = this;
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
+    fetch('/api/users/planNote/user/'+localStorage.userName+'/trip/'+tripId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -51,19 +70,19 @@ class MyTrip extends Component {
     }).then(function(res){
       return res.json();
     }).then(function(data){
-      console.log(data);
       self.props.action_getPlanNote(data);
+      localStorage.tempTripId = tripId;
       browserHistory.push("UserPage/NewTrip");
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
   }
   deletePlanNoteClick(tripId){
-    fetch('/api/users/planNote/user/'+this.props.userData.userName+'/trip/'+tripId, {
+    var self = this;
+    fetch('/api/users/planNote/user/'+localStorage.userName+'/trip/'+tripId, {
       method: 'DELETE'
     })
-
-    this.fetchUserTrips();
+    setTimeout(function(){self.fetchUserTrips()}, 500);
   }
   render(){
     const {userData} = this.props;

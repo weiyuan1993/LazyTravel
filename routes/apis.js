@@ -102,7 +102,7 @@ router.delete('/users/planNote/user/:userName/trip/:tripId', function(req, res) 
   PlanNote.findOneAndRemove({user:req.params.userName,_id:req.params.tripId},function(err){
     if(err)return next(err);
     console.log("行程: "+req.params.tripId+"刪除成功");
-
+    res.send("Delete Success");
   });
 });
 

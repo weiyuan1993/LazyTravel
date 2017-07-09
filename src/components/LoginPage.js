@@ -22,6 +22,7 @@ class LoginPage extends Component {
     if(typeof localStorage.userName === "undefined"){
       console.log("未存有localStorage");
     }else{
+      $('#login-validation').hide();
       var self = this;
       fetch('/api/users/login', {
         method: 'POST',
@@ -39,9 +40,11 @@ class LoginPage extends Component {
           }else if(data.notRegisterd){
             alert("此帳號尚未註冊!");
           }else{
-            console.log(data);
+            console.log(data.userName+"已登入");
             self.props.action_userData(data);
-            browserHistory.push("/UserPage");
+            $('#login-validation').prepend("<h3>登入中...</h3>");
+            setTimeout(function(){$('#login-validation').show();browserHistory.push("/UserPage")}, 1000);
+
 
           }
         })
@@ -72,12 +75,12 @@ class LoginPage extends Component {
         }else if(data.notRegisterd){
           alert("此帳號尚未註冊!");
         }else{
-          console.log(data);
+          console.log(data.userName+"已登入");
           localStorage.setItem("userName", self.state.userName);
           localStorage.setItem("password", self.state.password);
-
           self.props.action_userData(data);
-          browserHistory.push("/UserPage");
+          $('#login-validation').prepend("<h3>登入中...</h3>");
+          setTimeout(function(){browserHistory.push("/UserPage")}, 1000);
 
         }
       })
@@ -109,7 +112,7 @@ class LoginPage extends Component {
   render(){
     return(
       <div>
-      <Header/>
+      <Header />
           <div className="col-md-4 col-xs-4"></div>
           <div id="login-validation" className="col-md-4 col-xs-12" style={{marginTop:"60px"}}>
             <div id="login-form" className="content-box bg-default">

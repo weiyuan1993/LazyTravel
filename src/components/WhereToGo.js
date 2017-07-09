@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Link,browserHistory } from 'react-router';
 import SearchBox from './SearchBox';
 import SearchResult from './SearchResult';
-import { action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay } from '../actions/index';
+import { action_getPlanNote,action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay } from '../actions/index';
 import Sortable from 'sortablejs';
 function mapStateToProps(state){
   return{
@@ -31,15 +31,45 @@ class WhereToGo extends Component {
       nowDay:"day1",
       myLovePlace:''
     };
-    if(this.props.userData==null){
+    if(localStorage.tempTripId==null){
        window.location="/";
+    }else{
+      this.getTripData();
     }
+  }
+  getTripData(){
+    var self = this;
+    fetch('/api/users/planNote/user/'+localStorage.userName+'/trip/'+localStorage.tempTripId, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(function(res){
+      return res.json();
+    }).then(function(data){
+      self.props.action_getPlanNote(data);
+      self.setState(
+        {
+          tripNameInput:self.props.planNoteData.tripName||'我的行程',
+          whereInput:self.props.planNoteData.wherePlay||'',
+          planNote:self.props.planNoteData.planNote,
+          // startDate:this.props.planNoteData.startDate,
+          // endDate:this.props.planNoteData.endDate
+      });
+      if(self.props.planNoteData.startDate){
+        self.setState({startDate:self.props.planNoteData.startDate});
+      }
+      if(self.props.planNoteData.endDate){
+        self.setState({endDate:self.props.planNoteData.endDate});
+      }
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
   }
   componentDidMount(){
 
 
     //loading autocomplete serach box
-    console.log("收藏景點:  ",this.props.planData)
     var input = document.getElementById('where-to-go');
     var searchBox = new google.maps.places.SearchBox(input);
     if(this.props.planNoteData !== null){
@@ -363,7 +393,7 @@ class WhereToGo extends Component {
                 <div className="dropdown" style={{display: "inline"}} >
                   <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">訂飯店
                     <span className="caret" /></button>
-                  <ul className="dropdown-menu dropdown-menu-right" style={{padding:"5px"}}>
+                  <ul className="dropdown-menu dropdown-menu" style={{padding:"5px"}}>
                    <li>
                      <a target="_blank" className= "btn btn-primary" style={{backgroundColor:"#003580",height:"34px"}} href="https://www.booking.com/">
                        <img style={{height: "25px"}} src="/img/booking.png" />
@@ -450,4 +480,4 @@ class WhereToGo extends Component {
     )
   }
 }
-export default connect(mapStateToProps,{action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay})(WhereToGo);
+export default connect(mapStateToProps,{action_getPlanNote,action_addPlan,action_addLocalPlan,action_deleteLocalPlan,action_nowDay})(WhereToGo);

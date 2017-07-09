@@ -29885,7 +29885,7 @@
 	    value: function logOut() {
 	      localStorage.clear('userName');
 	      localStorage.clear('password');
-	      _reactRouter.browserHistory.push("/");
+	      window.location = "/";
 	    }
 	  }, {
 	    key: 'render',
@@ -29905,7 +29905,7 @@
 	          ),
 	          _react2.default.createElement(
 	            _reactRouter.Link,
-	            { to: '/UserPage' },
+	            { style: { textDecoration: "none" }, to: '/UserPage' },
 	            ' ',
 	            _react2.default.createElement(
 	              'h1',
@@ -29924,27 +29924,40 @@
 	            _react2.default.createElement(
 	              'ul',
 	              { className: 'dropdown-menu dropdown-menu-right', style: { textAlign: "center" } },
-	              !localStorage.userName ? _react2.default.createElement('span', null) : _react2.default.createElement(
+	              !localStorage.userName ? _react2.default.createElement(
 	                'li',
 	                null,
 	                _react2.default.createElement(
 	                  'h6',
 	                  { className: 'dropdown-header' },
-	                  localStorage.userName
+	                  '\u5E33\u6236:\u5C1A\u672A\u767B\u5165'
 	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
+	              ) : _react2.default.createElement(
+	                'span',
 	                null,
 	                _react2.default.createElement(
-	                  'a',
-	                  { href: '#', onClick: function onClick() {
-	                      return _this2.logOut();
-	                    } },
+	                  'li',
+	                  null,
 	                  _react2.default.createElement(
-	                    'h3',
-	                    null,
-	                    '\u767B\u51FA'
+	                    'h6',
+	                    { className: 'dropdown-header' },
+	                    '\u5E33\u6236:',
+	                    localStorage.userName
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  _react2.default.createElement(
+	                    'a',
+	                    { href: 'javascript: void(0)', onClick: function onClick() {
+	                        return _this2.logOut();
+	                      } },
+	                    _react2.default.createElement(
+	                      'h3',
+	                      null,
+	                      '\u767B\u51FA'
+	                    )
 	                  )
 	                )
 	              ),
@@ -29958,7 +29971,7 @@
 	                  _react2.default.createElement(
 	                    'h3',
 	                    null,
-	                    '\u95DC\u65BC'
+	                    'GitHub'
 	                  )
 	                )
 	              )
@@ -30816,18 +30829,47 @@
 	      nowDay: "day1",
 	      myLovePlace: ''
 	    };
-	    if (_this.props.userData == null) {
+	    if (localStorage.tempTripId == null) {
 	      window.location = "/";
+	    } else {
+	      _this.getTripData();
 	    }
 	    return _this;
 	  }
 
 	  _createClass(WhereToGo, [{
+	    key: 'getTripData',
+	    value: function getTripData() {
+	      var self = this;
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + localStorage.userName + '/trip/' + localStorage.tempTripId, {
+	        method: 'GET',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        }
+	      }).then(function (res) {
+	        return res.json();
+	      }).then(function (data) {
+	        self.props.action_getPlanNote(data);
+	        self.setState({
+	          tripNameInput: self.props.planNoteData.tripName || '我的行程',
+	          whereInput: self.props.planNoteData.wherePlay || '',
+	          planNote: self.props.planNoteData.planNote
+	        });
+	        if (self.props.planNoteData.startDate) {
+	          self.setState({ startDate: self.props.planNoteData.startDate });
+	        }
+	        if (self.props.planNoteData.endDate) {
+	          self.setState({ endDate: self.props.planNoteData.endDate });
+	        }
+	      }).catch(function (ex) {
+	        console.log('parsing failed', ex);
+	      });
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 
 	      //loading autocomplete serach box
-	      console.log("收藏景點:  ", this.props.planData);
 	      var input = document.getElementById('where-to-go');
 	      var searchBox = new google.maps.places.SearchBox(input);
 	      if (this.props.planNoteData !== null) {
@@ -31363,7 +31405,7 @@
 	                ),
 	                _react2.default.createElement(
 	                  'ul',
-	                  { className: 'dropdown-menu dropdown-menu-right', style: { padding: "5px" } },
+	                  { className: 'dropdown-menu dropdown-menu', style: { padding: "5px" } },
 	                  _react2.default.createElement(
 	                    'li',
 	                    null,
@@ -31516,7 +31558,7 @@
 	  return WhereToGo;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_addPlan: _index.action_addPlan, action_addLocalPlan: _index.action_addLocalPlan, action_deleteLocalPlan: _index.action_deleteLocalPlan, action_nowDay: _index.action_nowDay })(WhereToGo);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { action_getPlanNote: _index.action_getPlanNote, action_addPlan: _index.action_addPlan, action_addLocalPlan: _index.action_addLocalPlan, action_deleteLocalPlan: _index.action_deleteLocalPlan, action_nowDay: _index.action_nowDay })(WhereToGo);
 
 /***/ }),
 /* 300 */
@@ -34873,22 +34915,43 @@
 	    var _this = _possibleConstructorReturn(this, (MyTrip.__proto__ || Object.getPrototypeOf(MyTrip)).call(this, props));
 
 	    _this.state = { trips: '目前還沒有規劃行程哦!點擊右上角新增來安排假期吧' };
-	    if (_this.props.userData == null) {
-	      window.location = "/";
-	    }
+	    // if(this.props.userData==null){
+	    //    window.location="/";
+	    // }
 	    return _this;
 	  }
 
 	  _createClass(MyTrip, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      this.login();
 	      this.fetchUserTrips();
+	    }
+	  }, {
+	    key: 'login',
+	    value: function login() {
+	      var self = this;
+	      (0, _isomorphicFetch2.default)('/api/users/login', {
+	        method: 'POST',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({
+	          userName: localStorage.userName,
+	          password: localStorage.password
+	        })
+	      }).then(function (res) {
+	        res.json().then(function (data) {
+	          console.log(data.userName + "已登入");
+	          self.props.action_userData(data);
+	        });
+	      });
 	    }
 	  }, {
 	    key: 'fetchUserTrips',
 	    value: function fetchUserTrips() {
 	      var self = this;
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName, {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + localStorage.userName, {
 	        method: 'GET',
 	        headers: {
 	          'Content-Type': 'application/json'
@@ -34906,7 +34969,7 @@
 	    key: 'modifyPlan',
 	    value: function modifyPlan(tripId) {
 	      var self = this;
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + localStorage.userName + '/trip/' + tripId, {
 	        method: 'GET',
 	        headers: {
 	          'Content-Type': 'application/json'
@@ -34914,8 +34977,8 @@
 	      }).then(function (res) {
 	        return res.json();
 	      }).then(function (data) {
-	        console.log(data);
 	        self.props.action_getPlanNote(data);
+	        localStorage.tempTripId = tripId;
 	        _reactRouter.browserHistory.push("UserPage/NewTrip");
 	      }).catch(function (ex) {
 	        console.log('parsing failed', ex);
@@ -34924,11 +34987,13 @@
 	  }, {
 	    key: 'deletePlanNoteClick',
 	    value: function deletePlanNoteClick(tripId) {
-	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + this.props.userData.userName + '/trip/' + tripId, {
+	      var self = this;
+	      (0, _isomorphicFetch2.default)('/api/users/planNote/user/' + localStorage.userName + '/trip/' + tripId, {
 	        method: 'DELETE'
 	      });
-
-	      this.fetchUserTrips();
+	      setTimeout(function () {
+	        self.fetchUserTrips();
+	      }, 500);
 	    }
 	  }, {
 	    key: 'render',
@@ -35116,6 +35181,7 @@
 	      if (typeof localStorage.userName === "undefined") {
 	        console.log("未存有localStorage");
 	      } else {
+	        $('#login-validation').hide();
 	        var self = this;
 	        fetch('/api/users/login', {
 	          method: 'POST',
@@ -35133,9 +35199,12 @@
 	            } else if (data.notRegisterd) {
 	              alert("此帳號尚未註冊!");
 	            } else {
-	              console.log(data);
+	              console.log(data.userName + "已登入");
 	              self.props.action_userData(data);
-	              _reactRouter.browserHistory.push("/UserPage");
+	              $('#login-validation').prepend("<h3>登入中...</h3>");
+	              setTimeout(function () {
+	                $('#login-validation').show();_reactRouter.browserHistory.push("/UserPage");
+	              }, 1000);
 	            }
 	          });
 	        });
@@ -35171,12 +35240,14 @@
 	          } else if (data.notRegisterd) {
 	            alert("此帳號尚未註冊!");
 	          } else {
-	            console.log(data);
+	            console.log(data.userName + "已登入");
 	            localStorage.setItem("userName", self.state.userName);
 	            localStorage.setItem("password", self.state.password);
-
 	            self.props.action_userData(data);
-	            _reactRouter.browserHistory.push("/UserPage");
+	            $('#login-validation').prepend("<h3>登入中...</h3>");
+	            setTimeout(function () {
+	              _reactRouter.browserHistory.push("/UserPage");
+	            }, 1000);
 	          }
 	        });
 	      });
